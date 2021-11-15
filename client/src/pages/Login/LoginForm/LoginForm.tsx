@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import { CircularProgress } from '@material-ui/core';
+import AuthFooter from '../../../components/AuthFooter/AuthFooter';
 
 interface Props {
   handleSubmit: (
@@ -57,6 +58,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
             InputProps={{
               classes: { input: classes.inputs },
             }}
+            variant="outlined"
             name="email"
             autoComplete="email"
             autoFocus
@@ -77,6 +79,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
               classes: { input: classes.inputs },
               endAdornment: <Typography className={classes.forgot}>Forgot?</Typography>,
             }}
+            variant="outlined"
             type="password"
             autoComplete="current-password"
             helperText={touched.password ? errors.password : ''}
@@ -89,7 +92,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
               {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Login'}
             </Button>
           </Box>
-          <div style={{ height: 95 }} />
+          <AuthFooter linkTo="/signup" asideText="Not a member?" btnText="Sign Up" />
         </form>
       )}
     </Formik>

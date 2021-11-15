@@ -9,15 +9,19 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  authWrapper: {
+  tabContainer: {
+    flexGrow: 1,
     display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    minHeight: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: 224,
   },
-  welcome: {
-    paddingBottom: 20,
+  tabs: {
+    borderRight: 1,
+    borderColor: 'divider',
+  },
+  tabComponents: {
+    flexGrow: 2,
   },
 }));
 

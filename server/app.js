@@ -11,6 +11,7 @@ const logger = require("morgan");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
+const profileRouter = require("./routes/profile");
 
 const { json, urlencoded } = express;
 

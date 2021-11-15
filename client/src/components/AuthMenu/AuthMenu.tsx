@@ -2,8 +2,9 @@ import { useState, MouseEvent } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import Avatar from '@material-ui/core/Avatar';
 import { useAuth } from '../../context/useAuthContext';
+import { Link } from 'react-router-dom';
 
 const AuthMenu = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -26,7 +27,7 @@ const AuthMenu = (): JSX.Element => {
   return (
     <div>
       <IconButton aria-label="show auth menu" aria-controls="auth-menu" aria-haspopup="true" onClick={handleClick}>
-        <MoreHorizIcon />
+        <Avatar />
       </IconButton>
       <Menu
         id="auth-menu"
@@ -40,6 +41,9 @@ const AuthMenu = (): JSX.Element => {
         }}
         getContentAnchorEl={null}
       >
+        <MenuItem component={Link} to="/edit-profile">
+          Profile
+        </MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
