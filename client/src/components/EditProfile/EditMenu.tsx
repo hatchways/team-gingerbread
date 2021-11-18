@@ -70,7 +70,7 @@ const EditMenu = (): JSX.Element => {
       </Grid>
       <Grid item xs={6} md={6} lg={6} component={Paper} className={classes.tabComponents}>
         <TabPanel value={value} index={0}>
-          <EditProfileTab></EditProfileTab>
+          <EditProfileTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
           Profile Photo Placeholder

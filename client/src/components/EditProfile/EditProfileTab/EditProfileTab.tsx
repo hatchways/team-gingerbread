@@ -2,21 +2,22 @@ import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Menu, Switch } from '@material-ui/core';
 import React, { useState } from 'react';
+import { useFormik } from 'formik';
 
-interface UserData {
+interface UserProfile {
   firstName: string;
   lastName: string;
-  gender: any;
-  birthdateMonth: any;
-  birthdateDay: any;
-  birthdateYear: any;
+  gender: string;
+  birthdateMonth: string;
+  birthdateDay: string;
+  birthdateYear: string;
   email: string;
   phone: string;
   address: string;
   description: string;
   accountType: string;
-  available: any;
-  availability: any;
+  available: boolean;
+  availability: string;
 }
 
 const months = [
@@ -38,63 +39,69 @@ const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
-
-  const [firstName, setFirstName] = useState<UserData['firstName'] | null>();
-  const [lastName, setLastName] = useState<UserData['lastName'] | null>();
-  const [gender, setGender] = useState<UserData['gender'] | null>('gender');
-  const [birthdateMonth, setBirthdateMonth] = useState<UserData['birthdateMonth'] | null>('month');
-  const [birthdateDay, setBirthdateDay] = useState<UserData['birthdateDay'] | null>('day');
-  const [birthdateYear, setBirthdateYear] = useState<UserData['birthdateYear'] | null>('year');
-  const [email, setEmail] = useState<UserData['email'] | null>();
-  const [phone, setPhone] = useState<UserData['phone'] | null>();
-  const [address, setAddress] = useState<UserData['address'] | null>();
-  const [description, setDescription] = useState<UserData['description'] | null>();
+  const [accountType, setAccountType] = useState<UserProfile['accountType'] | null>('partner');
+  const [available, setAvailable] = useState<UserProfile['available'] | null>(false);
+  const [availability, setAvailability] = useState<UserProfile['availability'] | null>('availability');
+  const [firstName, setFirstName] = useState<UserProfile['firstName'] | null>();
+  const [lastName, setLastName] = useState<UserProfile['lastName'] | null>();
+  const [gender, setGender] = useState<UserProfile['gender'] | null>('gender');
+  const [birthdateMonth, setBirthdateMonth] = useState<UserProfile['birthdateMonth'] | null>('month');
+  const [birthdateDay, setBirthdateDay] = useState<UserProfile['birthdateDay'] | null>('day');
+  const [birthdateYear, setBirthdateYear] = useState<UserProfile['birthdateYear'] | null>('year');
+  const [email, setEmail] = useState<UserProfile['email'] | null>();
+  const [phone, setPhone] = useState<UserProfile['phone'] | null>();
+  const [address, setAddress] = useState<UserProfile['address'] | null>();
+  const [description, setDescription] = useState<UserProfile['description'] | null>();
   const [showPhoneInput, setShowPhoneInput] = useState(false);
 
-  const [accountType, setAccountType] = useState<UserData['accountType'] | null>('partner');
-  const [available, setAvailable] = useState<UserData['available'] | null>(false);
-  const [availability, setAvailability] = useState<UserData['availability'] | null>('availability');
-
-  const handleSubmit = () => {
-    if (accountType === 'partner') {
-      alert(`
-        available: ${available}\n
-        availability: ${availability}\n
-        first name: ${firstName}\n
-        last name: ${lastName}\n
-        gender: ${gender}\n
-        birthdate: ${birthdateMonth} ${birthdateDay}, ${birthdateYear}\n
-        email: ${email}\n
-        phone: ${phone}\n
-        address: ${address}\n
-        description: ${description}
-      `);
-    } else {
-      alert(`
-        first name: ${firstName}\n
-        last name: ${lastName}\n
-        gender: ${gender}\n
-        birthdate: ${birthdateMonth} ${birthdateDay}, ${birthdateYear}\n
-        email: ${email}\n
-        phone: ${phone}\n
-        address: ${address}\n
-        description: ${description}
-      `);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      available: false,
+      availability: 'availability',
+      firstName: '',
+      lastName: '',
+      gender: 'gender',
+      birthdateMonth: 'month',
+      birthdateDay: 'day',
+      birthdateYear: 'year',
+      email: '',
+      phone: '',
+      address: '',
+      description: '',
+    },
+    onSubmit: (values) => {
+      if (accountType === 'partner') {
+        setAvailable(values.available);
+        setAvailability(values.availability);
+      }
+      setFirstName(values.firstName);
+      setLastName(values.lastName);
+      setGender(values.gender);
+      setBirthdateMonth(values.birthdateMonth);
+      setBirthdateDay(values.birthdateDay);
+      setBirthdateYear(values.birthdateYear);
+      setEmail(values.email);
+      setPhone(values.phone);
+      setAddress(values.address);
+      setDescription(values.description);
+    },
+  });
 
   return (
     <Box>
       <Typography className={classes.title}>Edit Profile</Typography>
-      <form className={classes.form} onSubmit={handleSubmit}>
+      <form className={classes.form} onSubmit={formik.handleSubmit}>
         {accountType === 'partner' && (
           <Box className={classes.section}>
             <FormLabel>
               <Typography className={classes.label}>i&apos;m available</Typography>
             </FormLabel>
             <Switch
-              checked={available}
-              onChange={({ target: { value } }) => setAvailable(!available)}
+              value={false}
+              checked={formik.values.available === true}
+              onChange={(event, checked) => {
+                formik.setFieldValue('available', checked ? true : false);
+              }}
               color="primary"
             />
           </Box>
@@ -108,10 +115,11 @@ export default function EditProfileTab(): JSX.Element {
             <Select
               className={classes.selectAvailability}
               id="availability"
-              value={availability}
-              onChange={({ target: { value } }) => setAvailability(value)}
+              name="availability"
+              value={formik.values.availability}
+              onChange={formik.handleChange}
               variant="outlined"
-              style={availability !== 'availability' ? { color: 'black' } : { color: 'grey' }}
+              style={formik.values.availability !== 'availability' ? { color: 'black' } : { color: 'grey' }}
             >
               <MenuItem value="availability" disabled>
                 availability
@@ -135,10 +143,11 @@ export default function EditProfileTab(): JSX.Element {
             name="firstName"
             autoComplete="given-name"
             autoFocus={accountType === 'client'}
-            value={firstName}
-            onChange={({ target: { value } }) => setFirstName(value)}
+            value={formik.values.firstName}
+            onChange={formik.handleChange}
           ></OutlinedInput>
         </Box>
+
         <Box className={classes.section}>
           <FormLabel>
             <Typography className={classes.label}>last name</Typography>
@@ -149,31 +158,34 @@ export default function EditProfileTab(): JSX.Element {
             placeholder="Doe"
             name="lastName"
             autoComplete="family-name"
-            value={lastName}
-            onChange={({ target: { value } }) => setLastName(value)}
+            value={formik.values.lastName}
+            onChange={formik.handleChange}
           ></OutlinedInput>
         </Box>
+
         <Box className={classes.section}>
           <FormLabel>
             <Typography className={classes.label}>gender</Typography>
           </FormLabel>
-
           <Select
             className={classes.select}
             id="gender"
+            name="gender"
             autoComplete="sex"
-            value={gender}
-            onChange={({ target: { value } }) => setGender(value)}
+            value={formik.values.gender}
+            onChange={formik.handleChange}
             variant="outlined"
-            style={gender !== 'gender' ? { color: 'black' } : { color: 'grey' }}
+            style={formik.values.gender !== 'gender' ? { color: 'black' } : { color: 'grey' }}
           >
             <MenuItem value="gender" disabled>
               gender
             </MenuItem>
             <MenuItem value="male">male</MenuItem>
             <MenuItem value="female">female</MenuItem>
+            <MenuItem value="genderQueer">genderqueer/non-binary</MenuItem>
           </Select>
         </Box>
+
         <Box className={classes.section}>
           <FormLabel>
             <Typography className={classes.label}>birth date</Typography>
@@ -182,10 +194,11 @@ export default function EditProfileTab(): JSX.Element {
             <Select
               className={classes.selectMonth}
               id="birthdateMonth"
-              value={birthdateMonth}
-              onChange={({ target: { value } }) => setBirthdateMonth(value)}
+              name="birthdateMonth"
+              value={formik.values.birthdateMonth}
+              onChange={formik.handleChange}
               variant="outlined"
-              style={birthdateMonth !== 'month' ? { color: 'black' } : { color: 'grey' }}
+              style={formik.values.birthdateMonth !== 'month' ? { color: 'black' } : { color: 'grey' }}
             >
               <MenuItem value="month" disabled>
                 month
@@ -199,10 +212,11 @@ export default function EditProfileTab(): JSX.Element {
             <Select
               className={classes.selectDay}
               id="birthdateDay"
-              value={birthdateDay}
-              onChange={({ target: { value } }) => setBirthdateDay(value)}
+              name="birthdateDay"
+              value={formik.values.birthdateDay}
+              onChange={formik.handleChange}
               variant="outlined"
-              style={birthdateDay !== 'day' ? { color: 'black' } : { color: 'grey' }}
+              style={formik.values.birthdateDay !== 'day' ? { color: 'black' } : { color: 'grey' }}
             >
               <MenuItem value="day" disabled>
                 day
@@ -216,10 +230,11 @@ export default function EditProfileTab(): JSX.Element {
             <Select
               className={classes.selectYear}
               id="birthdateYear"
-              value={birthdateYear}
-              onChange={({ target: { value } }) => setBirthdateYear(value)}
+              name="birthdateYear"
+              value={formik.values.birthdateYear}
+              onChange={formik.handleChange}
               variant="outlined"
-              style={birthdateYear !== 'year' ? { color: 'black' } : { color: 'grey' }}
+              style={formik.values.birthdateYear !== 'year' ? { color: 'black' } : { color: 'grey' }}
             >
               <MenuItem value="year" disabled>
                 year
@@ -243,10 +258,11 @@ export default function EditProfileTab(): JSX.Element {
             placeholder="john-doe@gmail.com"
             name="email"
             autoComplete="email"
-            value={email}
-            onChange={({ target: { value } }) => setEmail(value)}
+            value={formik.values.email}
+            onChange={formik.handleChange}
           ></OutlinedInput>
         </Box>
+
         <Box className={classes.section}>
           <FormLabel>
             <Typography className={classes.label}>phone number</Typography>
@@ -261,8 +277,8 @@ export default function EditProfileTab(): JSX.Element {
                 placeholder="(210) 556-0123"
                 name="phone"
                 autoComplete="tel"
-                value={phone}
-                onChange={({ target: { value } }) => setPhone(value)}
+                value={formik.values.phone}
+                onChange={formik.handleChange}
               ></OutlinedInput>
             )}
             {!showPhoneInput ? (
@@ -284,6 +300,7 @@ export default function EditProfileTab(): JSX.Element {
             )}
           </Box>
         </Box>
+
         <Box className={classes.section}>
           <FormLabel>
             <Typography className={classes.label}>where you live</Typography>
@@ -294,10 +311,11 @@ export default function EditProfileTab(): JSX.Element {
             placeholder="Address"
             name="address"
             autoComplete="street-address"
-            value={address}
-            onChange={({ target: { value } }) => setAddress(value)}
+            value={formik.values.address}
+            onChange={formik.handleChange}
           ></OutlinedInput>
         </Box>
+
         <Box className={classes.section}>
           <FormLabel>
             <Typography className={classes.label}>describe yourself</Typography>
@@ -306,11 +324,13 @@ export default function EditProfileTab(): JSX.Element {
             placeholder="About you"
             multiline
             rows={4}
-            value={description}
-            onChange={({ target: { value } }) => setDescription(value)}
+            name="description"
+            value={formik.values.description}
+            onChange={formik.handleChange}
             variant="outlined"
           />
         </Box>
+
         <Button type="submit" size="large" variant="contained" className={classes.save}>
           save
         </Button>
