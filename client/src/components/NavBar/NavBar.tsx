@@ -9,7 +9,6 @@ import LoggedInBar from './AuthBars/LoggedInBar';
 import LoggedOutBar from './AuthBars/LoggedOutBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import HomePageBar from './AuthBars/HomePageBar';
-import { useHistory, useLocation } from 'react-router-dom';
 
 const NavBar = (): JSX.Element => {
   const classes = useStyles();
@@ -37,6 +36,18 @@ const NavBar = (): JSX.Element => {
   useEffect(() => {
     initSocket();
   }, [initSocket]);
+
+  if (loggedInUser === undefined) return <CircularProgress />;
+  if (
+    !loggedInUser &&
+    history.location.pathname !== '/login' &&
+    history.location.pathname !== '/signup' &&
+    history.location.pathname !== '/'
+  ) {
+    history.push('/login');
+    // loading for a split seconds until history.push works
+    // return <CircularProgress />;
+  }
 
   return (
     <AppBar className={outterNavStyle.current} position="absolute">
