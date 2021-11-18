@@ -11,6 +11,7 @@ import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
 
 import './App.css';
+import Homepage from './pages/Homepage/Homepage';
 
 function App(): JSX.Element {
   return (
@@ -21,6 +22,7 @@ function App(): JSX.Element {
             <SocketProvider>
               <NavBar />
               <Switch>
+                <Route exact path="/" component={Homepage} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/dashboard">
