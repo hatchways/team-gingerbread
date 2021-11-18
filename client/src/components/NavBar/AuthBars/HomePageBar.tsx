@@ -9,15 +9,8 @@ const HomePageBar = (): JSX.Element => {
   return (
     <Grid container className={classes.navButtons}>
       <Grid item>
-        <Button
-          component={Link}
-          to="/login"
-          color="primary"
-          size="large"
-          variant="outlined"
-          className={classes.loginButton}
-        >
-          Login
+        <Button component={Link} to="/login" color="primary" size="large" variant="outlined">
+          TEST
         </Button>
       </Grid>
       <Grid item>
