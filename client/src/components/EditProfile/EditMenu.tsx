@@ -7,6 +7,8 @@ import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import { useState, ChangeEvent } from 'react';
 
+import EditProfileTab from './EditProfileTab/EditProfileTab';
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -68,7 +70,7 @@ const EditMenu = (): JSX.Element => {
       </Grid>
       <Grid item xs={6} md={6} lg={6} component={Paper} className={classes.tabComponents}>
         <TabPanel value={value} index={0}>
-          Edit Profile Placeholder
+          <EditProfileTab></EditProfileTab>
         </TabPanel>
         <TabPanel value={value} index={1}>
           Profile Photo Placeholder
