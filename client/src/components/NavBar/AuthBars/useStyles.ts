@@ -11,6 +11,10 @@ const useStyles = makeStyles(() => ({
     },
   },
   link: { textDecoration: 'none' },
+  loginButton: {
+    borderColor: 'white',
+    color: 'white',
+  },
 }));
 
 export default useStyles;
