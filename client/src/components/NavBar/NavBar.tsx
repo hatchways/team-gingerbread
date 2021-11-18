@@ -33,9 +33,9 @@ const NavBar = (): JSX.Element => {
   }
 
   return (
-    <AppBar className={classes.appbar} position="absolute">
+    <AppBar className={history.location.pathname === '/' ? classes.appbarHomePage : classes.appbar} position="absolute">
       <CssBaseline />
-      <ToolBar className={classes.toolbar}>
+      <ToolBar className={history.location.pathname === '/' ? classes.homePageBar : classes.toolbar}>
         <img src={logo} alt="logo" />
         {loggedInUser ? <LoggedInBar /> : history.location.pathname === '/' ? <HomePageBar /> : <LoggedOutBar />}
       </ToolBar>
