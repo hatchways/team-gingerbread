@@ -1,6 +1,6 @@
 import { MuiThemeProvider } from '@material-ui/core';
 import { theme } from './themes/theme';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login/Login';
 import Signup from './pages/SignUp/SignUp';
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -38,10 +38,6 @@ function App(): JSX.Element {
                   <Dashboard />
                 </Route>
                 <Route exact path="/edit-profile" component={EditMenu} />
-
-                <Route path="*">
-                  <Redirect to="/login" />
-                </Route>
               </Switch>
             </SocketProvider>
           </AuthProvider>
