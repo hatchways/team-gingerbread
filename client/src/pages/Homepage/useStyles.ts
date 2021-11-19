@@ -1,13 +1,16 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import homepage_image from '../../Images/homepage_image_v2.png';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: '100vh',
   },
   wrapper: {
     minHeight: '100vh',
     minWidth: '100vw',
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: '50px',
+    },
   },
   gridContainer: {
     height: '100vh',
@@ -17,6 +20,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     justifyContent: 'center',
   },
+
   form: {
     display: 'flex',
     flexDirection: 'column',
