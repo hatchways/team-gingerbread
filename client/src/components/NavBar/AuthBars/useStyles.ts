@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   navButtons: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -14,6 +14,10 @@ const useStyles = makeStyles(() => ({
   loginButton: {
     borderColor: 'white',
     color: 'white',
+    [theme.breakpoints.down('xs')]: {
+      border: `1px solid ${theme.palette.primary.main}`,
+      color: theme.palette.primary.main,
+    },
   },
 }));
 
