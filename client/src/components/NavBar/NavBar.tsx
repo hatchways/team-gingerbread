@@ -23,12 +23,10 @@ const NavBar = (): JSX.Element => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log('**************');
     initSocket();
   }, [initSocket]);
 
   useEffect(() => {
-    console.log('**************');
     const path = history.location.pathname;
     if (path === '/') {
       outterNavStyle.current = classes.appbarHomePage;
@@ -48,7 +46,7 @@ const NavBar = (): JSX.Element => {
   ) {
     history.push('/login');
     // loading for a split seconds until history.push works
-    // return <CircularProgress />;
+    return <CircularProgress />;
   }
 
   return (
