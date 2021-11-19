@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
     '& h1': {
       fontSize: '2.5rem',
+      fontWeight: '900',
     },
     '& label': {
       color: 'black',
