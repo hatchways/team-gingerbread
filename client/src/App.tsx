@@ -9,6 +9,8 @@ import EditMenu from './components/EditProfile/EditMenu';
 import { AuthProvider } from './context/useAuthContext';
 import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Unauthorized from './pages/Unauthorized/Unauthorized';
 
 import './App.css';
 
@@ -21,21 +23,15 @@ function App(): JSX.Element {
             <SocketProvider>
               <NavBar />
               <Switch>
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/signup" component={Signup} />
-                <Route exact path="/dashboard">
-                  <Dashboard />
-                </Route>
-                <Route exact path="/my-jobs">
-                  <Dashboard />
-                </Route>
-                <Route exact path="/messages">
-                  <Dashboard />
-                </Route>
-                <Route exact path="/my-sitters">
-                  <Dashboard />
-                </Route>
-                <Route exact path="/edit-profile" component={EditMenu} />
+                <Route path="/login" component={Login} />
+                <Route path="/signup" component={Signup} />
+                <Route path="/unauthorized" component={Unauthorized} />
+                <Route exact path="/" component={Login} />
+                <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
+                <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
+                <ProtectedRoute exact path="/messages" Component={Dashboard} />
+                <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
+                <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
               </Switch>
             </SocketProvider>
           </AuthProvider>
