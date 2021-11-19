@@ -1,5 +1,5 @@
 import useStyles from './useStyles';
-import { Box, Grid, TextField, InputLabel, Button } from '@material-ui/core';
+import { Box, Grid, TextField, InputLabel, Button, Typography } from '@material-ui/core';
 import homepage_image from '../../Images/homepage_image_v2.png';
 export default function Homepage(): JSX.Element {
   const classes = useStyles();
@@ -8,7 +8,7 @@ export default function Homepage(): JSX.Element {
       <Grid container className={classes.gridContainer}>
         <Grid item xs={12} sm={6} className={classes.contentWrapper}>
           <form className={classes.form}>
-            <h1>Find the care your dog deserves</h1>
+            <Typography variant="h1">Find the care your dog deserves</Typography>
             <InputLabel shrink htmlFor="location">
               Where
             </InputLabel>
