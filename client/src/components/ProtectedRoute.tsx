@@ -11,8 +11,6 @@ const ProtectedRoute = ({ Component, ...rest }: IProtectedRoute): JSX.Element =>
   return (
     <Route
       render={(props: RouteComponentProps) => {
-        //for demonstrating performance issue
-        console.log('rendering...');
         if (loggedInUser !== null) {
           return <Component {...rest} {...props} />;
         } else {

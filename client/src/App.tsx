@@ -23,9 +23,9 @@ function App(): JSX.Element {
             <SocketProvider>
               <NavBar />
               <Switch>
-                <Route path="/login" component={Login} />
-                <Route path="/signup" component={Signup} />
-                <Route path="/unauthorized" component={Unauthorized} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/signup" component={Signup} />
+                <Route exact path="/unauthorized" component={Unauthorized} />
                 <Route exact path="/" component={Login} />
                 <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />

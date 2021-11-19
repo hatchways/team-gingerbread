@@ -24,12 +24,16 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
 
   const updateLoginContext = useCallback(
     (data: AuthApiDataSuccess) => {
-      if (loggedInUser === null && history.location.pathname === '/login') {
+      if (
+        history.location.pathname === '/' ||
+        history.location.pathname === '/login' ||
+        history.location.pathname === '/signup'
+      ) {
         setLoggedInUser(data.user);
         history.push('/dashboard');
       } else setLoggedInUser(data.user);
     },
-    [history, loggedInUser],
+    [history],
   );
 
   const logout = useCallback(async () => {
