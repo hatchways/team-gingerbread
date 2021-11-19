@@ -14,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
   loginButton: {
     borderColor: 'white',
     color: 'white',
+    [theme.breakpoints.down('xs')]: {
+      border: `1px solid ${theme.palette.primary.main}`,
+      color: theme.palette.primary.main,
+    },
   },
 }));
 
