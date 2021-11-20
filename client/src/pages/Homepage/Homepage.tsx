@@ -38,7 +38,7 @@ export default function Homepage(): JSX.Element {
           </form>
         </Grid>
         <Grid item xs={12} sm={6} className={classes.imageWrapper}>
-          <img className={classes.image} src={homepage_image} alt="" width="100%" />
+          <img className={classes.image} src={homepage_image} alt="Home page cover" width="100%" />
         </Grid>
       </Grid>
     </Box>
