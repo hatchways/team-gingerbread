@@ -11,7 +11,7 @@ const ProtectedRoute = ({ Component, ...rest }: IProtectedRoute): JSX.Element =>
   return (
     <Route
       render={(props: RouteComponentProps) => {
-        if (loggedInUser !== null) {
+        if (!loggedInUser) {
           return <Component {...rest} {...props} />;
         } else {
           return (
