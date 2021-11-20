@@ -6,7 +6,7 @@ interface ProtectedRoute extends RouteProps {
   Component: React.ComponentType;
 }
 
-const ProtectedRoute = ({ Component, ...rest }: IProtectedRoute): JSX.Element => {
+const ProtectedRoute = ({ Component, ...rest }: ProtectedRoute): JSX.Element => {
   const { loggedInUser } = useAuth();
   return (
     <Route

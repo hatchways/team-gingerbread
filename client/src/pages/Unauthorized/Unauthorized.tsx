@@ -10,7 +10,7 @@ const Unauthorized = (): JSX.Element => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} sm={8} md={7}>
-        <Box className={classes.boxWrapper}>
+        <Box display="flex" alignItems="center" justifyContent="center" className={classes.boxWrapper}>
           <Typography component="h1" variant="h5">
             Please <Link to="/login">Login</Link> or <Link to="/signup">Sign up</Link> to access that page.
           </Typography>

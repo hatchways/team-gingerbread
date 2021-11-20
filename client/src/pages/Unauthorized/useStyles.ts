@@ -10,9 +10,6 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   boxWrapper: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
     flexDirection: 'column',
     minHeight: '100%',
   },
