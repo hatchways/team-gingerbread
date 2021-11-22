@@ -6,15 +6,19 @@ const useStyles = makeStyles(() => ({
     '& .MuiInput-underline:before': {
       borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
     },
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'start',
+    paddingLeft: '14vw',
+    paddingTop: '8vh',
+    alignItems: 'start',
   },
   tabContainer: {
     flexGrow: 1,
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    height: 224,
+    minHeight: 224,
+
+    marginRight: '1vw',
   },
   tabs: {
     borderRight: 1,
