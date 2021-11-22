@@ -22,34 +22,39 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     res.status(400);
     throw new Error("A user with that username already exists");
   }
-  const newProfile = await Profile.create();
-  const profile = newProfile._id
+  const newProfile = await Profile.create({});
 
-  const user = await User.create({
-    username,
-    email,
-    password,
-    profile,
-  });
-
-  if (user) {
-    const token = generateToken(user._id);
-    const secondsInWeek = 604800;
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: secondsInWeek * 1000,
+  if(newProfile){
+    const profile = newProfile._id;
+    const user = await User.create({
+      username,
+      email,
+      password,
+      profile,
     });
 
-    res.status(201).json({
-      success: {
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
+    if (user) {
+      const token = generateToken(user._id);
+      const secondsInWeek = 604800;
+  
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: secondsInWeek * 1000,
+      });
+  
+      res.status(201).json({
+        success: {
+          user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+          },
         },
-      },
-    });
+      });
+    } else {
+      res.status(400);
+      throw new Error("Invalid user data");
+    }
   } else {
     res.status(400);
     throw new Error("Invalid user data");
