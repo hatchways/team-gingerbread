@@ -10,6 +10,7 @@ import LoggedInBar from './AuthBars/LoggedInBar';
 import LoggedOutBar from './AuthBars/LoggedOutBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import HomePageBar from './AuthBars/HomePageBar';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const NavBar = (): JSX.Element => {
   const classes = useStyles();
@@ -22,6 +23,20 @@ const NavBar = (): JSX.Element => {
 
   const history = useHistory();
   const location = useLocation();
+
+  useEffect(() => {
+    const locationChange = history.listen((location) => {
+      if (location.pathname === '/') {
+        outterNavStyle.current = classes.appbarHomePage;
+        innerNavStyle.current = classes.homePageBar;
+      } else {
+        outterNavStyle.current = classes.appbar;
+        innerNavStyle.current = classes.toolbar;
+      }
+    });
+
+    return locationChange;
+  }, [history, classes, location]);
 
   useEffect(() => {
     initSocket();
