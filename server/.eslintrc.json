@@ -1,6 +1,6 @@
 {
   "env": {
-    "browser": true,
+    "node": true,
     "commonjs": true,
     "es2021": true
   },
@@ -10,6 +10,7 @@
     "ecmaVersion": 13
   },
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "quotes": [2, "double", { "avoidEscape": true }]
   }
 }
