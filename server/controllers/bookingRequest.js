@@ -49,26 +49,22 @@ exports.bookRequest = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @route PUT /bookingrequests/update
+// @route PUT /bookingrequests/update/:requestId
 // @desc Update a booking request
-// @desc Private
+// @access Private
 
 exports.updateRequest = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { requestId } = req.params;
-    const { description, accepted, declined, paid, start, end } = req.body;
-    const requestUpdate = {
-      description,
-      accepted,
-      declined,
-      paid,
-      start,
-      end,
-    };
-    if (requestId) {
-      const bookingRequest = await BookingRequest.findByIdAndUpdate(
-        requestId,
+
+    if (requestId && requestId) {
+      const filter = { _id: requestId, user_id: userId };
+      const { ...requestUpdate } = req.body || {};
+      // req.body can include any number of keys from the bookingRequest schema
+
+      const bookingRequest = await BookingRequest.findOneAndUpdate(
+        filter,
         {
           $set: requestUpdate,
         },
@@ -82,6 +78,9 @@ exports.updateRequest = asyncHandler(async (req, res, next) => {
           bookingRequest,
         },
       });
+    } else {
+      res.status(401);
+      throw new Error("Unauthorized: Invalid Data");
     }
   } catch (error) {
     res.status(500).json({
