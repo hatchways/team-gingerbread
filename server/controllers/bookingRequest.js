@@ -58,16 +58,19 @@ exports.updateRequest = asyncHandler(async (req, res, next) => {
     const userId = req.user.id;
     const { requestId } = req.params;
     const { description, accepted, declined, paid, start, end } = req.body;
+    const requestUpdate = {
+      description,
+      accepted,
+      declined,
+      paid,
+      start,
+      end,
+    };
     if (requestId) {
       const bookingRequest = await BookingRequest.findByIdAndUpdate(
         requestId,
         {
-          description,
-          accepted,
-          declined,
-          paid,
-          start,
-          end,
+          $set: requestUpdate,
         },
         {
           returnOriginal: false,
@@ -79,9 +82,10 @@ exports.updateRequest = asyncHandler(async (req, res, next) => {
           bookingRequest,
         },
       });
-      console.log(bookingRequest);
     }
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      error,
+    });
   }
 });
