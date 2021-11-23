@@ -1,4 +1,3 @@
-const Profile = require("../models/Profile");
 const aws = require('aws-sdk');
 const multer = require('multer');
 
@@ -21,30 +20,11 @@ const uploadToS3 = (img) => {
   return s3.upload(params).promise();
 };
 
-const writeToDB = async (_id, url, res) => {
-  await Profile.findByIdAndUpdate(String(_id), {"photo": url }, (err, result) => {
-    if(err) {
-      res.status(500).send(`A problem occurred while saving an image. ${err}`);
-    } else res.status(200).send(`Image saved. ${result}`);
-  });
-};
-
-exports.multerMultiUpload = multer({
-  storage: multer.memoryStorage(),
-  fileFilter: (_req, file, cb) => {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-      cb(null, true);
-    } else {
-      cb(null, false);
-      return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-    }
-  }
-}).array('images');
+exports.multerMultiUpload = multer({storage: multer.memoryStorage()}).array('images');
 
 exports.uploadImages = async (req, res) => {
   const images = req.files;
   const promises = [];
-  const { _id } = req.body;
 
   for(let i = 0; i < images.length; i++){
     let img = images[i];
@@ -53,8 +33,9 @@ exports.uploadImages = async (req, res) => {
 
   try {
     const data = await Promise.all(promises)
-    writeToDB(_id, data[0].Location, res);
+    res.status(200).send(`${data.length} file(s) uploaded.`);
+
   } catch(e) {
-    res.status(500).send(`A problem occurred while saving/uploading an image. ${e}`);
+    res.status(500).send(`A problem occurred while uploading an image. ${e}`);
   }
 };
