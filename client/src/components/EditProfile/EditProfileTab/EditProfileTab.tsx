@@ -84,8 +84,27 @@ export default function EditProfileTab(): JSX.Element {
       setPhone(values.phone);
       setAddress(values.address);
       setDescription(values.description);
+      handlePost();
     },
   });
+
+  const handlePost = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user: { id: '12345' },
+        firstName: firstName,
+        lastName: lastName,
+        description: description,
+        address: address,
+        phoneNumber: phone,
+        dateOfBirth: new Date(`${birthdateMonth} ${birthdateDay}, ${birthdateYear}`),
+        availability: '',
+      }),
+    };
+    fetch('http://localhost:3001/profile/edit', requestOptions); //getting type error (failed to fetch)
+  };
 
   return (
     <Box>
