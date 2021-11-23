@@ -6,7 +6,8 @@ const {
   loadProfile,
 } = require('../controllers/profile');
 
-router.route('/edit').post(protect, editProfile);
+// router.route('/edit').post(protect, editProfile);
+router.route('/edit').post(editProfile);
 
 router.route('/load').get(protect, loadProfile);
 
