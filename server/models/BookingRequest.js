@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const bookingRequestSchema = new mongoose.Schema({
     user_id: {
-        type: mongoose.SchemaType.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
     sitter_id: {
-        type: mongoose.SchemaType.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
@@ -39,4 +39,4 @@ const bookingRequestSchema = new mongoose.Schema({
     }
 })
 
-module.exports = BookingRequest = mongoose.model("Request", requestSchema)
+module.exports = BookingRequest = mongoose.model("Request", bookingRequestSchema)
