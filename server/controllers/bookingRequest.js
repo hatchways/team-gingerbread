@@ -22,11 +22,27 @@ exports.bookRequest = asyncHandler(async (req, res, next) => {
                     end,
                     description
                 })
-                console.log(bookingRequest)
+                
+                res.status(201).json({
+                    success: {
+                        bookingRequest: {
+                            user_id: bookingRequest.user_id._id,
+                            sitter_id: bookingRequest.sitter_id._id,
+                            start: bookingRequest.start,
+                            end: bookingRequest.end,
+                            description: bookingRequest.description
+                        }
+                    }
+                })
             }
-            else throw new Error("Unable to find the dog sitter info")
-        } else throw new Error("Unable to find the dog owner info")
-        // console.log(user)
+            else {
+                res.status(400);
+                throw new Error("Unable to find the dog sitter info")
+            }
+        } else {
+            res.status(400);
+            throw new Error("Unable to find the dog owner info")
+        }
 
     } catch (error){
         console.error(error)
