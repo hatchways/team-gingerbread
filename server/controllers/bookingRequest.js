@@ -6,7 +6,7 @@ const BookingRequest = require("../models/BookingRequest");
 // @desc Create a new request
 // @access Private
 
-exports.bookRequest = asyncHandler(async (req, res, next) => {
+exports.createBookingRequest = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId);
@@ -43,9 +43,9 @@ exports.bookRequest = asyncHandler(async (req, res, next) => {
       throw new Error("Unable to find the dog owner info");
     }
   } catch (error) {
-    res.status(500);
-    console.error(error);
-    return error;
+    res.status(500).json({
+      error,
+    });
   }
 });
 
@@ -53,7 +53,7 @@ exports.bookRequest = asyncHandler(async (req, res, next) => {
 // @desc Update a booking request (only for users who created a request)
 // @access Private
 
-exports.updateRequest = asyncHandler(async (req, res, next) => {
+exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { requestId } = req.params;
@@ -93,7 +93,7 @@ exports.updateRequest = asyncHandler(async (req, res, next) => {
 // @ desc Get all requests for logged in user
 // @ access Private
 
-exports.getRequests = asyncHandler(async (req, res, next) => {
+exports.getBookingRequests = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     if (userId) {
