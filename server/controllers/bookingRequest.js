@@ -50,7 +50,7 @@ exports.bookRequest = asyncHandler(async (req, res, next) => {
 });
 
 // @route PUT /bookingrequests/update/:requestId
-// @desc Update a booking request
+// @desc Update a booking request (only for users who created a request)
 // @access Private
 
 exports.updateRequest = asyncHandler(async (req, res, next) => {
@@ -81,6 +81,37 @@ exports.updateRequest = asyncHandler(async (req, res, next) => {
     } else {
       res.status(401);
       throw new Error("Unauthorized: Invalid Data");
+    }
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
+});
+
+// @ route GET /bookingrequests/all
+// @ desc Get all requests for logged in user
+// @ access Private
+
+exports.getRequests = asyncHandler(async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    if (userId) {
+      const bookingRequests = (await BookingRequest.find({ user_id: userId }).exec()) || [];
+      if (bookingRequests.length > 0) {
+        res.status(200).json({
+          bookingRequestsWereFound: true,
+          bookingRequests,
+        });
+      } else {
+        res.status(204).json({
+          bookingRequestsWereFound: false,
+          message: "No booking requests found for this user",
+        });
+      }
+    } else {
+      res.status(400);
+      throw new Error("Unable to access user id");
     }
   } catch (error) {
     res.status(500).json({
