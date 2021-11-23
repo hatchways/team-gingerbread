@@ -1,6 +1,6 @@
 {
   "env": {
-    "node": true,
+    "browser": true,
     "commonjs": true,
     "es2021": true
   },
@@ -10,15 +10,6 @@
     "ecmaVersion": 13
   },
   "rules": {
-    "prettier/prettier": "error",
-    "quotes": [2, "double", { "avoidEscape": true }],
-    "no-unused-vars": "off",
-    "no-underscore-dangle": "off",
-    "camelcase": "off",
-    "object-curly-newline": "warn",
-    "consistent-return": "off",
-    "no-multi-assign": "off",
-    "no-undef": "off",
-    "comma-dangle": "off"
+    "prettier/prettier": "error"
   }
 }
