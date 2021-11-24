@@ -4,22 +4,6 @@ import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Men
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 
-interface UserProfile {
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthdateMonth: string;
-  birthdateDay: string;
-  birthdateYear: string;
-  email: string;
-  phone: string;
-  address: string;
-  description: string;
-  accountType: string;
-  available: boolean;
-  availability: string;
-}
-
 const months = [
   'January',
   'February',
@@ -39,20 +23,11 @@ const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
-  const [accountType, setAccountType] = useState<UserProfile['accountType'] | null>('partner');
-  const [available, setAvailable] = useState<UserProfile['available'] | null>(false);
-  const [availability, setAvailability] = useState<UserProfile['availability'] | null>('availability');
-  const [firstName, setFirstName] = useState<UserProfile['firstName'] | null>();
-  const [lastName, setLastName] = useState<UserProfile['lastName'] | null>();
-  const [gender, setGender] = useState<UserProfile['gender'] | null>('gender');
-  const [birthdateMonth, setBirthdateMonth] = useState<UserProfile['birthdateMonth'] | null>('month');
-  const [birthdateDay, setBirthdateDay] = useState<UserProfile['birthdateDay'] | null>('day');
-  const [birthdateYear, setBirthdateYear] = useState<UserProfile['birthdateYear'] | null>('year');
-  const [email, setEmail] = useState<UserProfile['email'] | null>();
-  const [phone, setPhone] = useState<UserProfile['phone'] | null>();
-  const [address, setAddress] = useState<UserProfile['address'] | null>();
-  const [description, setDescription] = useState<UserProfile['description'] | null>();
+  const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
+
+  //create useEffect to fetch user's profile
+  //populate form with profile values as placeholders?
 
   const formik = useFormik({
     initialValues: {
@@ -70,40 +45,52 @@ export default function EditProfileTab(): JSX.Element {
       description: '',
     },
     onSubmit: (values) => {
-      if (accountType === 'partner') {
-        setAvailable(values.available);
-        setAvailability(values.availability);
-      }
-      setFirstName(values.firstName);
-      setLastName(values.lastName);
-      setGender(values.gender);
-      setBirthdateMonth(values.birthdateMonth);
-      setBirthdateDay(values.birthdateDay);
-      setBirthdateYear(values.birthdateYear);
-      setEmail(values.email);
-      setPhone(values.phone);
-      setAddress(values.address);
-      setDescription(values.description);
-      handlePost();
+      handlePost(
+        values.firstName,
+        values.lastName,
+        values.description,
+        values.address,
+        values.phone,
+        values.birthdateMonth,
+        values.birthdateDay,
+        values.birthdateYear,
+      );
     },
   });
 
-  const handlePost = () => {
+  const handlePost = (
+    firstName: string,
+    lastName: string,
+    description: string,
+    address: string,
+    phone: string,
+    birthdateMonth: string,
+    birthdateDay: string,
+    birthdateYear: string,
+  ) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        user: { id: '12345' },
+        user: { id: '619c1eb37a1e963a5b179c4b' },
         firstName: firstName,
         lastName: lastName,
         description: description,
         address: address,
         phoneNumber: phone,
         dateOfBirth: new Date(`${birthdateMonth} ${birthdateDay}, ${birthdateYear}`),
-        availability: '',
+        // availability: '',
       }),
     };
-    fetch('http://localhost:3001/profile/edit', requestOptions); //getting type error (failed to fetch)
+    // fetch('https://reqres.in/api/posts', requestOptions) //posts request to reqres API (returns object with data from req)
+    //   .then((res) => res.json())
+    //   .then((data) => console.log(data));
+
+    fetch('http://localhost:3001/') //tests that server is running, getting type error (failed to fetch)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+
+    // fetch('http://localhost:3001/profile/edit', requestOptions); //tests edit profile route, getting type error (failed to fetch)
   };
 
   return (
