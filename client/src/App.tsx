@@ -14,6 +14,7 @@ import Unauthorized from './pages/Unauthorized/Unauthorized';
 
 import './App.css';
 import Homepage from './pages/Homepage/Homepage';
+import MySitters from './pages/MySitters/MySitters';
 
 function App(): JSX.Element {
   return (
@@ -32,7 +33,7 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
-                <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
+                <ProtectedRoute exact path="/my-sitters" Component={MySitters} />
                 <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
               </Switch>
             </SocketProvider>
