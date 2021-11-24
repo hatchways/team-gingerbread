@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
     },
     justifyContent: 'start',
     paddingLeft: '14vw',
-    paddingTop: '8vh',
+    paddingTop: 125,
     alignItems: 'start',
   },
   tabContainer: {
@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     minHeight: 224,
-
     marginRight: '1vw',
   },
   tabs: {
