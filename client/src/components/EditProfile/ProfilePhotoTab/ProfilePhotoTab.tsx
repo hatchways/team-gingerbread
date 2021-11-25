@@ -7,7 +7,6 @@ import useStyles from './useStyles';
 
 const ProfilePhoto = (): JSX.Element => {
   const classes = useStyles();
-  //const [selectedPhoto, setSelectedPhoto] = useState<File>();
   const [displayPhoto, setDisplayPhoto] = useState<string>('');
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
 
