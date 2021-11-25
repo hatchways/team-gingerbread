@@ -97,17 +97,10 @@ exports.getBookingRequests = asyncHandler(async (req, res, next) => {
     const userId = req.user.id;
     if (userId) {
       const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
-      if (bookingRequests.length > 0) {
-        res.status(200).json({
-          bookingRequestsWereFound: true,
-          bookingRequests,
-        });
-      } else {
-        res.status(204).json({
-          bookingRequestsWereFound: false,
-          message: "No booking requests found for this user",
-        });
-      }
+      res.status(200).json({
+        bookingRequestsWereFound: true,
+        bookingRequests,
+      });
     } else {
       res.status(400);
       throw new Error("Unable to access user id");
