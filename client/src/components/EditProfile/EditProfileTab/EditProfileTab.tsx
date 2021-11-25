@@ -1,8 +1,10 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
-import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Menu, Switch } from '@material-ui/core';
-import React, { useState } from 'react';
+import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
+import edit from '../../../helpers/APICalls/edit';
+import fetchProfile from '../../../helpers/APICalls/fetchProfile';
 
 const months = [
   'January',
@@ -26,8 +28,10 @@ export default function EditProfileTab(): JSX.Element {
   const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
 
-  //create useEffect to fetch user's profile
-  //populate form with profile values as placeholders?
+  // useEffect(() => {
+  // fetchProfile('619c1eb37a1e963a5b179c4b').then((data) => console.log(data));
+  //   //set profile data to profile state var
+  // }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -45,7 +49,7 @@ export default function EditProfileTab(): JSX.Element {
       description: '',
     },
     onSubmit: (values) => {
-      handlePost(
+      edit(
         values.firstName,
         values.lastName,
         values.description,
@@ -54,44 +58,9 @@ export default function EditProfileTab(): JSX.Element {
         values.birthdateMonth,
         values.birthdateDay,
         values.birthdateYear,
-      );
+      ).then((data) => console.log(data));
     },
   });
-
-  const handlePost = (
-    firstName: string,
-    lastName: string,
-    description: string,
-    address: string,
-    phone: string,
-    birthdateMonth: string,
-    birthdateDay: string,
-    birthdateYear: string,
-  ) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user: { id: '619c1eb37a1e963a5b179c4b' },
-        firstName: firstName,
-        lastName: lastName,
-        description: description,
-        address: address,
-        phoneNumber: phone,
-        dateOfBirth: new Date(`${birthdateMonth} ${birthdateDay}, ${birthdateYear}`),
-        // availability: '',
-      }),
-    };
-    // fetch('https://reqres.in/api/posts', requestOptions) //posts request to reqres API (returns object with data from req)
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data));
-
-    fetch('http://localhost:3001/') //tests that server is running, getting type error (failed to fetch)
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-
-    // fetch('http://localhost:3001/profile/edit', requestOptions); //tests edit profile route, getting type error (failed to fetch)
-  };
 
   return (
     <Box>
