@@ -10,13 +10,13 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId);
-    const { sitter_id, start, end, description } = req.body;
+    const { sitterId, start, end, description } = req.body;
     if (user) {
-      const sitter = await User.findById(sitter_id);
+      const sitter = await User.findById(sitterId);
       if (sitter) {
         const bookingRequest = await BookingRequest.create({
-          user_id: user,
-          sitter_id: sitter,
+          userId: user,
+          sitterId: sitter,
           start,
           end,
           description,
@@ -26,8 +26,8 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
           success: {
             bookingRequest: {
               request_id: bookingRequest._id,
-              user_id: bookingRequest.user_id._id,
-              sitter_id: bookingRequest.sitter_id._id,
+              userId: bookingRequest.userId._id,
+              sitterId: bookingRequest.sitterId._id,
               start: bookingRequest.start,
               end: bookingRequest.end,
               description: bookingRequest.description,
@@ -59,7 +59,7 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
     const { requestId } = req.params;
 
     if (requestId && requestId) {
-      const filter = { _id: requestId, user_id: userId };
+      const filter = { _id: requestId, userId };
       const { ...requestUpdate } = req.body || {};
       // req.body can include any number of keys from the bookingRequest schema
 
@@ -97,7 +97,7 @@ exports.getBookingRequests = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     if (userId) {
-      const bookingRequests = (await BookingRequest.find({ user_id: userId }).exec()) || [];
+      const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
       if (bookingRequests.length > 0) {
         res.status(200).json({
           bookingRequestsWereFound: true,
