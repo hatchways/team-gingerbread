@@ -31,6 +31,12 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     textJusify: 'center',
   },
+  validationText: {
+    margin: '10px',
+    color: '#F14140',
+    textAlign: 'center',
+    textJusify: 'center',
+  },
   input: {
     display: 'none',
   },

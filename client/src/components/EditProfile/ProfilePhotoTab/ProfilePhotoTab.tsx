@@ -9,12 +9,16 @@ const ProfilePhoto = (): JSX.Element => {
   const classes = useStyles();
   const [displayPhoto, setDisplayPhoto] = useState<string>('');
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const [isWrongFileType, setIsWrongFileType] = useState<boolean>(false);
 
   const onPhotoUploadChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file: File = (e.target.files as FileList)[0];
     const fileURL = URL.createObjectURL(file);
-    setIsUploaded(true);
-    setDisplayPhoto(fileURL);
+    if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+      setIsUploaded(true);
+      setIsWrongFileType(false);
+      setDisplayPhoto(fileURL);
+    } else setIsWrongFileType(true);
   };
 
   return (
@@ -46,9 +50,13 @@ const ProfilePhoto = (): JSX.Element => {
               <Grid item xs={12} sm={8} md={7}>
                 <Box display="flex" alignItems="center" justifyContent="center">
                   <Box>
-                    <Typography color="textPrimary" className={classes.reminderTxt}>
-                      Please use a photo that clearly shows your face.
-                    </Typography>
+                    {!isWrongFileType ? (
+                      <Typography color="textPrimary" className={classes.reminderTxt}>
+                        Please use a photo that clearly shows your face.
+                      </Typography>
+                    ) : (
+                      <Typography className={classes.validationText}>Please upload a jpeg/png file type.</Typography>
+                    )}
                   </Box>
                 </Box>
               </Grid>
