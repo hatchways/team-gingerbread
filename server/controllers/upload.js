@@ -1,7 +1,6 @@
 const Profile = require("../models/Profile");
 const aws = require('aws-sdk');
 const multer = require('multer');
-const mongoose = require("mongoose");
 
 const BUCKET_NAME = 'team-gingerbread-s3bucket';
 
@@ -30,7 +29,17 @@ const writeToDB = async (_id, url, res) => {
   });
 };
 
-exports.multerMultiUpload = multer({storage: multer.memoryStorage()}).array('images');
+exports.multerMultiUpload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+    }
+  }
+}).array('images');
 
 exports.uploadImages = async (req, res) => {
   const images = req.files;
@@ -44,12 +53,8 @@ exports.uploadImages = async (req, res) => {
 
   try {
     const data = await Promise.all(promises)
-    try {
-      writeToDB(_id, data[0].Location, res);
-    } catch(e) {
-      res.status(500).send(`A problem occurred while saving an image. ${e}`);
-    }
+    writeToDB(_id, data[0].Location, res);
   } catch(e) {
-    res.status(500).send(`A problem occurred while uploading an image. ${e}`);
+    res.status(500).send(`A problem occurred while saving/uploading an image. ${e}`);
   }
 };
