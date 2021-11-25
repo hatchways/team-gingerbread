@@ -61,7 +61,6 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
     if (requestId && requestId) {
       const filter = { _id: requestId, userId };
       const { ...requestUpdate } = req.body || {};
-      // req.body can include any number of keys from the bookingRequest schema
 
       const bookingRequest = await BookingRequest.findOneAndUpdate(
         filter,
@@ -89,9 +88,9 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @ route GET /bookingrequests/all
-// @ desc Get all requests for logged in user
-// @ access Private
+// @route GET /bookingrequests/all
+// @desc Get all requests for logged in user
+// @access Private
 
 exports.getBookingRequests = asyncHandler(async (req, res, next) => {
   try {
