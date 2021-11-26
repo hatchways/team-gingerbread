@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Box, Grid, Avatar, Button } from '@material-ui/core';
+import { Typography, Box, Grid, Avatar, Button, InputLabel } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -13,8 +13,8 @@ const ProfilePhoto = (): JSX.Element => {
 
   const onPhotoUploadChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file: File = (e.target.files as FileList)[0];
-    const fileURL = URL.createObjectURL(file);
-    if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+    const fileURL = file ? URL.createObjectURL(file) : '';
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
       setIsUploaded(true);
       setIsWrongFileType(false);
       setDisplayPhoto(fileURL);
@@ -73,7 +73,7 @@ const ProfilePhoto = (): JSX.Element => {
                       type="file"
                       onChange={onPhotoUploadChange}
                     />
-                    <label htmlFor="contained-button-file">
+                    <InputLabel htmlFor="contained-button-file">
                       <Button
                         startIcon={<CloudUploadIcon />}
                         variant="outlined"
@@ -83,10 +83,10 @@ const ProfilePhoto = (): JSX.Element => {
                         component="span"
                       >
                         <Typography color="primary" className={classes.uploadBtnTxt}>
-                          Upload a photo from your device
+                          Upload a profile photo
                         </Typography>
                       </Button>
-                    </label>
+                    </InputLabel>
                   </Box>
                 </Box>
               </Grid>
