@@ -50,27 +50,21 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
 });
 
 // @route PUT /bookingrequests/update/:requestId
-// @desc Update a booking request (only for users who created a request)
+// @desc Update a booking request (only for dog owners)
 // @access Private
 
 exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { requestId } = req.params;
+    const fieldsToUpdate = ({ start, end, description } = req.body);
 
-    if (requestId && requestId) {
+    if (requestId && userId) {
       const filter = { _id: requestId, userId };
-      const { ...requestUpdate } = req.body || {};
 
-      const bookingRequest = await BookingRequest.findOneAndUpdate(
-        filter,
-        {
-          $set: requestUpdate,
-        },
-        {
-          returnOriginal: false,
-        }
-      );
+      const bookingRequest = await BookingRequest.findOneAndUpdate(filter, fieldsToUpdate, {
+        new: true,
+      });
 
       res.status(200).json({
         updatedSuccess: {
