@@ -7,45 +7,39 @@ const BookingRequest = require("../models/BookingRequest");
 // @access Private
 
 exports.createBookingRequest = asyncHandler(async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const user = await User.findById(userId);
-    const { sitterId, start, end, description } = req.body;
-    if (user) {
-      const sitter = await User.findById(sitterId);
-      if (sitter) {
-        const bookingRequest = await BookingRequest.create({
-          userId: user,
-          sitterId: sitter,
-          start,
-          end,
-          description,
-        });
+  const userId = req.user.id;
+  const user = await User.findById(userId);
+  const { sitterId, start, end, description } = req.body;
+  if (user) {
+    const sitter = await User.findById(sitterId);
+    if (sitter) {
+      const bookingRequest = await BookingRequest.create({
+        userId: user,
+        sitterId: sitter,
+        start,
+        end,
+        description,
+      });
 
-        res.status(201).json({
-          success: {
-            bookingRequest: {
-              request_id: bookingRequest._id,
-              userId: bookingRequest.userId._id,
-              sitterId: bookingRequest.sitterId._id,
-              start: bookingRequest.start,
-              end: bookingRequest.end,
-              description: bookingRequest.description,
-            },
+      res.status(201).json({
+        success: {
+          bookingRequest: {
+            request_id: bookingRequest._id,
+            userId: bookingRequest.userId._id,
+            sitterId: bookingRequest.sitterId._id,
+            start: bookingRequest.start,
+            end: bookingRequest.end,
+            description: bookingRequest.description,
           },
-        });
-      } else {
-        res.status(400);
-        throw new Error("Unable to find the dog sitter info");
-      }
+        },
+      });
     } else {
       res.status(400);
-      throw new Error("Unable to find the dog owner info");
+      throw new Error("Unable to find the dog sitter info");
     }
-  } catch (error) {
-    res.status(500).json({
-      error,
-    });
+  } else {
+    res.status(400);
+    throw new Error("Unable to find the dog owner info");
   }
 });
 
@@ -54,31 +48,25 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
 // @access Private
 
 exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const { requestId } = req.params;
-    const fieldsToUpdate = ({ start, end, description } = req.body);
+  const userId = req.user.id;
+  const { requestId } = req.params;
+  const fieldsToUpdate = ({ start, end, description } = req.body);
 
-    if (requestId && userId) {
-      const filter = { _id: requestId, userId };
+  if (requestId && userId) {
+    const filter = { _id: requestId, userId };
 
-      const bookingRequest = await BookingRequest.findOneAndUpdate(filter, fieldsToUpdate, {
-        new: true,
-      });
-
-      res.status(200).json({
-        updatedSuccess: {
-          bookingRequest,
-        },
-      });
-    } else {
-      res.status(401);
-      throw new Error("Unauthorized: Invalid Data");
-    }
-  } catch (error) {
-    res.status(500).json({
-      error,
+    const bookingRequest = await BookingRequest.findOneAndUpdate(filter, fieldsToUpdate, {
+      new: true,
     });
+
+    res.status(200).json({
+      updatedSuccess: {
+        bookingRequest,
+      },
+    });
+  } else {
+    res.status(401);
+    throw new Error("Unauthorized: Invalid Data");
   }
 });
 
@@ -87,21 +75,15 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
 // @access Private
 
 exports.getBookingRequests = asyncHandler(async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    if (userId) {
-      const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
-      res.status(200).json({
-        bookingRequestsWereFound: true,
-        bookingRequests,
-      });
-    } else {
-      res.status(400);
-      throw new Error("Unable to access user id");
-    }
-  } catch (error) {
-    res.status(500).json({
-      error,
+  const userId = req.user.id;
+  if (userId) {
+    const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
+    res.status(200).json({
+      bookingRequestsWereFound: true,
+      bookingRequests,
     });
+  } else {
+    res.status(400);
+    throw new Error("Unable to access user id");
   }
 });
