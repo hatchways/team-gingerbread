@@ -21,12 +21,21 @@ const uploadToS3 = (img) => {
   return s3.upload(params).promise();
 };
 
-const writeToDB = async (_id, url, res) => {
-  await Profile.findByIdAndUpdate(String(_id), { photo: url }, (err, result) => {
-    if (err) {
-      res.status(500).send(`A problem occurred while saving an image. ${err}`);
-    } else res.status(200).send(`Image saved. ${result}`);
-  });
+const writeToDB = async (_id, data, res) => {
+  await Profile.findByIdAndUpdate(
+    _id,
+    {
+      photo: {
+        url: data[0],
+        key: data[1],
+      },
+    },
+    (err, result) => {
+      if (err) {
+        res.status(500).send(`A problem occurred while saving an image. ${err}`);
+      } else res.status(200).send(`Image saved. ${result}`);
+    }
+  );
 };
 
 exports.multerMultiUpload = multer({
@@ -53,7 +62,7 @@ exports.uploadImages = async (req, res) => {
 
   try {
     const data = await Promise.all(promises);
-    writeToDB(_id, data[0].Location, res);
+    writeToDB(_id, [data[0].Location, data[0].key], res);
   } catch (e) {
     res.status(500).send(`A problem occurred while saving/uploading an image. ${e}`);
   }
