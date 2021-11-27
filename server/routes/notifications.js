@@ -10,7 +10,7 @@ const {
 
 router.route('/create').post(createNotification);
 
-router.route('/read').post(readNotification);
+router.route('/read/:id').patch(readNotification);
 
 router.route('/all').get(getAllNotifications);
 

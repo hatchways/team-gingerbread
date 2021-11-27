@@ -20,11 +20,11 @@ exports.createNotification = asyncHandler(async (req, res, next) => {
     })
 });
 
-// @route POST /notifications/read
+// @route PATCH /notifications/read
 // @desc mark notification as read
 // @access Public
-exports.readNotification = asyncHandler(async (req, res, next) => {
-    const notification = await Notification.findById(req.body.id);
+exports.readNotification = asyncHandler(async (req, res) => {
+    const notification = await Notification.findById(req.params.id);
     if (!notification) {
         res.status(404);
         throw new Error("Notification doesn't exist")
@@ -41,11 +41,11 @@ exports.readNotification = asyncHandler(async (req, res, next) => {
 // @route GET /notifications/all
 // @desc get all notifications
 // @access Public
-exports.getAllNotifications = asyncHandler(async (req, res, next) => {
+exports.getAllNotifications = asyncHandler(async (req, res) => {
     const notifications = await Notification.find({}); 
     res.status(200).json({
         success: {
-            notifications: notifications
+            notifications
         }
     })
 })
@@ -53,12 +53,11 @@ exports.getAllNotifications = asyncHandler(async (req, res, next) => {
 // @route GET /notifications/unread
 // @desc get all unread notifications
 // @access Public
-exports.getUnreadNotifications = asyncHandler(async (req, res, next) => {
-    const notifications = await Notification.find({}); 
-    const unreadNotifications = notifications.filter(n => n.read === false);
+exports.getUnreadNotifications = asyncHandler(async (req, res) => {
+    const notifications = await Notification.find({read: false}); 
     res.status(200).json({
         success: {
-            notifications: unreadNotifications
+            notifications
         }
     })
 })
