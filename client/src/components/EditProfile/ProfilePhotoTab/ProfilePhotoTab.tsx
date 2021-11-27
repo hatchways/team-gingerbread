@@ -3,10 +3,13 @@ import { Typography, Box, Grid, Avatar, Button, InputLabel } from '@material-ui/
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useAuth } from '../../../context/useAuthContext';
+import upload from '../../../helpers/APICalls/upload';
 import useStyles from './useStyles';
 
 const ProfilePhoto = (): JSX.Element => {
   const classes = useStyles();
+  const { loggedInUser } = useAuth();
   const [displayPhoto, setDisplayPhoto] = useState<string>('');
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [isWrongFileType, setIsWrongFileType] = useState<boolean>(false);
@@ -14,10 +17,19 @@ const ProfilePhoto = (): JSX.Element => {
   const onPhotoUploadChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file: File = (e.target.files as FileList)[0];
     const fileURL = file ? URL.createObjectURL(file) : '';
+    const images = [];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
       setIsUploaded(true);
       setIsWrongFileType(false);
       setDisplayPhoto(fileURL);
+      if (loggedInUser) {
+        images.push(file);
+        upload(images, loggedInUser.profile).then((data) => {
+          if (data.error) {
+            console.error(data.error);
+          }
+        });
+      }
     } else setIsWrongFileType(true);
   };
 
@@ -55,7 +67,7 @@ const ProfilePhoto = (): JSX.Element => {
                         Please use a photo that clearly shows your face.
                       </Typography>
                     ) : (
-                      <Typography className={classes.validationText}>Please upload a jpeg/png file type.</Typography>
+                      <Typography className={classes.validationText}>Please upload a jpeg or png file type.</Typography>
                     )}
                   </Box>
                 </Box>
