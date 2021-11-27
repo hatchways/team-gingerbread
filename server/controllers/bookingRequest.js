@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const BookingRequest = require("../models/BookingRequest");
 
-// @route POST /bookingrequests/create
+// @route POST /booking-requests/
 // @desc Create a new request
 // @access Private
 
@@ -49,7 +49,7 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @route PUT /bookingrequests/update/:requestId
+// @route PATCH /booking-requests/:requestId
 // @desc Update a booking request (only for dog owners)
 // @access Private
 
