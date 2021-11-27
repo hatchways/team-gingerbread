@@ -7,27 +7,33 @@ interface FetchOptions {
 }
 
 const edit = async (
+  id: string,
   firstName: string,
   lastName: string,
   description: string,
   address: string,
-  phone: string,
-  birthdateMonth: string,
-  birthdateDay: string,
-  birthdateYear: string,
+  phoneNumber: string,
+  dateOfBirth: Date,
+  available: boolean,
+  availability: string,
+  gender: string,
+  email: string,
 ) => {
   const fetchOptions: FetchOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      user: { id: '619c1eb37a1e963a5b179c4b' },
+      user: { id: id },
       firstName: firstName,
       lastName: lastName,
       description: description,
       address: address,
-      phoneNumber: phone,
-      dateOfBirth: new Date(`${birthdateMonth} ${birthdateDay}, ${birthdateYear}`),
-      availability: '',
+      phoneNumber: phoneNumber,
+      dateOfBirth: dateOfBirth,
+      available: available,
+      availability: availability,
+      gender: gender,
+      email: email,
     }),
   };
   return await fetch(`/profile/edit`, fetchOptions)

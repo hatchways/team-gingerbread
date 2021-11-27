@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%',
+
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
@@ -67,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
   },
   phoneNumberInputComponent: {
     width: '80%',
+  },
+  phoneNumberInputComponentFull: {
+    width: '100%',
   },
   addPhone: {
     color: theme.palette.primary.main,

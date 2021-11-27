@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     minHeight: 224,
-
     marginRight: '1vw',
   },
   tabs: {
@@ -26,6 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   tabComponents: {
     flexGrow: 2,
+    minWidth: 800,
   },
 }));
 
