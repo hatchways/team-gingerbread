@@ -4,15 +4,19 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
 import AuthMenu from '../../AuthMenu/AuthMenu';
+import Notifications from './Notifications/Notifications';
+import { useState } from 'react';
 
 const LoggedInBar = (): JSX.Element => {
   const classes = useStyles();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   return (
     <Grid container className={classes.navButtons}>
       <Grid item>
-        <Button component={Link} to="/notifications" color="secondary" size="large" variant="text">
+        <Button onClick={(e) => setNotificationsOpen(!notificationsOpen)} color="secondary" size="large" variant="text">
           <Typography variant="h3">Notifications</Typography>
+          {notificationsOpen && <Notifications />}
         </Button>
       </Grid>
       <Grid item>

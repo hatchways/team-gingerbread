@@ -20,6 +20,10 @@ const notificationSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: null
+    },
+    image: {
+        type: String,
+        default: ""
     }
 })
 
