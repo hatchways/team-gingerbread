@@ -1,17 +1,18 @@
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
 const colors = require("colors");
 const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
-const { notFound, errorHandler } = require("./middleware/error");
-const connectDB = require("./db");
 const { join } = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
+const connectDB = require("./db");
+const { notFound, errorHandler } = require("./middleware/error");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
+const bookingRequestRouter = require("./routes/bookingRequest");
 const uploadRouter = require("./routes/upload");
 
 const { json, urlencoded } = express;
@@ -45,14 +46,13 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+app.use("/booking-requests", bookingRequestRouter);
 app.use("/upload", uploadRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
 
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname), "client", "build", "index.html")
-  );
+  app.get("*", (req, res) => res.sendFile(path.resolve(__dirname), "client", "build", "index.html"));
 } else {
   app.get("/", (req, res) => {
     res.send("API is running");
