@@ -10,36 +10,32 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const user = await User.findById(userId);
   const { sitterId, start, end, description } = req.body;
-  if (user) {
-    const sitter = await User.findById(sitterId);
-    if (sitter) {
-      const bookingRequest = await BookingRequest.create({
-        userId: user,
-        sitterId: sitter,
-        start,
-        end,
-        description,
-      });
 
-      res.status(201).json({
-        success: {
-          bookingRequest: {
-            request_id: bookingRequest._id,
-            userId: bookingRequest.userId._id,
-            sitterId: bookingRequest.sitterId._id,
-            start: bookingRequest.start,
-            end: bookingRequest.end,
-            description: bookingRequest.description,
-          },
+  const sitter = await User.findById(sitterId);
+  if (sitter) {
+    const bookingRequest = await BookingRequest.create({
+      userId: user,
+      sitterId: sitter,
+      start,
+      end,
+      description,
+    });
+
+    res.status(201).json({
+      success: {
+        bookingRequest: {
+          request_id: bookingRequest._id,
+          userId: bookingRequest.userId._id,
+          sitterId: bookingRequest.sitterId._id,
+          start: bookingRequest.start,
+          end: bookingRequest.end,
+          description: bookingRequest.description,
         },
-      });
-    } else {
-      res.status(400);
-      throw new Error("Unable to find the dog sitter info");
-    }
+      },
+    });
   } else {
     res.status(400);
-    throw new Error("Unable to find the dog owner info");
+    throw new Error("Unable to find the dog sitter info");
   }
 });
 
@@ -52,7 +48,7 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
   const { requestId } = req.params;
   const fieldsToUpdate = ({ start, end, description } = req.body);
 
-  if (requestId && userId) {
+  if (requestId) {
     const filter = { _id: requestId, userId };
 
     const bookingRequest = await BookingRequest.findOneAndUpdate(filter, fieldsToUpdate, {
@@ -76,14 +72,10 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
 
 exports.getBookingRequests = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
-  if (userId) {
-    const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
-    res.status(200).json({
-      bookingRequestsWereFound: true,
-      bookingRequests,
-    });
-  } else {
-    res.status(400);
-    throw new Error("Unable to access user id");
-  }
+
+  const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
+  res.status(200).json({
+    bookingRequestsWereFound: true,
+    bookingRequests,
+  });
 });
