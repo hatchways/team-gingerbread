@@ -1,12 +1,12 @@
 import { AuthApiData } from '../../interface/AuthApiData';
 
-export interface UploadFetchOptions {
+interface UploadFetchOptions {
   method: string;
   body?: FormData;
   credentials: RequestCredentials;
 }
 
-const upload = async (images: Array<File>, _id: string): Promise<AuthApiData> => {
+const uploadImage = async (images: Array<File>, _id: string): Promise<AuthApiData> => {
   const formData = new FormData();
   formData.append('images', images[0]);
   formData.append('_id', _id);
@@ -23,4 +23,4 @@ const upload = async (images: Array<File>, _id: string): Promise<AuthApiData> =>
     }));
 };
 
-export default upload;
+export default uploadImage;

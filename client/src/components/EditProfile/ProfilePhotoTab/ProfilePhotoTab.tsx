@@ -4,7 +4,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useAuth } from '../../../context/useAuthContext';
-import upload from '../../../helpers/APICalls/upload';
+import uploadImage from '../../../helpers/APICalls/uploadImage';
+import deleteImage from '../../../helpers/APICalls/deleteImage';
 import useStyles from './useStyles';
 
 const ProfilePhoto = (): JSX.Element => {
@@ -24,13 +25,20 @@ const ProfilePhoto = (): JSX.Element => {
       setDisplayPhoto(fileURL);
       if (loggedInUser) {
         images.push(file);
-        upload(images, loggedInUser.profile).then((data) => {
-          if (data.error) {
-            console.error(data.error);
-          }
+        uploadImage(images, loggedInUser.profile).then((data) => {
+          if (data.error) console.error(data.error);
         });
       }
     } else setIsWrongFileType(true);
+  };
+
+  const onDeletePhotoClick = (): void => {
+    setIsUploaded(false);
+    if (loggedInUser) {
+      deleteImage(loggedInUser.profile).then((data) => {
+        if (data.error) console.error(data.error);
+      });
+    }
   };
 
   return (
@@ -107,7 +115,7 @@ const ProfilePhoto = (): JSX.Element => {
               <Grid item xs={12} sm={8} md={7}>
                 <Box display="flex" alignItems="center" justifyContent="center">
                   <Box alignSelf="center">
-                    <Button startIcon={<DeleteIcon />} onClick={() => setIsUploaded(false)} className={classes.button}>
+                    <Button startIcon={<DeleteIcon />} onClick={onDeletePhotoClick} className={classes.button}>
                       <Typography color="textPrimary" className={classes.deleteBtnTxt}>
                         Delete photo
                       </Typography>

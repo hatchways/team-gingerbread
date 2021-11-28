@@ -23,15 +23,6 @@ const deleteInS3 = (Key) => {
   return s3.deleteObjects(params).promise();
 };
 
-/*
-{
-      photo: {
-        url: data[0],
-        key: data[1],
-      },
-    }
-*/
-
 const getKeyFromDB = async (_id) => {
   const response = await Profile.find({ _id }, "photo", (err, result) => {
     if (err) throw new Error(err);
