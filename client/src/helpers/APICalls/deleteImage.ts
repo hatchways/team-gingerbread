@@ -11,7 +11,7 @@ const deleteImage = async (_id: string): Promise<AuthApiData> => {
     credentials: 'include',
   };
   console.log('deleteImage called');
-  return await fetch(`/delete/image?` + new URLSearchParams({ _id }), fetchOptions)
+  return await fetch(`/image/delete?` + new URLSearchParams({ _id }), fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

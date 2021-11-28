@@ -16,7 +16,7 @@ const uploadImage = async (images: Array<File>, _id: string): Promise<AuthApiDat
     body: formData,
     credentials: 'include',
   };
-  return await fetch(`/upload/image`, fetchOptions)
+  return await fetch(`/image/upload`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
