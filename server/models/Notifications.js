@@ -24,7 +24,7 @@ const notificationSchema = new mongoose.Schema({
     image: {
         type: String,
         default: ""
-    }
+    },
 })
 
 module.exports = Notification = mongoose.model("Notification", notificationSchema);

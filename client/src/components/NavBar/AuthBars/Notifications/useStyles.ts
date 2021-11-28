@@ -10,6 +10,14 @@ const useStyles = makeStyles((theme) => ({
     borderTop: 'black 6px solid',
     minWidth: '20vw',
   },
+  defaultMessage: {
+    width: '20vw',
+  },
+  defaultMessageText: {
+    color: 'black',
+    marginTop: 30,
+    marginBottom: 30,
+  },
 }));
 
 export default useStyles;

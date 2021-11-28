@@ -59,6 +59,11 @@ const Notifications = (): JSX.Element => {
           />
         );
       })}
+      {notifications.length === 0 && (
+        <Box className={classes.defaultMessage}>
+          <Typography className={classes.defaultMessageText}>You have no new notifications</Typography>
+        </Box>
+      )}
     </Box>
   );
 };

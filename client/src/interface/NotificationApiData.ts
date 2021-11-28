@@ -7,6 +7,7 @@ export interface NotificationApiDataSuccess {
       read: boolean;
       date: Date;
       image: string;
+      _id: string;
     },
   ];
 }
