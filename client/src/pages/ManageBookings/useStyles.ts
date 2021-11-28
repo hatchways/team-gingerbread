@@ -1,6 +1,21 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
+  '@global': {
+    '.MuiPickersBasePicker-containerLandscape': {
+      justifyContent: 'center',
+    },
+    '.MuiPickersBasePicker-pickerView': {
+      width: '100%',
+      maxWidth: 'none',
+    },
+    '.MuiPickersCalendar-week': {
+      justifyContent: 'space-around',
+    },
+    '.MuiPickersCalendarHeader-daysHeader': {
+      justifyContent: 'space-around',
+    },
+  },
   root: {
     minHeight: '100vh',
   },
