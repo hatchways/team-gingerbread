@@ -1,11 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { useState, useEffect, Key } from 'react';
 import { Grid, CssBaseline, TextField, InputAdornment, Typography, Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import DateRangeIcon from '@material-ui/icons/DateRange';
-import useStyles from './useStyles';
 import ProfilePreview from './ProfilePreview/ProfilePreview';
+import generateMockData from './generateMockData';
+import useStyles from './useStyles';
 
 const ProfileListings = (): JSX.Element => {
   const classes = useStyles();
+  const [currentUsers, setCurrentUsers] = useState<number>(6);
+  const [mockData, setMockData] = useState<any>([]);
+
+  const renderedPreviews = mockData.map((data: { name: any; picture: any }[], idx: Key | null | undefined) => {
+    return (
+      <Grid item key={idx}>
+        <ProfilePreview
+          img={data[0].picture.large}
+          name={`${data[0].name.first} ${data[0].name.last}`}
+          subtitle={'Puppy power'}
+          rating={3}
+          description={'I like to take long walks on the beach with your dog.'}
+          location={'Ontario, Canada'}
+          payRate={15}
+        />
+      </Grid>
+    );
+  });
+
+  useEffect(() => {
+    const data = generateMockData(currentUsers);
+    data.then((res) => setMockData(res));
+  }, [currentUsers]);
 
   return (
     <Grid container spacing={1} component="main" className={classes.root}>
@@ -19,7 +46,7 @@ const ProfileListings = (): JSX.Element => {
             <TextField
               color="primary"
               variant="outlined"
-              value="place from homepage"
+              value="Ontario, Canada"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -47,28 +74,16 @@ const ProfileListings = (): JSX.Element => {
       </Grid>
       <Grid item>
         <Grid container spacing={6} className={classes.profilePreviewWrapper}>
-          <Grid item>
-            <ProfilePreview />
-          </Grid>
-          <Grid item>
-            <ProfilePreview />
-          </Grid>
-          <Grid item>
-            <ProfilePreview />
-          </Grid>
-          <Grid item>
-            <ProfilePreview />
-          </Grid>
-          <Grid item>
-            <ProfilePreview />
-          </Grid>
-          <Grid item>
-            <ProfilePreview />
-          </Grid>
+          {renderedPreviews}
         </Grid>
       </Grid>
       <Grid item spacing={1}>
-        <Button size="large" variant="outlined" className={classes.showMoreButton}>
+        <Button
+          size="large"
+          variant="outlined"
+          onClick={() => setCurrentUsers(currentUsers * 2)}
+          className={classes.showMoreButton}
+        >
           Show more
         </Button>
       </Grid>

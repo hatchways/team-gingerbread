@@ -4,33 +4,47 @@ import Rating from '@material-ui/lab/Rating';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import useStyles from './useStyles';
 
-const ProfilePreview = (): JSX.Element => {
-  const classes = useStyles();
+interface PreviewProps {
+  img: string;
+  name: string;
+  subtitle: string;
+  rating: number;
+  description: string;
+  location: string;
+  payRate: number;
+}
 
+const ProfilePreview = ({ img, name, subtitle, rating, description, location, payRate }: PreviewProps): JSX.Element => {
+  const classes = useStyles();
+  console.log(img);
   return (
     <Card className={classes.root}>
       <CardContent className={classes.content}>
-        <Avatar className={classes.avatar}>
-          <AccountCircleIcon className={classes.icon} />
-        </Avatar>
+        {img ? (
+          <Avatar src={img} className={classes.avatar} />
+        ) : (
+          <Avatar className={classes.avatar}>
+            <AccountCircleIcon className={classes.icon} />
+          </Avatar>
+        )}
         <Typography color="textPrimary" variant="h5">
-          Name
+          {name}
         </Typography>
         <Typography variant="subtitle1" className={classes.subtitleText}>
-          Subtitle
+          {subtitle}
         </Typography>
-        <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly className={classes.rating} />
+        <Rating name="half-rating-read" defaultValue={rating} precision={0.5} readOnly className={classes.rating} />
         <Typography color="textPrimary" variant="h6">
-          Description
+          {description}
         </Typography>
       </CardContent>
       <CardActions className={classes.footer}>
         <IconButton aria-label="add to favorites">
           <LocationOnIcon color="primary" />
         </IconButton>
-        <Typography className={classes.locationText}>Ontario, Canada</Typography>
+        <Typography className={classes.locationText}>{location}</Typography>
         <Typography color="textPrimary" variant="h6" className={classes.rateText}>
-          Rate
+          {`$${payRate}/hr`}
         </Typography>
       </CardActions>
     </Card>

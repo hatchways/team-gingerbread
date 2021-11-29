@@ -20,6 +20,10 @@ const useStyles = makeStyles(() => ({
   icon: {
     fontSize: 100,
   },
+  photo: {
+    maxHeight: '110%',
+    maxWidth: '110%',
+  },
   subtitleText: {
     color: 'grey',
   },
