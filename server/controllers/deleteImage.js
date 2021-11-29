@@ -39,6 +39,9 @@ const removeFromDB = async (_id, res) => {
   });
 };
 
+// @route DELETE /image/delete?
+// @desc delete profile photo in S3 and DB
+// @access Public
 exports.deleteImages = async (req, res) => {
   const { _id } = req.query;
 

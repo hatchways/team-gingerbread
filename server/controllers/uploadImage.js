@@ -50,6 +50,9 @@ exports.multerMultiUpload = multer({
   },
 }).array("images");
 
+// @route POST /image/upload
+// @desc upload profile photo to S3 and write link to DB
+// @access Private
 exports.uploadImages = async (req, res) => {
   const images = req.files;
   const promises = [];
