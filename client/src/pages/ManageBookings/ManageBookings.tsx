@@ -1,20 +1,88 @@
 import { useState, cloneElement } from 'react';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid, Paper, Typography, Box } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { useTheme } from '@material-ui/core';
 
-import { Calendar } from '@material-ui/pickers';
-
 import useStyles from './useStyles';
+
+enum BookingStatus {
+  pending,
+  accepted,
+  declined,
+}
+
+type BookingRequest = {
+  description: string;
+  status: BookingStatus;
+  requestId: string;
+  userId: string;
+  sitterId: string;
+  start: Date;
+  end: Date;
+};
+
+type BookingRequests = BookingRequest[];
+
+enum BookingRelativeTime {
+  next,
+  current,
+  past,
+}
+
+function checkIfBooked(bookingRequests: BookingRequests, dateToCheck: Date | null) {
+  const check = bookingRequests.findIndex((booking) => {
+    const startDay = booking.start.getDate();
+    const checkDay = dateToCheck?.getDate();
+    return startDay === checkDay;
+  });
+  return check > -1;
+}
+
+function sortBookingsByStartDate(bookingRequests: BookingRequests) {
+  const sorted = [...bookingRequests].sort((bookingA, bookingB) => {
+    return bookingB.start.getDate() - bookingA.start.getDate();
+  });
+  return sorted;
+}
+
+// function checkBookingRelativeTime(bookingRequest: BookingRequest) {
+//   let bookingRelativeTime = null;
+//   const startDate = bookingRequest.start;
+//   const todayDate = new Date();
+//   if (startDate < todayDate) {
+//     bookingRelativeTime = 3;
+//   } else if () {
+
+//   }}
+// }
 
 export default function ManageBookings(): JSX.Element {
   const classes = useStyles('blue')();
   const theme = useTheme();
   const [date, setDate] = useState<Date | null>(new Date());
-  const [bookedDates, setBookedDates] = useState<Array<Date | null>>([new Date(2021, 11, 10), new Date(2021, 11, 11)]);
+  const [sitterBookings, setSitterBookings] = useState<BookingRequests>([
+    {
+      description: 'Test Booking Request Description #1',
+      status: 1,
+      requestId: '61a26c5dc517da480ca7a2b9',
+      userId: '619c203917b5e66160b119fb',
+      sitterId: '618ff3d3939f8555dc391646',
+      start: new Date(2021, 11, 9),
+      end: new Date(2021, 11, 11),
+    },
+    {
+      description: 'Test Booking Request Description #2',
+      status: 1,
+      requestId: '61a26c5dc517da480ca7a2sdf9',
+      userId: '619c203917b5e66160b119fb',
+      sitterId: '618ff3d3939f8555dc391646',
+      start: new Date(2021, 11, 20),
+      end: new Date(2021, 11, 23),
+    },
+  ]);
 
   const updateDate = (date: MaterialUiPickersDate) => {
     setDate(date);
@@ -26,10 +94,19 @@ export default function ManageBookings(): JSX.Element {
     dayInCurrentMonth: boolean,
     dayComponent: JSX.Element,
   ) => {
-    const dayBackgroundColor = theme.palette.primary;
-    const isBookedDay = bookedDates.findIndex((bookedDay) => bookedDay?.getDate() === day?.getDate());
-    let dayStyle = theme.palette.grey[100];
-    if (isBookedDay !== -1) {
+    const renderDay = day?.getDate();
+    const selectedDay = selectedDate?.getDate();
+    const isSelectedDay = selectedDay === renderDay;
+
+    const isBookedDay = checkIfBooked(sitterBookings, day);
+
+    let dayStyle = theme.palette.common.white;
+
+    if (isBookedDay) {
+      dayStyle = theme.palette.primary.light;
+    }
+
+    if (isSelectedDay) {
       dayStyle = theme.palette.primary.main;
     }
 
@@ -40,15 +117,23 @@ export default function ManageBookings(): JSX.Element {
   return (
     <Grid container component="main" spacing={5} className={classes.root + ' ' + classes.mySitters}>
       <Grid item sm={6}>
-        <Grid container className={classes.bookingListingContainer}>
+        <Grid container spacing={2} className={classes.bookingListingContainer}>
           <Grid item>
             <Paper elevation={2}>
-              <h1>CURRENT BOOKING</h1>
+              <Box p={2} pt={2}>
+                <Typography variant="h6" component="div" className={classes.uppercase}>
+                  Your Next Booking
+                </Typography>
+              </Box>
             </Paper>
           </Grid>
           <Grid item>
             <Paper elevation={2}>
-              <h1>NEXT</h1>
+              <Box p={2} pt={2}>
+                <Typography variant="h6" component="div" className={classes.uppercase}>
+                  Current Bookings
+                </Typography>
+              </Box>
             </Paper>
           </Grid>
         </Grid>

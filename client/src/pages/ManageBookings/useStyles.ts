@@ -38,6 +38,9 @@ const useStyles = (valueTest: string) => {
     dayTest: {
       backgroundColor: 'yellow',
     },
+    uppercase: {
+      textTransform: 'uppercase',
+    },
   }));
 };
 
