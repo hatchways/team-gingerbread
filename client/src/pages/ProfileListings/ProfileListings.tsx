@@ -6,12 +6,29 @@ import SearchIcon from '@material-ui/icons/Search';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import ProfilePreview from './ProfilePreview/ProfilePreview';
 import generateMockData from './generateMockData';
+import { defaultUsers } from './mockData';
 import useStyles from './useStyles';
 
 const ProfileListings = (): JSX.Element => {
   const classes = useStyles();
   const [currentUsers, setCurrentUsers] = useState<number>(6);
   const [mockData, setMockData] = useState<any>([]);
+
+  const defaultPreviews = defaultUsers.map((el, idx) => {
+    return (
+      <Grid item key={idx}>
+        <ProfilePreview
+          img={el.img}
+          name={el.name}
+          subtitle={el.subtitle}
+          rating={el.rating}
+          description={el.description}
+          location={el.location}
+          payRate={el.payRate}
+        />
+      </Grid>
+    );
+  });
 
   const renderedPreviews = mockData.map((data: { name: any; picture: any }[], idx: Key | null | undefined) => {
     return (
@@ -74,7 +91,7 @@ const ProfileListings = (): JSX.Element => {
       </Grid>
       <Grid item>
         <Grid container spacing={6} className={classes.profilePreviewWrapper}>
-          {renderedPreviews}
+          {mockData.length === 0 ? defaultPreviews : renderedPreviews}
         </Grid>
       </Grid>
       <Grid item spacing={1}>
