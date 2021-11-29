@@ -14,7 +14,7 @@ const Notification = (props: props): JSX.Element => {
   return (
     <Box className={classes.notification}>
       <Box className={classes.imageContainer}>
-        <img src={props.image} className={classes.image} />
+        <img src={props.image} className={classes.image} alt="user profile picture" />
       </Box>
       <Box className={classes.dataContainer}>
         <Typography className={classes.description}>{props.description}</Typography>

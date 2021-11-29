@@ -37,7 +37,6 @@ const LoggedInBar = (): JSX.Element => {
 
   useEffect(() => {
     getUnread().then((data) => {
-      //get unread notifications, set unread state var to true if there are unread notifications
       const notificationsData = data.success?.notifications;
       const notificationsArray: notification[] = [
         {
