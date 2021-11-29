@@ -35,7 +35,13 @@ export default function Homepage(): JSX.Element {
                 }}
               />
             </Box>
-            <Button component={Link} to="/profile-listings" color="primary" size="large" variant="contained">
+            <Button
+              component={Link}
+              to="/profile-listings"
+              color="primary"
+              variant="contained"
+              className={classes.findMyButton}
+            >
               Find My Dog Sitter
             </Button>
           </form>

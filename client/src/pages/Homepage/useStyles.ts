@@ -1,5 +1,4 @@
-import { Grid, makeStyles } from '@material-ui/core';
-import homepage_image from '../../Images/homepage_image_v2.png';
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,20 +37,20 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '20px',
       marginBottom: '5px',
     },
-    '& button': {
-      display: 'flex',
-      color: 'white',
-      fontWeight: 'normal',
-      backgroundColor: '#F14140',
+  },
+  findMyButton: {
+    display: 'flex',
+    color: 'white',
+    fontWeight: 'normal',
+    backgroundColor: '#F14140',
+    boxShadow: 'none',
+    padding: '10px 30px 10px 30px',
+    margin: '20px auto 0px 0px',
+    '&:hover': {
+      backgroundColor: 'white',
+      color: '#F14140',
+      border: '1px solid #F14140',
       boxShadow: 'none',
-      padding: '10px 30px 10px 30px',
-      margin: '20px auto 0px 0px',
-      '&:hover': {
-        backgroundColor: 'white',
-        color: '#F14140',
-        border: '1px solid #F14140',
-        boxShadow: 'none',
-      },
     },
   },
   imageWrapper: {
