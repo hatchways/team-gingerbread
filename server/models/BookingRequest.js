@@ -30,13 +30,11 @@ const bookingRequestSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    declined: {
-      type: Boolean,
-      default: false,
-    },
-    paid: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ["pending", "accepted", "declined"],
+      default: "pending",
+      required: true,
     },
   },
   { timestamps: true }
