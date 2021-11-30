@@ -24,7 +24,7 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
     res.status(201).json({
       success: {
         bookingRequest: {
-          request_id: bookingRequest._id,
+          requestId: bookingRequest._id,
           userId: bookingRequest.userId._id,
           sitterId: bookingRequest.sitterId._id,
           start: bookingRequest.start,
