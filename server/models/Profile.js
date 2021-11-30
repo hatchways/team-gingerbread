@@ -25,15 +25,19 @@ const profileSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    default: null
+    default: null,
   },
   availability: {
     type: [Date],
-    default: []
+    default: [],
   },
   photo: {
     type: String,
     default: "",
+  },
+  isSitter: {
+    type: Boolean,
+    default: false,
   },
 });
 
