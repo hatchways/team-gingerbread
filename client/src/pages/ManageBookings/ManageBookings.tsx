@@ -1,36 +1,14 @@
-import { useState, cloneElement } from 'react';
+import { useState, cloneElement, FunctionComponentElement } from 'react';
 import { Grid, Paper, Typography, Box } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { useTheme } from '@material-ui/core';
-
+import { BookingStatus, BookingRequest, BookingRequests } from './types';
 import useStyles from './useStyles';
-
-enum BookingStatus {
-  pending,
-  accepted,
-  declined,
-}
-
-type BookingRequest = {
-  description: string;
-  status: BookingStatus;
-  requestId: string;
-  userId: string;
-  sitterId: string;
-  start: Date;
-  end: Date;
-};
-
-type BookingRequests = BookingRequest[];
-
-enum BookingRelativeTime {
-  next,
-  current,
-  past,
-}
+import PastBookings from '../../components/ManageBookings/PastBookings';
+import CurrentBookings from '../../components/ManageBookings/CurrentBookings';
 
 function checkIfBooked(bookingRequests: BookingRequests, dateToCheck: Date | null) {
   const check = bookingRequests.findIndex((booking) => {
@@ -41,24 +19,6 @@ function checkIfBooked(bookingRequests: BookingRequests, dateToCheck: Date | nul
   return check > -1;
 }
 
-function sortBookingsByStartDate(bookingRequests: BookingRequests) {
-  const sorted = [...bookingRequests].sort((bookingA, bookingB) => {
-    return bookingB.start.getDate() - bookingA.start.getDate();
-  });
-  return sorted;
-}
-
-// function checkBookingRelativeTime(bookingRequest: BookingRequest) {
-//   let bookingRelativeTime = null;
-//   const startDate = bookingRequest.start;
-//   const todayDate = new Date();
-//   if (startDate < todayDate) {
-//     bookingRelativeTime = 3;
-//   } else if () {
-
-//   }}
-// }
-
 export default function ManageBookings(): JSX.Element {
   const classes = useStyles('blue')();
   const theme = useTheme();
@@ -66,21 +26,39 @@ export default function ManageBookings(): JSX.Element {
   const [sitterBookings, setSitterBookings] = useState<BookingRequests>([
     {
       description: 'Test Booking Request Description #1',
-      status: 1,
-      requestId: '61a26c5dc517da480ca7a2b9',
+      status: BookingStatus.pending,
+      requestId: '61a26c5dc517da0ca7a2b9',
       userId: '619c203917b5e66160b119fb',
       sitterId: '618ff3d3939f8555dc391646',
-      start: new Date(2021, 11, 9),
-      end: new Date(2021, 11, 11),
+      start: new Date(2021, 10, 9),
+      end: new Date(2021, 10, 11),
     },
     {
-      description: 'Test Booking Request Description #2',
-      status: 1,
+      description: 'Test Booking Request Description #3',
+      status: BookingStatus.declined,
       requestId: '61a26c5dc517da480ca7a2sdf9',
       userId: '619c203917b5e66160b119fb',
       sitterId: '618ff3d3939f8555dc391646',
-      start: new Date(2021, 11, 20),
-      end: new Date(2021, 11, 23),
+      start: new Date(2021, 10, 10),
+      end: new Date(2021, 10, 15),
+    },
+    {
+      description: 'Test Booking Request Description #4',
+      status: BookingStatus.accepted,
+      requestId: '61a26cc517da480ca7a2sdf9',
+      userId: '619c203917b5e66160b119fb',
+      sitterId: '618ff3d3939f8555dc391646',
+      start: new Date(2021, 10, 29),
+      end: new Date(2021, 10, 29),
+    },
+    {
+      description: 'Test Booking Request Description #5',
+      status: BookingStatus.declined,
+      requestId: '61a5dc517da480ca7a2sdf9',
+      userId: '619c203917b5e66160b119fb',
+      sitterId: '618ff3d3939f8555dc391646',
+      start: new Date(2021, 11, 5),
+      end: new Date(2021, 11, 6),
     },
   ]);
 
@@ -133,6 +111,11 @@ export default function ManageBookings(): JSX.Element {
                 <Typography variant="h6" component="div" className={classes.uppercase}>
                   Current Bookings
                 </Typography>
+                <CurrentBookings bookingRequests={sitterBookings} />
+                <Typography variant="h6" component="div" className={classes.uppercase}>
+                  Past Bookings
+                </Typography>
+                <PastBookings bookingRequests={sitterBookings} />
               </Box>
             </Paper>
           </Grid>
