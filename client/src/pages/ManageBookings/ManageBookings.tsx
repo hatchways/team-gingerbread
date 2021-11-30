@@ -41,7 +41,6 @@ export default function ManageBookings(): JSX.Element {
       dayStyle.disabled = false;
     }
     if (isSelectedDay) {
-      // dayStyle.style.backgroundColor = theme.palette.primary.main;
       dayStyle.style.border = `2px solid ${theme.palette.grey[400]}`;
     }
     const dayComponentStyled = cloneElement(dayComponent, dayStyle);
