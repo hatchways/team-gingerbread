@@ -26,7 +26,7 @@ const bookingRequestSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    accepted: {
+    payment: {
       type: Boolean,
       default: false,
     },
