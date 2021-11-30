@@ -1,8 +1,10 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
-import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Menu, Switch } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch } from '@material-ui/core';
+import { useState } from 'react';
 import { useFormik } from 'formik';
+import { useAuth } from '../../../context/useAuthContext';
+import changeSitterStatus from '../../../helpers/APICalls/changeSitterStatus';
 
 interface UserProfile {
   firstName: string;
@@ -39,6 +41,7 @@ const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
+  const { loggedInUser } = useAuth();
   const [accountType, setAccountType] = useState<UserProfile['accountType'] | null>('partner');
   const [isSitter, setIsSitter] = useState<boolean>(false);
   const [availability, setAvailability] = useState<UserProfile['availability'] | null>('availability');
@@ -71,6 +74,9 @@ export default function EditProfileTab(): JSX.Element {
     },
     onSubmit: (values) => {
       if (accountType === 'partner') {
+        if (values.isSitter !== isSitter && loggedInUser) {
+          changeSitterStatus(loggedInUser.profile);
+        }
         setIsSitter(values.isSitter);
         setAvailability(values.availability);
       }
@@ -86,12 +92,6 @@ export default function EditProfileTab(): JSX.Element {
       setDescription(values.description);
     },
   });
-
-  useEffect(() => {
-    if (isSitter) {
-      console.log(isSitter);
-    }
-  }, [isSitter]);
 
   return (
     <Box>
@@ -295,7 +295,7 @@ export default function EditProfileTab(): JSX.Element {
               <Button
                 variant="contained"
                 className={classes.addPhone}
-                onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                onClick={() => setShowPhoneInput(!showPhoneInput)}
               >
                 Add a phone number
               </Button>
@@ -303,7 +303,7 @@ export default function EditProfileTab(): JSX.Element {
               <Button
                 variant="contained"
                 className={classes.addPhone}
-                onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                onClick={() => setShowPhoneInput(!showPhoneInput)}
               >
                 Cancel
               </Button>
