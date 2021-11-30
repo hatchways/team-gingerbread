@@ -16,7 +16,7 @@ interface PreviewProps {
 
 const ProfilePreview = ({ img, name, subtitle, rating, description, location, payRate }: PreviewProps): JSX.Element => {
   const classes = useStyles();
-  console.log(img);
+
   return (
     <Card className={classes.root}>
       <CardContent className={classes.content}>

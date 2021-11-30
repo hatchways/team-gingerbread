@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, Key } from 'react';
+import { useState, useEffect } from 'react';
 import { Grid, CssBaseline, TextField, InputAdornment, Typography, Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import DateRangeIcon from '@material-ui/icons/DateRange';
@@ -16,7 +16,7 @@ const ProfileListings = (): JSX.Element => {
 
   const defaultPreviews = defaultUsers.map((el, idx) => {
     return (
-      <Grid item key={idx}>
+      <Grid item key={`default${idx}`}>
         <ProfilePreview
           img={el.img}
           name={el.name}
@@ -30,9 +30,9 @@ const ProfileListings = (): JSX.Element => {
     );
   });
 
-  const renderedPreviews = mockData.map((data: { name: any; picture: any }[], idx: Key | null | undefined) => {
+  const renderedPreviews = mockData.map((data: { name: Record<string, unknown>; picture: any; id: any }[]) => {
     return (
-      <Grid item key={idx}>
+      <Grid item key={data[0].id.value}>
         <ProfilePreview
           img={data[0].picture.large}
           name={`${data[0].name.first} ${data[0].name.last}`}
@@ -47,8 +47,7 @@ const ProfileListings = (): JSX.Element => {
   });
 
   useEffect(() => {
-    const data = generateMockData(currentUsers);
-    data.then((res) => setMockData(res));
+    generateMockData(currentUsers).then((res) => setMockData(res));
   }, [currentUsers]);
 
   return (
