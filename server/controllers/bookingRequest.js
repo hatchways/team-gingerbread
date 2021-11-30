@@ -46,7 +46,7 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
 exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { requestId } = req.params;
-  const fieldsToUpdate = ({ start, end, description } = req.body);
+  const fieldsToUpdate = ({ start, end, status, description } = req.body);
 
   if (requestId) {
     const filter = { _id: requestId, userId };
