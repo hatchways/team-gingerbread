@@ -29,7 +29,6 @@ function App(): JSX.Element {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/unauthorized" component={Unauthorized} />
-                <Route exact path="/" component={Login} />
                 <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />

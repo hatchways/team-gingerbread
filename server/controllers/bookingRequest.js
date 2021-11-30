@@ -24,7 +24,7 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
     res.status(201).json({
       success: {
         bookingRequest: {
-          request_id: bookingRequest._id,
+          requestId: bookingRequest._id,
           userId: bookingRequest.userId._id,
           sitterId: bookingRequest.sitterId._id,
           start: bookingRequest.start,
@@ -34,8 +34,8 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
       },
     });
   } else {
-    res.status(400);
-    throw new Error("Unable to find the dog sitter info");
+    res.status(500);
+    throw new Error("Unable to create a request");
   }
 });
 
@@ -46,7 +46,7 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
 exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { requestId } = req.params;
-  const fieldsToUpdate = ({ start, end, description } = req.body);
+  const fieldsToUpdate = ({ start, end, status, description } = req.body);
 
   if (requestId) {
     const filter = { _id: requestId, userId };
@@ -73,7 +73,7 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
 exports.getBookingRequests = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
 
-  const bookingRequests = (await BookingRequest.find({ userId }).exec()) || [];
+  const bookingRequests = (await BookingRequest.find({ userId }).exec());
   res.status(200).json({
     bookingRequestsWereFound: true,
     bookingRequests,
