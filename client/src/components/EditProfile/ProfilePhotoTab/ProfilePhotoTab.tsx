@@ -53,15 +53,13 @@ const ProfilePhoto = (): JSX.Element => {
               <Grid item xs={12} sm={8} md={7}>
                 <Box display="flex" alignItems="center" justifyContent="center">
                   <Box width="100%" maxWidth={450} alignSelf="center">
-                    {!isUploaded ? (
-                      <Avatar className={classes.avatar}>
+                    <Avatar className={classes.avatar}>
+                      {!isUploaded ? (
                         <AccountCircleIcon className={classes.icon} />
-                      </Avatar>
-                    ) : (
-                      <Avatar className={classes.avatar}>
+                      ) : (
                         <img src={displayPhoto} alt="profile image" className={classes.photo} />
-                      </Avatar>
-                    )}
+                      )}
+                    </Avatar>
                   </Box>
                 </Box>
               </Grid>
