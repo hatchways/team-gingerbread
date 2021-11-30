@@ -34,7 +34,7 @@ exports.createBookingRequest = asyncHandler(async (req, res, next) => {
       },
     });
   } else {
-    res.status(400);
+    res.status(500);
     throw new Error("Unable to find the dog sitter info");
   }
 });
