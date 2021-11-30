@@ -5,38 +5,41 @@ import sortBookingsByStartDate from '../../helpers/ManageBookings/sortBookingsBy
 import { BookingRequests, BookingStatus } from '../../pages/ManageBookings/types';
 import useStyles from './useStyles';
 
-type PastBookingsProps = {
+type NextBookingProps = {
   bookingRequests: BookingRequests;
 };
 
-const PastBookings: FC<PastBookingsProps> = ({ bookingRequests: bookingRequests }) => {
+const CurrentBookings: FC<NextBookingProps> = ({ bookingRequests: bookingRequests }) => {
   const classes = useStyles();
 
-  const pastBookings = bookingRequests.filter((bookingRequest) => {
+  const currentBookings = bookingRequests.filter((bookingRequest) => {
     const startDayEpoch = bookingRequest.start.getTime();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const todayEpoch = today.getTime();
-    return startDayEpoch < todayEpoch;
+    const todayUTC = today.getTime();
+    return startDayEpoch >= todayUTC;
   });
 
-  const sortedBookings = sortBookingsByStartDate(pastBookings);
+  const sortedBookings = sortBookingsByStartDate(currentBookings);
+  const nextBooking = sortedBookings[sortedBookings.length - 1];
 
   return (
     <>
-      {sortedBookings.map((booking) => (
-        <Box key={booking.requestId} className={classes.bookingContainer}>
-          <Typography variant="body2">{formatBookingDate(booking.start)}</Typography>
+      {nextBooking ? (
+        <Box className={classes.bookingContainer}>
+          <Typography variant="body2">{formatBookingDate(nextBooking.start)}</Typography>
           <Box display="flex" justifyContent="space-between">
             <Box>
               <Typography variant="body2">NAME OF DOG OWNER</Typography>
             </Box>
-            <Box>{BookingStatus[booking.status]}</Box>
+            <Box>{BookingStatus[nextBooking.status]}</Box>
           </Box>
         </Box>
-      ))}
+      ) : (
+        <Box>No Upcoming Bookings</Box>
+      )}
     </>
   );
 };
 
-export default PastBookings;
+export default CurrentBookings;
