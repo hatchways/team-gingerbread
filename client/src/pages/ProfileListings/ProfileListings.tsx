@@ -30,21 +30,23 @@ const ProfileListings = (): JSX.Element => {
     );
   });
 
-  const renderedPreviews = mockData.map((data: { name: Record<string, unknown>; picture: any; id: any }[]) => {
-    return (
-      <Grid item key={data[0].id.value}>
-        <ProfilePreview
-          img={data[0].picture.large}
-          name={`${data[0].name.first} ${data[0].name.last}`}
-          subtitle={'Puppy power'}
-          rating={3}
-          description={'I like to take long walks on the beach with your dog.'}
-          location={'Ontario, Canada'}
-          payRate={15}
-        />
-      </Grid>
-    );
-  });
+  const renderedPreviews = mockData.map(
+    (data: { name: Record<string, unknown>; picture: Record<string, any>; id: Record<string, any> }[]) => {
+      return (
+        <Grid item key={data[0].id.value}>
+          <ProfilePreview
+            img={data[0].picture.large}
+            name={`${data[0].name.first} ${data[0].name.last}`}
+            subtitle={'Puppy power'}
+            rating={3}
+            description={'I like to take long walks on the beach with your dog.'}
+            location={'Ontario, Canada'}
+            payRate={15}
+          />
+        </Grid>
+      );
+    },
+  );
 
   useEffect(() => {
     generateMockData(currentUsers).then((res) => setMockData(res));
