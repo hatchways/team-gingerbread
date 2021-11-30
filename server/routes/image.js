@@ -5,6 +5,6 @@ const { deleteImages } = require("../controllers/deleteImage");
 const { multerMultiUpload, uploadImages } = require("../controllers/uploadImage");
 
 router.route("/upload").post(multerMultiUpload, uploadImages);
-router.route("/delete?").delete(deleteImages);
+router.route("/delete").delete(deleteImages);
 
 module.exports = router;

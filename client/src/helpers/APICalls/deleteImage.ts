@@ -10,7 +10,7 @@ const deleteImage = async (_id: string): Promise<AuthApiData> => {
     method: 'DELETE',
     credentials: 'include',
   };
-  console.log('deleteImage called');
+
   return await fetch(`/image/delete?` + new URLSearchParams({ _id }), fetchOptions)
     .then((res) => res.json())
     .catch(() => ({

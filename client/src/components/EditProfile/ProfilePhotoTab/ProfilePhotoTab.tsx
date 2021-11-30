@@ -59,7 +59,7 @@ const ProfilePhoto = (): JSX.Element => {
                       </Avatar>
                     ) : (
                       <Avatar className={classes.avatar}>
-                        <img src={displayPhoto} className={classes.photo} />
+                        <img src={displayPhoto} alt="profile image" className={classes.photo} />
                       </Avatar>
                     )}
                   </Box>
