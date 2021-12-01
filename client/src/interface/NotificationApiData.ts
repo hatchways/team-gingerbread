@@ -5,9 +5,9 @@ export interface NotificationApiDataSuccess {
       title: string;
       description: string;
       read: boolean;
-      date: Date;
       image: string;
       _id: string;
+      createdAt: Date;
     },
   ];
 }

@@ -8,32 +8,13 @@ import Notifications from './Notifications/Notifications';
 import { useState, useEffect } from 'react';
 import getUnread from '../../../helpers/APICalls/getAllUnreadNotifications';
 import readNotification from '../../../helpers/APICalls/readNotification';
-
-interface notification {
-  type: string;
-  title: string;
-  description: string;
-  read: boolean;
-  date: Date;
-  image: string;
-  _id: string;
-}
+import { notification } from '../../../interface/Notification';
 
 const LoggedInBar = (): JSX.Element => {
   const classes = useStyles();
   const [unread, setUnread] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<notification[]>([
-    {
-      type: '',
-      title: 'filler',
-      description: '',
-      read: false,
-      date: new Date('1/1/2000'),
-      image: '',
-      _id: '',
-    },
-  ]);
+  const [notifications, setNotifications] = useState<notification[]>([]);
 
   useEffect(() => {
     getUnread().then((data) => {
@@ -44,7 +25,7 @@ const LoggedInBar = (): JSX.Element => {
           title: '',
           description: '',
           read: false,
-          date: new Date('1/1/2000'),
+          createdAt: new Date('1/1/2000'),
           image: '',
           _id: '',
         },
@@ -74,7 +55,7 @@ const LoggedInBar = (): JSX.Element => {
         <Button onClick={(e) => handleNotificationsOpen()} color="secondary" size="large" variant="text">
           <Typography variant="h3">Notifications</Typography>
           {unread && <Typography className={classes.indicator}></Typography>}
-          {notificationsOpen && <Notifications />}
+          {notificationsOpen && <Notifications notifications={notifications} />}
         </Button>
       </Grid>
       <Grid item>

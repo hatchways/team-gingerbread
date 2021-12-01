@@ -15,13 +15,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#9ce8cd',
     },
   },
-  imageContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-  },
   image: {
     height: '80%',
     width: '70%',
