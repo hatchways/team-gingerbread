@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import { useState, ChangeEvent } from 'react';
 
 import EditProfileTab from './EditProfileTab/EditProfileTab';
+import ProfilePhotoTab from './ProfilePhotoTab/ProfilePhotoTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,6 +59,7 @@ const EditMenu = (): JSX.Element => {
           value={value}
           className={classes.tabs}
           onChange={handleChange}
+          indicatorColor="primary"
         >
           <Tab label="Edit Profile" {...a11yProps(0)} />
           <Tab label="Profile Photo" {...a11yProps(1)} />
@@ -72,7 +74,7 @@ const EditMenu = (): JSX.Element => {
           <EditProfileTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Profile Photo Placeholder
+          <ProfilePhotoTab />
         </TabPanel>
         <TabPanel value={value} index={2}>
           Availability Placeholder
