@@ -25,8 +25,9 @@ const notificationSchema = new mongoose.Schema(
       default: false,
     },
     recipient: {
-      type: String,
-      default: "619c1eb37a1e963a5b179c4b", //sets default recipient to test user
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
     },
     image: {
       type: String,
