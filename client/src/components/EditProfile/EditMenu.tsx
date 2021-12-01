@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -8,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import { useState, ChangeEvent } from 'react';
 
 import EditProfileTab from './EditProfileTab/EditProfileTab';
+import ProfilePhotoTab from './ProfilePhotoTab/ProfilePhotoTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -27,8 +27,8 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box p="3">
+          <Box>{children}</Box>
         </Box>
       )}
     </div>
@@ -59,6 +59,7 @@ const EditMenu = (): JSX.Element => {
           value={value}
           className={classes.tabs}
           onChange={handleChange}
+          indicatorColor="primary"
         >
           <Tab label="Edit Profile" {...a11yProps(0)} />
           <Tab label="Profile Photo" {...a11yProps(1)} />
@@ -73,7 +74,7 @@ const EditMenu = (): JSX.Element => {
           <EditProfileTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Profile Photo Placeholder
+          <ProfilePhotoTab />
         </TabPanel>
         <TabPanel value={value} index={2}>
           Availability Placeholder
