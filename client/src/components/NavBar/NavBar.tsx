@@ -4,6 +4,7 @@ import useStyles from './useStyles';
 import logo from '../../Images/logo.png';
 import { useAuth } from '../../context/useAuthContext';
 import { useSocket } from '../../context/useSocketContext';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import LoggedInBar from './AuthBars/LoggedInBar';
 import LoggedOutBar from './AuthBars/LoggedOutBar';
@@ -19,6 +20,9 @@ const NavBar = (): JSX.Element => {
   const { initSocket } = useSocket();
   const outterNavStyle = useRef(classes.appbarHomePage);
   const innerNavStyle = useRef(classes.appbarHomePage);
+
+  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     const locationChange = history.listen((location) => {
@@ -37,6 +41,29 @@ const NavBar = (): JSX.Element => {
   useEffect(() => {
     initSocket();
   }, [initSocket]);
+
+  useEffect(() => {
+    const path = history.location.pathname;
+    if (path === '/') {
+      outterNavStyle.current = classes.appbarHomePage;
+      innerNavStyle.current = classes.homePageBar;
+    } else {
+      outterNavStyle.current = classes.appbar;
+      innerNavStyle.current = classes.toolbar;
+    }
+  }, [history, classes, location]);
+
+  if (loggedInUser === undefined) return <CircularProgress />;
+  if (
+    !loggedInUser &&
+    history.location.pathname !== '/login' &&
+    history.location.pathname !== '/signup' &&
+    history.location.pathname !== '/'
+  ) {
+    history.push('/login');
+    // loading for a split seconds until history.push works
+    return <CircularProgress />;
+  }
 
   return (
     <AppBar className={outterNavStyle.current} position="absolute">
