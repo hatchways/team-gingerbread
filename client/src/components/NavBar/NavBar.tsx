@@ -10,7 +10,7 @@ import LoggedInBar from './AuthBars/LoggedInBar';
 import LoggedOutBar from './AuthBars/LoggedOutBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import HomePageBar from './AuthBars/HomePageBar';
-import { useHistory, useLocation } from 'react-router-dom';
+import { CircularProgress } from '@material-ui/core';
 
 const NavBar = (): JSX.Element => {
   const classes = useStyles();
@@ -20,9 +20,6 @@ const NavBar = (): JSX.Element => {
   const { initSocket } = useSocket();
   const outterNavStyle = useRef(classes.appbarHomePage);
   const innerNavStyle = useRef(classes.appbarHomePage);
-
-  const history = useHistory();
-  const location = useLocation();
 
   useEffect(() => {
     const locationChange = history.listen((location) => {
@@ -61,7 +58,6 @@ const NavBar = (): JSX.Element => {
     history.location.pathname !== '/'
   ) {
     history.push('/login');
-    // loading for a split seconds until history.push works
     return <CircularProgress />;
   }
 
