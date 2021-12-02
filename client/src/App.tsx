@@ -11,6 +11,7 @@ import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Unauthorized from './pages/Unauthorized/Unauthorized';
+import ProfileDetails from './pages/ProfileDetails/ProfileDetails';
 
 import './App.css';
 import Homepage from './pages/Homepage/Homepage';
@@ -33,6 +34,7 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
                 <Route exact path="/edit-profile" component={EditMenu} />
+                <Route exact path="/profile-details" component={ProfileDetails}></Route>
               </Switch>
             </SocketProvider>
           </AuthProvider>
