@@ -1,8 +1,9 @@
 import useStyles from './useStyles';
-import { Box, Typography } from '@material-ui/core';
-import PinIcon from './icons8-pin-24.png';
+import { Box, Button, Typography, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
 import { useEffect } from 'react';
+import PinIcon from './PinIcon.png';
 import fetchProfile from '../../helpers/APICalls/fetchProfile';
+import BookingForm from './BookingForm/BookingForm';
 
 const ProfileDetails = (): JSX.Element => {
   const classes = useStyles();
@@ -48,9 +49,7 @@ const ProfileDetails = (): JSX.Element => {
         </Box>
       </Box>
 
-      <Box className={classes.requestForm}>
-        <Typography>Request Form</Typography>
-      </Box>
+      <BookingForm></BookingForm>
     </Box>
   );
 };
