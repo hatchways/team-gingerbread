@@ -32,8 +32,14 @@ const profileSchema = new mongoose.Schema({
     default: [],
   },
   photo: {
-    type: String,
-    default: "",
+    url: {
+      type: String,
+      default: "",
+    },
+    key: {
+      type: String,
+      default: "",
+    },
   },
   isSitter: {
     type: Boolean,
