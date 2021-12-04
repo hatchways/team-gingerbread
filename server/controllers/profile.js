@@ -40,7 +40,7 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 });
 
 exports.populateListings = async (req, res) => {
-  const profiles = await Profile.find({ isSitter: true });
+  const profiles = await Profile.find({ isSitter: true }).limit(6);
 
   if (!profiles) {
     res.status(500);
