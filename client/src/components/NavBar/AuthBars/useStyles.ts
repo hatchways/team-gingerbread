@@ -19,6 +19,13 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  indicator: {
+    borderRadius: '50%',
+    backgroundColor: 'green',
+    width: 7,
+    height: 7,
+    alignSelf: 'flex-start',
+  },
 }));
 
 export default useStyles;
