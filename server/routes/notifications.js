@@ -8,12 +8,12 @@ const {
   getUnreadNotifications,
 } = require("../controllers/notification");
 
-router.route("/create").post(createNotification);
+router.route("/create").post(protect, createNotification);
 
-router.route("/read/:id").patch(readNotification);
+router.route("/read/:id").patch(protect, readNotification);
 
-router.route("/all/:recipient").get(getAllNotifications);
+router.route("/all").get(protect, getAllNotifications);
 
-router.route("/unread/:recipient").get(getUnreadNotifications);
+router.route("/unread").get(protect, getUnreadNotifications);
 
 module.exports = router;
