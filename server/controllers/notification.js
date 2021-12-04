@@ -37,7 +37,7 @@ exports.readNotification = asyncHandler(async (req, res) => {
 // @desc get all notifications
 // @access Public
 exports.getAllNotifications = asyncHandler(async (req, res) => {
-  const notifications = await Notification.find({ recipient: req.params.recipient });
+  const notifications = await Notification.find({ recipient: req.user.id });
   res.status(200).json({
     success: {
       notifications,
@@ -49,7 +49,7 @@ exports.getAllNotifications = asyncHandler(async (req, res) => {
 // @desc get all unread notifications
 // @access Public
 exports.getUnreadNotifications = asyncHandler(async (req, res) => {
-  const notifications = await Notification.find({ recipient: req.params.recipient, read: false });
+  const notifications = await Notification.find({ recipient: req.user.id, read: false });
   res.status(200).json({
     success: {
       notifications,
