@@ -1,8 +1,10 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
-import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Menu, Switch } from '@material-ui/core';
-import React, { useState } from 'react';
+import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch } from '@material-ui/core';
+import { useState } from 'react';
 import { useFormik } from 'formik';
+import { useAuth } from '../../../context/useAuthContext';
+import changeSitterStatus from '../../../helpers/APICalls/changeSitterStatus';
 
 interface UserProfile {
   firstName: string;
@@ -16,7 +18,7 @@ interface UserProfile {
   address: string;
   description: string;
   accountType: string;
-  available: boolean;
+  isSitter: boolean;
   availability: string;
 }
 
@@ -39,8 +41,9 @@ const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
+  const { loggedInUser } = useAuth();
   const [accountType, setAccountType] = useState<UserProfile['accountType'] | null>('partner');
-  const [available, setAvailable] = useState<UserProfile['available'] | null>(false);
+  const [isSitter, setIsSitter] = useState<boolean>(false);
   const [availability, setAvailability] = useState<UserProfile['availability'] | null>('availability');
   const [firstName, setFirstName] = useState<UserProfile['firstName'] | null>();
   const [lastName, setLastName] = useState<UserProfile['lastName'] | null>();
@@ -56,7 +59,7 @@ export default function EditProfileTab(): JSX.Element {
 
   const formik = useFormik({
     initialValues: {
-      available: false,
+      isSitter: false,
       availability: 'availability',
       firstName: '',
       lastName: '',
@@ -71,7 +74,10 @@ export default function EditProfileTab(): JSX.Element {
     },
     onSubmit: (values) => {
       if (accountType === 'partner') {
-        setAvailable(values.available);
+        if (values.isSitter !== isSitter && loggedInUser) {
+          changeSitterStatus(loggedInUser.profile);
+        }
+        setIsSitter(values.isSitter);
         setAvailability(values.availability);
       }
       setFirstName(values.firstName);
@@ -94,13 +100,17 @@ export default function EditProfileTab(): JSX.Element {
         {accountType === 'partner' && (
           <Box className={classes.section}>
             <FormLabel>
-              <Typography className={classes.label}>i&apos;m available</Typography>
+              {isSitter ? (
+                <Typography className={classes.label}>i&apos;m a sitter</Typography>
+              ) : (
+                <Typography className={classes.label}>i&apos;m not a sitter</Typography>
+              )}
             </FormLabel>
             <Switch
               value={false}
-              checked={formik.values.available === true}
+              checked={formik.values.isSitter === true}
               onChange={(event, checked) => {
-                formik.setFieldValue('available', checked ? true : false);
+                formik.setFieldValue('isSitter', checked ? true : false);
               }}
               color="primary"
             />
@@ -285,7 +295,7 @@ export default function EditProfileTab(): JSX.Element {
               <Button
                 variant="contained"
                 className={classes.addPhone}
-                onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                onClick={() => setShowPhoneInput(!showPhoneInput)}
               >
                 Add a phone number
               </Button>
@@ -293,7 +303,7 @@ export default function EditProfileTab(): JSX.Element {
               <Button
                 variant="contained"
                 className={classes.addPhone}
-                onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                onClick={() => setShowPhoneInput(!showPhoneInput)}
               >
                 Cancel
               </Button>

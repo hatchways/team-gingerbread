@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const colors = require("colors");
@@ -48,6 +49,7 @@ app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/booking-requests", bookingRequestRouter);
 app.use("/upload", uploadRouter);
+app.use("/profile", profileRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
