@@ -12,6 +12,7 @@ const { notFound, errorHandler } = require("./middleware/error");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
+const notificationsRouter = require("./routes/notifications");
 const bookingRequestRouter = require("./routes/bookingRequest");
 const uploadRouter = require("./routes/upload");
 
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/profile", profileRouter);
+app.use("/notifications", notificationsRouter);
 app.use("/booking-requests", bookingRequestRouter);
 app.use("/upload", uploadRouter);
 
