@@ -55,7 +55,7 @@ export default function EditProfileTab(): JSX.Element {
   const userId = '619c1eb37a1e963a5b179c4b';
 
   useEffect(() => {
-    fetchProfile('619c1eb37a1e963a5b179c4b').then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
+    fetchProfile(userId).then((data) => setProfile(data.success.profile));
   }, []);
 
   const formik = useFormik({
