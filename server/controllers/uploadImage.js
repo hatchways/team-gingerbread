@@ -3,11 +3,13 @@ const multer = require("multer");
 const Profile = require("../models/Profile");
 
 const BUCKET_NAME = "team-gingerbread-s3bucket";
+const IN_SECONDS = 60 * 60 * 24 * 7;
 
 aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: "us-east-2",
+  signatureVersion: "v4",
 });
 
 const s3 = new aws.S3();
@@ -25,6 +27,7 @@ const getS3Url = (key) => {
   const params = {
     Bucket: BUCKET_NAME,
     Key: key,
+    Expires: IN_SECONDS,
   };
   return s3.getSignedUrlPromise("getObject", params);
 };
