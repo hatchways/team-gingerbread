@@ -6,7 +6,10 @@ export interface Profile {
   phoneNumber: string;
   dateOfBirth: Date;
   availability: Array<Date>;
-  photo: string;
+  photo: {
+    url: string;
+    key: string;
+  };
   isSitter: boolean;
   _id: string;
 }

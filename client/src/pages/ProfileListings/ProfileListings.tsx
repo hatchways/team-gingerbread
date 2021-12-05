@@ -17,7 +17,7 @@ const ProfileListings = (): JSX.Element => {
     return (
       <Grid item key={profile._id}>
         <ProfilePreview
-          img={profile.photo}
+          img={profile.photo.url}
           name={`${profile.firstName} ${profile.lastName}`}
           subtitle={'Puppy power'}
           rating={3}
