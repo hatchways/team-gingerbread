@@ -21,6 +21,14 @@ const uploadToS3 = (img) => {
   return s3.upload(params).promise();
 };
 
+const getS3Url = (key) => {
+  const params = {
+    Bucket: BUCKET_NAME,
+    Key: key,
+  };
+  return s3.getSignedUrlPromise("getObject", params);
+};
+
 const writeToDB = async (_id, data, res) => {
   await Profile.findByIdAndUpdate(
     _id,
@@ -65,7 +73,8 @@ exports.uploadImages = async (req, res) => {
 
   try {
     const data = await Promise.all(promises);
-    writeToDB(_id, [data[0].Location, data[0].key], res);
+    const url = await getS3Url(data[0].key);
+    writeToDB(_id, [url, data[0].key], res);
   } catch (e) {
     res.status(500).send(`A problem occurred while saving/uploading an image. ${e}`);
   }
