@@ -1,23 +1,22 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
-import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Menu, Switch } from '@material-ui/core';
-import React, { useState } from 'react';
+import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch, setRef } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
+import edit from '../../../helpers/APICalls/edit';
+import fetchProfile from '../../../helpers/APICalls/fetchProfile';
 
-interface UserProfile {
+interface Profile {
   firstName: string;
   lastName: string;
-  gender: string;
-  birthdateMonth: string;
-  birthdateDay: string;
-  birthdateYear: string;
-  email: string;
-  phone: string;
-  address: string;
   description: string;
-  accountType: string;
+  address: string;
+  phoneNumber: string;
+  dateOfBirth: Date;
   available: boolean;
   availability: string;
+  gender: string;
+  email: string;
 }
 
 const months = [
@@ -34,57 +33,64 @@ const months = [
   'November',
   'December',
 ];
-const days = [...Array(30).keys()].map((i) => i + 1);
+const days = [...Array(31).keys()].map((i) => i + 1);
 const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
-  const [accountType, setAccountType] = useState<UserProfile['accountType'] | null>('partner');
-  const [available, setAvailable] = useState<UserProfile['available'] | null>(false);
-  const [availability, setAvailability] = useState<UserProfile['availability'] | null>('availability');
-  const [firstName, setFirstName] = useState<UserProfile['firstName'] | null>();
-  const [lastName, setLastName] = useState<UserProfile['lastName'] | null>();
-  const [gender, setGender] = useState<UserProfile['gender'] | null>('gender');
-  const [birthdateMonth, setBirthdateMonth] = useState<UserProfile['birthdateMonth'] | null>('month');
-  const [birthdateDay, setBirthdateDay] = useState<UserProfile['birthdateDay'] | null>('day');
-  const [birthdateYear, setBirthdateYear] = useState<UserProfile['birthdateYear'] | null>('year');
-  const [email, setEmail] = useState<UserProfile['email'] | null>();
-  const [phone, setPhone] = useState<UserProfile['phone'] | null>();
-  const [address, setAddress] = useState<UserProfile['address'] | null>();
-  const [description, setDescription] = useState<UserProfile['description'] | null>();
+  const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
+  const [profile, setProfile] = useState<Profile>({
+    firstName: '',
+    lastName: '',
+    description: '',
+    address: '',
+    phoneNumber: '',
+    dateOfBirth: new Date('December 17, 1995 03:24:00'),
+    available: false,
+    availability: '',
+    gender: '',
+    email: '',
+  });
+  const userId = '619c1eb37a1e963a5b179c4b';
+
+  useEffect(() => {
+    fetchProfile(userId).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
+  }, []);
 
   const formik = useFormik({
     initialValues: {
-      available: false,
-      availability: 'availability',
-      firstName: '',
-      lastName: '',
-      gender: 'gender',
-      birthdateMonth: 'month',
-      birthdateDay: 'day',
-      birthdateYear: 'year',
-      email: '',
-      phone: '',
-      address: '',
-      description: '',
+      available: profile.available,
+      availability: profile.availability || 'availability',
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender || 'gender',
+      birthdateMonth: profile.dateOfBirth ? months[new Date(profile.dateOfBirth).getMonth()] : 'month',
+      birthdateDay: profile.dateOfBirth ? new Date(profile.dateOfBirth).getDate() : 'day',
+      birthdateYear: profile.dateOfBirth ? new Date(profile.dateOfBirth).getFullYear() : 'year',
+      email: profile.email,
+      phoneNumber: profile.phoneNumber,
+      address: profile.address,
+      description: profile.description,
     },
     onSubmit: (values) => {
-      if (accountType === 'partner') {
-        setAvailable(values.available);
-        setAvailability(values.availability);
-      }
-      setFirstName(values.firstName);
-      setLastName(values.lastName);
-      setGender(values.gender);
-      setBirthdateMonth(values.birthdateMonth);
-      setBirthdateDay(values.birthdateDay);
-      setBirthdateYear(values.birthdateYear);
-      setEmail(values.email);
-      setPhone(values.phone);
-      setAddress(values.address);
-      setDescription(values.description);
+      edit(
+        userId,
+        values.firstName,
+        values.lastName,
+        values.description,
+        values.address,
+        values.phoneNumber,
+        new Date(`${values.birthdateMonth} ${values.birthdateDay}, ${values.birthdateYear}`),
+        values.available,
+        values.availability,
+        values.gender,
+        values.email,
+      );
+      formik.resetForm();
+      location.reload(); //reloads page so that prefilled values are updated, otherwise shows profile values before update submitted
     },
+    enableReinitialize: true, //since useEffect has a lag, this allows prefilled values to be updated if they change (from '' to value set by fetchProfile() helper)
   });
 
   return (
@@ -267,36 +273,49 @@ export default function EditProfileTab(): JSX.Element {
           <FormLabel>
             <Typography className={classes.label}>phone number</Typography>
           </FormLabel>
-          <Box className={classes.phoneNumberInput}>
-            {!showPhoneInput ? (
-              <Typography className={classes.phoneMessage}>No Phone number entered</Typography>
-            ) : (
+          <Box>
+            {profile.phoneNumber ? (
               <OutlinedInput
-                className={classes.phoneNumberInputComponent}
+                className={classes.phoneNumberInputComponentFull}
                 id="phone"
                 placeholder="(210) 556-0123"
                 name="phone"
                 autoComplete="tel"
-                value={formik.values.phone}
+                value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
               ></OutlinedInput>
-            )}
-            {!showPhoneInput ? (
-              <Button
-                variant="contained"
-                className={classes.addPhone}
-                onClick={(e) => setShowPhoneInput(!showPhoneInput)}
-              >
-                Add a phone number
-              </Button>
+            ) : !showPhoneInput ? (
+              <Box className={classes.phoneNumberInput}>
+                {' '}
+                <Typography className={classes.phoneMessage}>No Phone number entered</Typography>
+                <Button
+                  variant="contained"
+                  className={classes.addPhone}
+                  onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                >
+                  Add a phone number
+                </Button>
+              </Box>
             ) : (
-              <Button
-                variant="contained"
-                className={classes.addPhone}
-                onClick={(e) => setShowPhoneInput(!showPhoneInput)}
-              >
-                Cancel
-              </Button>
+              <Box className={classes.phoneNumberInput}>
+                {' '}
+                <OutlinedInput
+                  className={classes.phoneNumberInputComponent}
+                  id="phone"
+                  placeholder="(210) 556-0123"
+                  name="phone"
+                  autoComplete="tel"
+                  value={formik.values.phoneNumber}
+                  onChange={formik.handleChange}
+                ></OutlinedInput>
+                <Button
+                  variant="contained"
+                  className={classes.addPhone}
+                  onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                >
+                  Cancel
+                </Button>
+              </Box>
             )}
           </Box>
         </Box>

@@ -24,16 +24,14 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
 
   const updateLoginContext = useCallback(
     (data: AuthApiDataSuccess) => {
-      if (
-        history.location.pathname === '/' ||
-        history.location.pathname === '/login' ||
-        history.location.pathname === '/signup'
-      ) {
+      if (!loggedInUser && history.location.pathname === '/login') {
         setLoggedInUser(data.user);
-        history.replace('/dashboard');
+        history.push('/dashboard');
+      } else if (!loggedInUser && history.location.pathname === '/signup') {
+        history.push('/signup');
       } else setLoggedInUser(data.user);
     },
-    [history],
+    [history, loggedInUser],
   );
 
   const logout = useCallback(async () => {
@@ -52,8 +50,11 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
       await loginWithCookies().then((data: AuthApiData) => {
         if (data.success) {
           updateLoginContext(data.success);
+        } else if (history.location.pathname === '/signup') {
+          setLoggedInUser(null);
         } else {
           // don't need to provide error feedback as this just means user doesn't have saved cookies or the cookies have not been authenticated on the backend
+          history.push('/');
           setLoggedInUser(null);
         }
       });
