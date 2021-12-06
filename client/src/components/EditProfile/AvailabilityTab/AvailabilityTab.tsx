@@ -4,6 +4,7 @@ import AvailabilityRow from './AvailabilityRow/AvailabilityRow';
 import { useState, useEffect } from 'react';
 import editAvailability from '../../../helpers/APICalls/editAvailability';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
+import { mockId } from '../../../mocks/mockId';
 
 const months = [
   'January',
@@ -127,17 +128,15 @@ const AvailabilityTab = (): JSX.Element => {
     setUpdating(true);
   };
 
-  const userId = '619c1eb37a1e963a5b179c4b';
-
   useEffect(() => {
     if (updating) {
-      editAvailability(userId, availability).then((data) => console.log(data));
+      editAvailability(mockId, availability).then((data) => console.log(data));
       setUpdating(false);
     }
   }, [availability, updating]);
 
   useEffect(() => {
-    fetchProfile(userId).then((data) => setAvailability(data.success.profile.availableTime));
+    fetchProfile(mockId).then((data) => setAvailability(data.success.profile.availableTime));
   }, []);
 
   return (

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import edit from '../../../helpers/APICalls/edit';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
+import { mockId } from '../../../mocks/mockId';
 
 interface Profile {
   firstName: string;
@@ -52,10 +53,9 @@ export default function EditProfileTab(): JSX.Element {
     gender: '',
     email: '',
   });
-  const userId = '619c1eb37a1e963a5b179c4b';
 
   useEffect(() => {
-    fetchProfile(userId).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
+    fetchProfile(mockId).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
   }, []);
 
   const formik = useFormik({
@@ -75,7 +75,7 @@ export default function EditProfileTab(): JSX.Element {
     },
     onSubmit: (values) => {
       edit(
-        userId,
+        mockId,
         values.firstName,
         values.lastName,
         values.description,
@@ -279,7 +279,7 @@ export default function EditProfileTab(): JSX.Element {
                 className={classes.phoneNumberInputComponentFull}
                 id="phone"
                 placeholder="(210) 556-0123"
-                name="phone"
+                name="phoneNumber"
                 autoComplete="tel"
                 value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
@@ -303,7 +303,7 @@ export default function EditProfileTab(): JSX.Element {
                   className={classes.phoneNumberInputComponent}
                   id="phone"
                   placeholder="(210) 556-0123"
-                  name="phone"
+                  name="phoneNumber"
                   autoComplete="tel"
                   value={formik.values.phoneNumber}
                   onChange={formik.handleChange}
