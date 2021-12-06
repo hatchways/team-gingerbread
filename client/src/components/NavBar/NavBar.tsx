@@ -58,7 +58,6 @@ const NavBar = (): JSX.Element => {
     history.location.pathname !== '/'
   ) {
     history.push('/login');
-    // loading for a split seconds until history.push works
     return <CircularProgress />;
   }
 

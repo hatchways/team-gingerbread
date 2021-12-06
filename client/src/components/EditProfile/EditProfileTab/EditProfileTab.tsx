@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import edit from '../../../helpers/APICalls/edit';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
 
-interface ProfileInterface {
+interface Profile {
   firstName: string;
   lastName: string;
   description: string;
@@ -40,7 +40,7 @@ export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
   const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
-  const [profile, setProfile] = useState<ProfileInterface>({
+  const [profile, setProfile] = useState<Profile>({
     firstName: '',
     lastName: '',
     description: '',
