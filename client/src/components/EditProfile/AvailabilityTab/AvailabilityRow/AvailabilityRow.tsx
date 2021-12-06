@@ -45,9 +45,9 @@ const AvailabilityRow = (props: props): JSX.Element => {
   return (
     <Grid style={{ width: '90%', border: '#dedcdc 1px solid', margin: '0 auto' }} className={classes.availabilityRow}>
       <Typography style={{ color: 'grey', fontSize: 14 }}>
-        <span style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>
+        <Typography style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }} display="inline">
           {props.startDate + props.number} {props.month},
-        </span>{' '}
+        </Typography>{' '}
         {props.day}
       </Typography>
       <Box className={classes.availabilityForm}>
