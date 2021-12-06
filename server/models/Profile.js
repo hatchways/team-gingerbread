@@ -25,15 +25,59 @@ const profileSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    default: null
+    default: null,
   },
   available: {
     type: Boolean,
-    default: false
+    default: false,
   },
   availability: {
     type: String,
-    default: ''
+    default: "",
+  },
+  availableTime: {
+    type: Array({
+      day: String,
+      startTime: Number,
+      endTime: Number,
+    }),
+    default: [
+      {
+        day: "Monday",
+        startTime: 10,
+        endTime: 22,
+      },
+      {
+        day: "Tuesday",
+        startTime: 10,
+        endTime: 22,
+      },
+      {
+        day: "Wednesday",
+        startTime: 10,
+        endTime: 22,
+      },
+      {
+        day: "Thursday",
+        startTime: 10,
+        endTime: 22,
+      },
+      {
+        day: "Friday",
+        startTime: 10,
+        endTime: 22,
+      },
+      {
+        day: "Saturday",
+        startTime: 10,
+        endTime: 22,
+      },
+      {
+        day: "Sunday",
+        startTime: 10,
+        endTime: 22,
+      },
+    ],
   },
   photo: {
     type: String,
@@ -41,12 +85,12 @@ const profileSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    default: ""
+    default: "",
   },
   email: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
