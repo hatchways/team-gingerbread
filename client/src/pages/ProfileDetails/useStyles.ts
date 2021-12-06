@@ -1,6 +1,19 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+  profileCard: {
+    width: '100%',
+    minWidth: '600px',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  topCardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   backgroundImg: {
     width: '100%',
     height: '25vh',
@@ -16,11 +29,38 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '-6vh',
     boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
   },
+  userNameText: {
+    marginTop: 20,
+    color: 'black',
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  userTitleText: {
+    color: 'darkGrey',
+    fontSize: 16,
+  },
+  userLocationText: {
+    color: 'darkGrey',
+    fontSize: 14,
+  },
   userLocationIcon: {
     height: 20,
     width: 'auto',
     marginRight: 5,
     color: theme.palette.primary.main,
+  },
+  bottomCardContent: {
+    padding: 30,
+  },
+  userDescriptionHeaderText: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  userDescriptionText: {
+    marginTop: 10,
+    color: 'black',
+    fontSize: 16,
   },
   userAdditionalPhoto: {
     width: 150,

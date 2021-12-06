@@ -49,18 +49,9 @@ const BookingForm = (): JSX.Element => {
   });
 
   return (
-    <Card
-      style={{
-        width: '80%',
-        minWidth: 400,
-        height: '55%',
-        justifySelf: 'flex-end',
-      }}
-    >
-      <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography style={{ marginTop: 40, marginBottom: 10, color: 'black', fontSize: 22, fontWeight: 'bold' }}>
-          $14/hr
-        </Typography>
+    <Card className={classes.bookingFormCard}>
+      <form onSubmit={formik.handleSubmit} className={classes.bookingForm}>
+        <Typography className={classes.userRateText}>$14/hr</Typography>
         <Rating defaultValue={4.5} precision={0.5} readOnly />
 
         <Box className={classes.profileDetailsForm}>
@@ -120,24 +111,8 @@ const BookingForm = (): JSX.Element => {
             </Select>
           </Grid>
         </Box>
-        <Button
-          type="submit"
-          className={classes.requestFormButton}
-          style={{
-            marginTop: 70,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            padding: 10,
-            width: 160,
-            height: 56,
-            marginBottom: 35,
-            fontSize: 14,
-            color: 'white',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            transition: '1s',
-          }}
-        >
+
+        <Button type="submit" className={classes.requestFormButton}>
           send request
         </Button>
       </form>

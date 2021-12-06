@@ -1,6 +1,24 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+  bookingFormCard: {
+    width: '80%',
+    minWidth: 400,
+    height: '55%',
+    justifySelf: 'flex-end',
+  },
+  bookingForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  userRateText: {
+    marginTop: 40,
+    marginBottom: 10,
+    color: 'black',
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
   profileDetailsForm: {
     width: '100%',
     marginTop: 50,
@@ -30,6 +48,18 @@ const useStyles = makeStyles((theme) => ({
     borderBottomLeftRadius: 0,
   },
   requestFormButton: {
+    marginTop: 70,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: 10,
+    width: 160,
+    height: 56,
+    marginBottom: 35,
+    fontSize: 14,
+    color: 'white',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    transition: '1s',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.main,
     '&:hover': {
