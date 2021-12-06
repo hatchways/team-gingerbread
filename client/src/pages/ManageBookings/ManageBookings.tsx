@@ -44,7 +44,7 @@ export default function ManageBookings(): JSX.Element {
       dayStyle.style.border = `2px solid ${theme.palette.grey[400]}`;
     }
     const dayComponentStyled = cloneElement(dayComponent, dayStyle);
-    return <div>{dayComponentStyled}</div>;
+    return <>{dayComponentStyled}</>;
   };
 
   return (
