@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 // @route POST /profile/edit
 // @desc edit user profile
-// @access Public
+// @access Private
 exports.editProfile = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findByIdAndUpdate(req.body.id, req.body.changes, { new: true });
 
