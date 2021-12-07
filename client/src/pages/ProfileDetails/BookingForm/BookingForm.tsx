@@ -2,6 +2,8 @@ import useStyles from './useStyles';
 import { Box, Typography, Select, MenuItem, OutlinedInput, Grid, Button, Card } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import { useFormik } from 'formik';
+import fetchProfile from '../../../helpers/APICalls/fetchProfile';
+import { useEffect, useState } from 'react';
 
 const times = [...Array(24).keys()].map((number) => {
   if (number === 0) {
@@ -27,12 +29,32 @@ const times = [...Array(24).keys()].map((number) => {
   }
 });
 
-const BookingForm = (): JSX.Element => {
+const BookingForm = (props: { id: string }): JSX.Element => {
   const classes = useStyles();
+  const [availableTime, setAvailableTime] = useState([
+    {
+      day: 'Monday-default',
+      startTime: '8:00 AM - default',
+      endTime: '10:00 PM - default',
+    },
+  ]);
+  const [availableStartHours, setAvailableStartHours] = useState([
+    {
+      time: '12:00 AM - default',
+      value: 0,
+    },
+  ]);
+  const [availableEndHours, setAvailableEndHours] = useState([
+    {
+      time: '11:00 PM - default',
+      value: 23,
+    },
+  ]);
 
-  // create use effect that fetches availability data
-  // create fetchAvailability helper that is linked to profile/load/:id
-  // once data loaded, set to initial values of date and select inputs
+  useEffect(() => {
+    fetchProfile(props.id).then((data) => setAvailableTime(data.success.profile.availableTime));
+  }, [props.id]);
+
   // submit action triggers call to create notification
   // create createNotification helper that is linked to /notifications/create
   // 1. create notification for client that request has been submitted
@@ -40,9 +62,9 @@ const BookingForm = (): JSX.Element => {
 
   const formik = useFormik({
     initialValues: {
-      startDate: '',
+      startDate: 'placeholder',
       startTime: 'placeholder',
-      endDate: '',
+      endDate: 'placeholder',
       endTime: 'placeholder',
     },
     onSubmit: (values) => {
@@ -56,6 +78,22 @@ const BookingForm = (): JSX.Element => {
     },
   });
 
+  useEffect(() => {
+    const startDate = availableTime.find((date) => date.day === formik.values.startDate);
+    const startTime = typeof startDate?.startTime === 'number' ? parseInt(startDate?.startTime) : 24;
+    const endTime = typeof startDate?.startTime === 'number' ? parseInt(startDate?.endTime) : 24;
+    const availableTimes = times.filter((t) => t.value >= startTime && t.value <= endTime);
+    setAvailableStartHours(availableTimes);
+  }, [availableTime, formik.values.startDate]);
+
+  useEffect(() => {
+    const endDate = availableTime.find((date) => date.day === formik.values.endDate);
+    const startTime = typeof endDate?.startTime === 'number' ? parseInt(endDate?.startTime) : 24;
+    const endTime = typeof endDate?.startTime === 'number' ? parseInt(endDate?.endTime) : 24;
+    const availableTimes = times.filter((t) => t.value >= startTime && t.value <= endTime);
+    setAvailableEndHours(availableTimes);
+  }, [availableTime, formik.values.endDate]);
+
   return (
     <Card className={classes.bookingFormCard}>
       <form onSubmit={formik.handleSubmit} className={classes.bookingForm}>
@@ -65,13 +103,29 @@ const BookingForm = (): JSX.Element => {
         <Box className={classes.profileDetailsForm}>
           <Typography className={classes.profileDetailsLabel}>drop off</Typography>
           <Grid className={classes.profileDetailsFormContainer}>
-            <OutlinedInput
+            {/* <OutlinedInput
               type="date"
               name="startDate"
               className={classes.profileDetailsFormInput}
               value={formik.values.startDate}
               onChange={formik.handleChange}
-            ></OutlinedInput>
+            ></OutlinedInput> */}
+            <Select
+              variant="outlined"
+              name="startDate"
+              className={classes.profileDetailsFormInput}
+              value={formik.values.startDate}
+              onChange={formik.handleChange}
+            >
+              <MenuItem value="placeholder" disabled>
+                start date
+              </MenuItem>
+              {availableTime.map((time) => (
+                <MenuItem value={time.day} key={time.day}>
+                  {time.day}
+                </MenuItem>
+              ))}
+            </Select>
             <Select
               variant="outlined"
               name="startTime"
@@ -82,7 +136,7 @@ const BookingForm = (): JSX.Element => {
               <MenuItem value="placeholder" disabled>
                 start time
               </MenuItem>
-              {times.map((time) => (
+              {availableStartHours.map((time) => (
                 <MenuItem value={time.value} key={time.value}>
                   {time.time}
                 </MenuItem>
@@ -94,13 +148,29 @@ const BookingForm = (): JSX.Element => {
         <Box className={classes.profileDetailsForm}>
           <Typography className={classes.profileDetailsLabel}>pick up</Typography>
           <Grid className={classes.profileDetailsFormContainer}>
-            <OutlinedInput
+            {/* <OutlinedInput
               type="date"
               name="endDate"
               className={classes.profileDetailsFormInput}
               value={formik.values.endDate}
               onChange={formik.handleChange}
-            ></OutlinedInput>
+            ></OutlinedInput> */}
+            <Select
+              variant="outlined"
+              name="endDate"
+              className={classes.profileDetailsFormInput}
+              value={formik.values.endDate}
+              onChange={formik.handleChange}
+            >
+              <MenuItem value="placeholder" disabled>
+                end date
+              </MenuItem>
+              {availableTime.map((time) => (
+                <MenuItem value={time.day} key={time.day}>
+                  {time.day}
+                </MenuItem>
+              ))}
+            </Select>
             <Select
               variant="outlined"
               name="endTime"
@@ -111,7 +181,7 @@ const BookingForm = (): JSX.Element => {
               <MenuItem value="placeholder" disabled>
                 end time
               </MenuItem>
-              {times.map((time) => (
+              {availableEndHours.map((time) => (
                 <MenuItem value={time.value} key={time.value}>
                   {time.time}
                 </MenuItem>

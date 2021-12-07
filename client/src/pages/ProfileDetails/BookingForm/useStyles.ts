@@ -5,6 +5,7 @@ const useStyles = makeStyles((theme) => ({
     width: '80%',
     minWidth: 400,
     height: '55%',
+    minHeight: 550,
     justifySelf: 'flex-end',
   },
   bookingForm: {

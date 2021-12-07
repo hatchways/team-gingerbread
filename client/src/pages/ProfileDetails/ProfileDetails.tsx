@@ -29,7 +29,7 @@ const ProfileDetails = (): JSX.Element => {
   }, [id]);
 
   return (
-    <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1000px" display="grid" gridTemplateColumns="60fr 40fr">
+    <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1200px" display="grid" gridTemplateColumns="60fr 40fr">
       <Card className={classes.profileCard}>
         <CardMedia
           className={classes.backgroundImg}
@@ -71,7 +71,7 @@ const ProfileDetails = (): JSX.Element => {
         </CardContent>
       </Card>
 
-      <BookingForm></BookingForm>
+      <BookingForm id={id}></BookingForm>
     </Box>
   );
 };
