@@ -1,6 +1,6 @@
 import { Box, Typography } from '@material-ui/core';
 import { FC } from 'react';
-import { formatBookingDate, sortBookingsByStartDate, dateIsTodayOrAfter } from '../../helpers/ManageBookings';
+import { formatBookingDate } from '../../helpers/ManageBookings';
 import { BookingRequests, BookingStatus } from '../../pages/ManageBookings/types';
 import useStyles from './useStyles';
 

@@ -4,7 +4,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { cloneElement, useState } from 'react';
 import { CurrentBookings, NextBooking, PastBookings } from '../../components/ManageBookings/';
-import { checkIfBooked, getCurrentBookings, getNextBooking } from '../../helpers/ManageBookings';
+import { isThereBookingOnThisDate, getCurrentBookings, getNextBooking } from '../../helpers/ManageBookings';
 import mockBookingData from './mockBookingData';
 import { BookingRequests } from './types';
 import useStyles from './useStyles';
@@ -32,7 +32,7 @@ export default function ManageBookings(): JSX.Element {
     const selectedDay = selectedDate?.getTime();
     const isSelectedDay = selectedDay === renderDay;
 
-    const isBookedDay = checkIfBooked(sitterBookings, day);
+    const isBookedDay = isThereBookingOnThisDate(sitterBookings, day);
 
     const dayStyle = {
       style: { backgroundColor: theme.palette.common.white, border: 'none', color: theme.palette.common.black },
