@@ -4,7 +4,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { cloneElement, useState } from 'react';
 import { CurrentBookings, NextBooking, PastBookings } from '../../components/ManageBookings/';
-import { checkIfBooked } from '../../helpers/ManageBookings';
+import { checkIfBooked, getCurrentBookings, getNextBooking } from '../../helpers/ManageBookings';
 import mockBookingData from './mockBookingData';
 import { BookingRequests } from './types';
 import useStyles from './useStyles';
@@ -18,6 +18,9 @@ export default function ManageBookings(): JSX.Element {
   const updateDate = (date: MaterialUiPickersDate) => {
     setDate(date);
   };
+
+  const currentBookings = getCurrentBookings(sitterBookings);
+  const nextBooking = getNextBooking(sitterBookings);
 
   const renderDay = (
     day: MaterialUiPickersDate,
@@ -57,7 +60,7 @@ export default function ManageBookings(): JSX.Element {
                 <Typography variant="h6" component="div" className={classes.uppercase}>
                   Your Next Booking
                 </Typography>
-                <NextBooking bookingRequests={sitterBookings} />
+                <NextBooking nextBooking={nextBooking} />
               </Box>
             </Paper>
           </Grid>
@@ -67,7 +70,7 @@ export default function ManageBookings(): JSX.Element {
                 <Typography variant="h6" component="div" className={classes.uppercase}>
                   Current Bookings
                 </Typography>
-                <CurrentBookings bookingRequests={sitterBookings} />
+                <CurrentBookings currentBookings={currentBookings} />
                 <Typography variant="h6" component="div" className={classes.uppercase}>
                   Past Bookings
                 </Typography>

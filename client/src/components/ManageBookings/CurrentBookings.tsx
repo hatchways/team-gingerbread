@@ -5,22 +5,15 @@ import { BookingRequests, BookingStatus } from '../../pages/ManageBookings/types
 import useStyles from './useStyles';
 
 type CurrentBookingsProps = {
-  bookingRequests: BookingRequests;
+  currentBookings: BookingRequests;
 };
 
-const CurrentBookings: FC<CurrentBookingsProps> = ({ bookingRequests: bookingRequests }) => {
-  const currentBookings = bookingRequests.filter((bookingRequest) => {
-    const startDate = bookingRequest.start;
-    return dateIsTodayOrAfter(startDate);
-  });
-
+const CurrentBookings: FC<CurrentBookingsProps> = ({ currentBookings }) => {
   const classes = useStyles();
-  const sortedBookings = sortBookingsByStartDate(currentBookings);
-  sortedBookings.pop();
 
   return (
     <>
-      {sortedBookings.map((booking) => (
+      {currentBookings.map((booking) => (
         <Box key={booking.requestId} className={classes.bookingContainer}>
           <Typography variant="body2">{formatBookingDate(booking.start)}</Typography>
           <Box display="flex" justifyContent="space-between">
