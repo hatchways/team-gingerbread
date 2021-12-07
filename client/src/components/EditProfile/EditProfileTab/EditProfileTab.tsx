@@ -5,19 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import edit from '../../../helpers/APICalls/edit';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
-
-interface Profile {
-  firstName: string;
-  lastName: string;
-  description: string;
-  address: string;
-  phoneNumber: string;
-  dateOfBirth: Date;
-  available: boolean;
-  availability: string;
-  gender: string;
-  email: string;
-}
+import { Profile } from '../../../interface/Profile';
 
 const months = [
   'January',
