@@ -1,24 +1,16 @@
+const asyncHandler = require("express-async-handler");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
-const asyncHandler = require("express-async-handler");
 
 // @route POST /profile/edit
 // @desc edit user profile
 // @access Public
 exports.editProfile = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
+  const profile = await Profile.findByIdAndUpdate(req.body.id, req.body.changes, { new: true });
 
-  if (!user) {
-    res.status(404);
-    throw new Error("User doesn't exist");
-  }
-  user.profile.set(req.body);
-  const updatedUser = await user.save();
-  res.status(200).json({
-    success: {
-      profile: updated_user.profile,
-    },
-  });
+  if (!profile) res.status(500).send("An error occurred while editing profile.");
+
+  res.status(200).json({ success: { message: "Profile edited successfully!" } });
 });
 
 // @route GET /profile/load
@@ -34,7 +26,7 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      profile: profile,
+      profile,
     },
   });
 });

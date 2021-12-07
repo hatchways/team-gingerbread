@@ -75,7 +75,7 @@ export default function EditProfileTab(): JSX.Element {
     onSubmit: (values) => {
       if (accountType === 'partner') {
         if (values.isSitter !== isSitter && loggedInUser) {
-          changeSitterStatus(loggedInUser.profile);
+          changeSitterStatus(loggedInUser.profile, !isSitter);
         }
         setIsSitter(values.isSitter);
         setAvailability(values.availability);
