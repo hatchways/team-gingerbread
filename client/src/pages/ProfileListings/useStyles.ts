@@ -15,12 +15,12 @@ const useStyles = makeStyles(() => ({
   topRowWrapper: {
     margin: '100px 0 50px 0',
   },
-  textFieldWrapper: {
+  searchBarWrapper: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  textField: {
+  searchBar: {
     margin: '5px',
   },
   profilePreviewWrapper: {

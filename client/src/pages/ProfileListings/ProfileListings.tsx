@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useState, useEffect } from 'react';
-import { Grid, CssBaseline, TextField, InputAdornment, Typography, Button } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import DateRangeIcon from '@material-ui/icons/DateRange';
+import { Grid, Typography, Button, CircularProgress } from '@material-ui/core';
 import ProfilePreview from './ProfilePreview/ProfilePreview';
 import { populateProfiles } from '../../helpers/APICalls/populateProfiles';
 import { Profile } from '../../interface/Profile';
 import useStyles from './useStyles';
+import LocationSearchBar from '../../components/LocationSearchBar';
+import AvailabilitySearchBar from '../../components/AvailabilitySearchBar';
 
 const ProfileListings = (): JSX.Element => {
   const classes = useStyles();
@@ -37,45 +35,24 @@ const ProfileListings = (): JSX.Element => {
 
   return (
     <Grid container spacing={1} component="main" className={classes.root}>
-      <CssBaseline />
       <Grid item spacing={1} className={classes.topRowWrapper}>
         <Typography color="textPrimary" variant="h5">
           Your search results
         </Typography>
-        <Grid container spacing={1} className={classes.textFieldWrapper}>
-          <Grid item spacing={1} className={classes.textField}>
-            <TextField
-              color="primary"
-              variant="outlined"
-              value="Ontario, Canada"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="primary" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+        <Grid container spacing={1} className={classes.searchBarWrapper}>
+          <Grid item spacing={1} className={classes.searchBar}>
+            <LocationSearchBar searchTerm={'Ontario, Canada'} />
           </Grid>
-          <Grid item spacing={1} className={classes.textFieldWrapper}>
-            <TextField
-              color="primary"
-              variant="outlined"
-              value="date from homepage"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <DateRangeIcon color="primary" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+          <Grid item spacing={1} className={classes.searchBarWrapper}>
+            <Grid item spacing={1} className={classes.searchBar}>
+              <AvailabilitySearchBar searchTerm={'date range'} />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
       <Grid item>
         <Grid container spacing={6} className={classes.profilePreviewWrapper}>
-          {!profileData ? null : renderedPreviews}
+          {!profileData ? <CircularProgress /> : renderedPreviews}
         </Grid>
       </Grid>
       <Grid item spacing={1}>
