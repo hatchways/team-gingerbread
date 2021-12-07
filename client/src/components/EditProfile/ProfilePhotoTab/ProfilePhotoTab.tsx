@@ -4,6 +4,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useAuth } from '../../../context/useAuthContext';
+import { useSnackBar } from '../../../context/useSnackbarContext';
 import uploadImage from '../../../helpers/APICalls/uploadImage';
 import deleteImage from '../../../helpers/APICalls/deleteImage';
 import useStyles from './useStyles';
@@ -11,6 +12,7 @@ import useStyles from './useStyles';
 const ProfilePhoto = (): JSX.Element => {
   const classes = useStyles();
   const { loggedInUser } = useAuth();
+  const { updateSnackBarMessage } = useSnackBar();
   const [displayPhoto, setDisplayPhoto] = useState<string>('');
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [isWrongFileType, setIsWrongFileType] = useState<boolean>(false);
@@ -26,7 +28,7 @@ const ProfilePhoto = (): JSX.Element => {
       if (loggedInUser) {
         images.push(file);
         uploadImage(images, loggedInUser.profile).then((data) => {
-          if (data.error) console.error(data.error);
+          if (data.error) updateSnackBarMessage('An error occurred while uploading the image.');
         });
       }
     } else setIsWrongFileType(true);
@@ -36,7 +38,7 @@ const ProfilePhoto = (): JSX.Element => {
     setIsUploaded(false);
     if (loggedInUser) {
       deleteImage(loggedInUser.profile).then((data) => {
-        if (data.error) console.error(data.error);
+        if (data.error) updateSnackBarMessage('An error occurred while deleting the image.');
       });
     }
   };

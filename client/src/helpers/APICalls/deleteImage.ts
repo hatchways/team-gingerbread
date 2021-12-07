@@ -1,20 +1,25 @@
-import { AuthApiData } from '../../interface/AuthApiData';
+interface DeleteImageDataSuccess {
+  message: string;
+}
+
+interface DeleteImageData {
+  error?: { message: string };
+  succss: DeleteImageDataSuccess;
+}
 
 interface DeleteFetchOptions {
   method: string;
-  credentials: RequestCredentials;
 }
 
-const deleteImage = async (_id: string): Promise<AuthApiData> => {
+const deleteImage = async (_id: string): Promise<DeleteImageData> => {
   const fetchOptions: DeleteFetchOptions = {
     method: 'DELETE',
-    credentials: 'include',
   };
 
   return await fetch(`/image/delete?` + new URLSearchParams({ _id }), fetchOptions)
     .then((res) => res.json())
-    .catch(() => ({
-      error: { message: 'Unable to connect to server. Please try again' },
+    .catch((e) => ({
+      error: { message: `Unable to connect to server. Please try again ${e}` },
     }));
 };
 

@@ -24,19 +24,17 @@ const deleteInS3 = (Key) => {
 };
 
 const getKeyFromDB = async (_id) => {
-  const response = await Profile.find({ _id }, "photo", (err, result) => {
-    if (err) throw new Error(err);
-    return result;
-  });
+  const response = await Profile.find({ _id }, "photo");
+  if (!response) throw new Error("A problem occurred while deleting an image");
   return response;
 };
 
 const removeFromDB = async (_id, res) => {
-  await Profile.findByIdAndUpdate(String(_id), { photo: { url: "", key: "" } }, (err, result) => {
-    if (err) {
-      res.status(500).send(`A problem occurred while deleting an image. ${err}`);
-    } else res.status(200).send(`Image deleted. ${result}`);
-  });
+  const profile = await Profile.findByIdAndUpdate(String(_id), { photo: { url: "", key: "" } }, { new: true });
+  if (!profile) {
+    res.status(500).send("A problem occurred while deleting an image.");
+  }
+  res.status(200).send({ success: { message: "Image deleted." } });
 };
 
 // @route DELETE /image/delete?
