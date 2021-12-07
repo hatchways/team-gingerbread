@@ -1,7 +1,6 @@
 import { Box, Typography } from '@material-ui/core';
 import { FC } from 'react';
-import formatBookingDate from '../../helpers/ManageBookings/formatBookingDate';
-import sortBookingsByStartDate from '../../helpers/ManageBookings/sortBookingsByStartDate';
+import { formatBookingDate, sortBookingsByStartDate, dateIsTodayOrAfter } from '../../helpers/ManageBookings';
 import { BookingRequests, BookingStatus } from '../../pages/ManageBookings/types';
 import useStyles from './useStyles';
 
@@ -11,11 +10,8 @@ type CurrentBookingsProps = {
 
 const CurrentBookings: FC<CurrentBookingsProps> = ({ bookingRequests: bookingRequests }) => {
   const currentBookings = bookingRequests.filter((bookingRequest) => {
-    const startDayEpoch = bookingRequest.start.getTime();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayUTC = today.getTime();
-    return startDayEpoch >= todayUTC;
+    const startDate = bookingRequest.start;
+    return dateIsTodayOrAfter(startDate);
   });
 
   const classes = useStyles();
