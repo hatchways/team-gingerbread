@@ -9,6 +9,7 @@ import AvailabilitySearchBar from '../../components/AvailabilitySearchBar';
 
 const ProfileListings = (): JSX.Element => {
   const classes = useStyles();
+  const [currentUsers, setCurrentUsers] = useState<number>(6);
   const [profileData, setProfileData] = useState<Array<Profile>>([]);
 
   const renderedPreviews = profileData.map((profile) => {
@@ -28,10 +29,10 @@ const ProfileListings = (): JSX.Element => {
   });
 
   useEffect(() => {
-    populateProfiles().then((res) => {
+    populateProfiles(currentUsers).then((res) => {
       if (res && res.success) setProfileData(res.success.profiles);
     });
-  }, []);
+  }, [currentUsers]);
 
   return (
     <Grid container spacing={1} component="main" className={classes.root}>
@@ -59,7 +60,7 @@ const ProfileListings = (): JSX.Element => {
         <Button
           size="large"
           variant="outlined"
-          onClick={() => console.log('load more users')}
+          onClick={() => setCurrentUsers(currentUsers * 2)}
           className={classes.showMoreButton}
         >
           Show more

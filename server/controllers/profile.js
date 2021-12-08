@@ -24,24 +24,17 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
     throw new Error("Not authorized");
   }
 
-  res.status(200).json({
-    success: {
-      profile,
-    },
-  });
+  res.status(200).json({ success: { profile } });
 });
 
 exports.populateListings = async (req, res) => {
-  const profiles = await Profile.find({ isSitter: true }).limit(6);
+  const { numOfUsers } = req.query;
+  const profiles = await Profile.find({ isSitter: true }).limit(Number(numOfUsers));
 
   if (!profiles) {
     res.status(500);
     throw new Error("Unable to load profiles");
   }
 
-  res.status(200).json({
-    success: {
-      profiles,
-    },
-  });
+  res.status(200).json({ success: { profiles } });
 };
