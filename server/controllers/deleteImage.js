@@ -41,7 +41,7 @@ const removeFromDB = async (_id, res) => {
 // @desc delete profile photo in S3 and DB
 // @access Private
 exports.deleteImages = async (req, res) => {
-  const { _id } = req.query;
+  const { _id } = req.body;
 
   try {
     const response = await getKeyFromDB(_id);
