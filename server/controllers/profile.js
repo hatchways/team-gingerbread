@@ -27,6 +27,9 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: { profile } });
 });
 
+// @route GET /profile/listings
+// @desc load users from db
+// @access Public
 exports.populateListings = async (req, res) => {
   const { numOfUsers } = req.query;
   const profiles = await Profile.find({ isSitter: true }).limit(Number(numOfUsers));
