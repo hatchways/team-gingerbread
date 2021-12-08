@@ -4,6 +4,8 @@ import Rating from '@material-ui/lab/Rating';
 import { useFormik } from 'formik';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
 import { useEffect, useState } from 'react';
+import createRequestNotification from '../../../helpers/APICalls/createRequestNotification';
+import { mockName } from '../../../mocks/mockId';
 
 const times = [...Array(24).keys()].map((number) => {
   if (number === 0) {
@@ -55,11 +57,6 @@ const BookingForm = (props: { id: string }): JSX.Element => {
     fetchProfile(props.id).then((data) => setAvailableTime(data.success.profile.availableTime));
   }, [props.id]);
 
-  // submit action triggers call to create notification
-  // create createNotification helper that is linked to /notifications/create
-  // 1. create notification for client that request has been submitted
-  // 2. create notification for partner that service has been requested
-
   const formik = useFormik({
     initialValues: {
       startDate: 'placeholder',
@@ -68,12 +65,8 @@ const BookingForm = (props: { id: string }): JSX.Element => {
       endTime: 'placeholder',
     },
     onSubmit: (values) => {
-      alert(`
-      startDate: ${values.startDate}\n
-      startTime: ${values.startTime}\n
-      endDate: ${values.endDate}\n
-      endTime: ${values.endTime}
-      `);
+      alert('Your request for service has been submitted!');
+      createRequestNotification(mockName, 3, props.id).then((data) => console.log(data)); //need to calculate hours requested based on start and end (include nights as well)
       formik.resetForm();
     },
   });
