@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const conversationsArrayBound = (val) => val.length <= 100;
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -26,17 +24,6 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: "Profile",
-  },
-  conversations: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Conversation",
-      },
-    ],
-    validate: [conversationsArrayBound, "Exceeded number of conversations limit."],
-    required: false,
-    default: [],
   },
 });
 

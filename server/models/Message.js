@@ -1,22 +1,22 @@
 const mongoose = require("mongoose");
 
-const messageSchema = new mongoose.Schema({
-  convsersationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
+const messageSchema = new mongoose.Schema(
+  {
+    convsersationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+      default: "",
+    },
   },
-  date: {
-    type: Date,
-    required: true,
-  },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-  message: {
-    type: String,
-    default: "",
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = Message = mongoose.model("Message", messageSchema);
