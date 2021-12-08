@@ -37,6 +37,7 @@ interface props {
   endTime: number;
   changeStartTime: any;
   changeEndTime: any;
+  // date: Date;
 }
 
 const AvailabilityRow = (props: props): JSX.Element => {

@@ -10,6 +10,7 @@ interface AvailableDay {
   day: string;
   startTime: number;
   endTime: number;
+  date: Date;
 }
 
 const editAvailability = async (id: string, availableTime: AvailableDay[]) => {

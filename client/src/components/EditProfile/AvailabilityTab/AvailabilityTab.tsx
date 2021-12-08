@@ -60,36 +60,43 @@ const AvailabilityTab = (): JSX.Element => {
       day: 'Monday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-17'),
     },
     {
       day: 'Tuesday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-18'),
     },
     {
       day: 'Wednesday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-19'),
     },
     {
       day: 'Thursday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-20'),
     },
     {
       day: 'Friday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-21'),
     },
     {
       day: 'Saturday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-22'),
     },
     {
       day: 'Sunday',
       startTime: 10,
       endTime: 22,
+      date: new Date('2019-6-23'),
     },
   ]);
   const [updating, setUpdating] = useState(false);
@@ -102,6 +109,7 @@ const AvailabilityTab = (): JSX.Element => {
             day: day.day,
             startTime: newTime,
             endTime: day.endTime,
+            date: day.date,
           };
         } else {
           return day;
@@ -119,6 +127,7 @@ const AvailabilityTab = (): JSX.Element => {
             day: day.day,
             startTime: day.startTime,
             endTime: newTime,
+            date: day.date,
           };
         } else {
           return day;
@@ -160,6 +169,7 @@ const AvailabilityTab = (): JSX.Element => {
             name={day.day}
             day={day.day}
             key={day.id}
+            // date={day.date}
             number={day.id - 1}
             startDate={startDate.getDate()}
             month={months[startDate.getMonth()]}
