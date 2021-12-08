@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+const conversationsArrayBound = (val) => val.length <= 100;
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -25,13 +27,28 @@ const userSchema = new mongoose.Schema({
     required: true,
     ref: "Profile",
   },
+  conversations: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Conversation",
+      },
+    ],
+    validate: [conversationsArrayBound, "Exceeded number of conversations limit."],
+    required: false,
+    default: [],
+  },
 });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+userSchema.methods.matchPassword = async (enteredPassword) => {
+  try {
+    return await bcrypt.compare(enteredPassword, this.password);
+  } catch (e) {
+    return e;
+  }
 };
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async (next) => {
   if (!this.isModified("password")) {
     next();
   }
