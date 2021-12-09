@@ -6,8 +6,8 @@ const {
   loadProfile,
 } = require('../controllers/profile');
 
-router.route('/edit').post(protect, editProfile);
+router.route('/edit').post(editProfile); //add protect back in
 
-router.route('/load').get(protect, loadProfile);
+router.route('/load/:id').get(loadProfile); //add protect back in
 
 module.exports = router;
