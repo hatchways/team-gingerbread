@@ -32,7 +32,7 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
-                <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
+                <Route exact path="/edit-profile" component={EditMenu} />
               </Switch>
             </SocketProvider>
           </AuthProvider>

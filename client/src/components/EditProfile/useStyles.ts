@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   tabComponents: {
     flexGrow: 2,
+    minWidth: 800,
   },
 }));
 
