@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const {
-  test,
   createSession,
   createCustomer,
   retrieveCustomer,
@@ -10,7 +9,6 @@ const {
   getAllPaymentMethods,
 } = require("../controllers/stripe");
 
-router.route("/test").get(test);
 router.route("/session").post(createSession);
 router.route("/customers/create").post(createCustomer);
 router.route("/customers/retrieve/:id").get(retrieveCustomer);
