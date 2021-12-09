@@ -17,6 +17,7 @@ const imageRouter = require("./routes/image");
 const notificationsRouter = require("./routes/notifications");
 const bookingRequestRouter = require("./routes/bookingRequest");
 const conversationsRouter = require("./routes/conversations");
+const messagesRouter = require("./routes/messages");
 
 const { json, urlencoded } = express;
 
@@ -55,6 +56,7 @@ app.use("/profile", profileRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/booking-requests", bookingRequestRouter);
 app.use("/conversations", conversationsRouter);
+app.use("/messages", messagesRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

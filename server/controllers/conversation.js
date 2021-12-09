@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Conversation = require("../models/Conversation");
+const Message = require("../models/Message");
 
 exports.startConversation = async (req, res) => {
   const { user1, user2 } = req.body;
@@ -41,14 +42,16 @@ exports.loadConversations = async (req, res) => {
 };
 
 exports.deleteConversation = async (req, res) => {
-  const { user1, user2 } = req.body;
+  const { _id } = req.body;
 
-  const deleteConversation = await Conversation.deleteOne({
-    users: [mongoose.Types.ObjectId(user1), mongoose.Types.ObjectId(user2)],
-  });
+  const deleteConversation = await Conversation.deleteOne({ _id: mongoose.Types.ObjectId(_id) });
+
+  const deleteMessages = await Message.deleteMany({ conversationId: mongoose.Types.ObjectId(_id) });
 
   if (!deleteConversation.n) {
     res.status(400).send("Conversation does not exist.");
+  } else if (!deleteMessages.n) {
+    res.status(400).send("No messages exist for that conversation.");
   } else {
     res.status(200).send({
       success: { message: "Conversation deleted." },
