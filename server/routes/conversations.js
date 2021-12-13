@@ -6,7 +6,7 @@ const { startConversation, loadConversations, deleteConversation } = require("..
 
 router.route("/start").post(protect, startConversation);
 
-router.route("/load").get(protect, loadConversations);
+router.route("/load").post(protect, loadConversations);
 
 router.route("/delete").post(protect, deleteConversation);
 

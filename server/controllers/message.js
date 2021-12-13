@@ -18,9 +18,13 @@ exports.createNewMessage = async (req, res) => {
 
     if (!newMessage) {
       res.status(500).send("An error occurred while sending a message.");
+    } else {
+      await Conversation.findByIdAndUpdate(
+        { _id: mongoose.Types.ObjectId(conversationId) },
+        { lastMessage: mongoose.Types.ObjectId(newMessage._id) }
+      );
+      res.status(200).send({ success: newMessage });
     }
-
-    res.status(200).send({ success: newMessage });
   }
 };
 

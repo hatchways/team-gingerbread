@@ -1,6 +1,7 @@
+const mongoose = require("mongoose");
+const asyncHandler = require("express-async-handler");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
-const asyncHandler = require("express-async-handler");
 
 // @route POST /profile/edit
 // @desc edit user profile
@@ -11,7 +12,7 @@ exports.editProfile = asyncHandler(async (req, res, next) => {
   if (!user) {
     res.status(404);
     throw new Error("User doesn't exist");
-  } 
+  }
   const profile = await Profile.findById(user.profile);
   profile.set(req.body);
   const updatedProfile = await profile.save();
@@ -37,7 +38,12 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      profile: profile,
+      profile,
     },
   });
 });
+
+exports.batchLoadProfiles = async (req, res) => {
+  const { profileIds } = req.body;
+  const formattedIds = profileIds.map((id) => mongoose.Types.ObjectId(id));
+};

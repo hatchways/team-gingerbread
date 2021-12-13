@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login/Login';
 import Signup from './pages/SignUp/SignUp';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Messages from './pages/Messages/Messages';
 import NavBar from './components/NavBar/NavBar';
 import EditMenu from './components/EditProfile/EditMenu';
 import { AuthProvider } from './context/useAuthContext';
@@ -32,7 +33,7 @@ function App(): JSX.Element {
                 <Route exact path="/profile-listings" component={ProfileListings} />
                 <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
-                <ProtectedRoute exact path="/messages" Component={Dashboard} />
+                <ProtectedRoute exact path="/messages" Component={Messages} />
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
                 <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
               </Switch>

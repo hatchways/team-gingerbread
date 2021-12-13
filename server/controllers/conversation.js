@@ -36,7 +36,7 @@ exports.loadConversations = async (req, res) => {
     res.status(400).send("Conversations do not exist.");
   } else {
     res.status(200).send({
-      success: { message: `${conversations.length} conversations loaded.` },
+      success: { conversations },
     });
   }
 };

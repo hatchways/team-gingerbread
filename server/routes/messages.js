@@ -6,7 +6,7 @@ const { createNewMessage, loadMessages, deleteMessage } = require("../controller
 
 router.route("/new").post(protect, createNewMessage);
 
-router.route("/load").get(protect, loadMessages);
+router.route("/load").post(protect, loadMessages);
 
 router.route("/delete").post(protect, deleteMessage);
 

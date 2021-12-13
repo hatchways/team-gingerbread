@@ -1,5 +1,5 @@
-const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
+const User = require("../models/User");
 
 // @route POST /users
 // @desc Search for users
@@ -10,7 +10,7 @@ exports.searchUsers = asyncHandler(async (req, res, next) => {
   let users;
   if (searchString) {
     users = await User.find({
-      username: { $regex: searchString, $options: "i" }
+      username: { $regex: searchString, $options: "i" },
     });
   }
 
@@ -19,5 +19,5 @@ exports.searchUsers = asyncHandler(async (req, res, next) => {
     throw new Error("No users found in search");
   }
 
-  res.status(200).json({ users: users });
+  res.status(200).json({ users });
 });
