@@ -6,10 +6,18 @@ const useStyles = makeStyles(() => ({
     gridTemplateColumns: '30fr 35fr 35fr',
     alignItems: 'center',
     padding: '20px 45px',
+    width: '90%',
+    border: '#dedcdc 1px solid',
+    margin: '0 auto',
   },
-  availabilityForm: {
-    display: 'flex',
-    alignItems: 'center',
+  availabilityText: {
+    color: 'grey',
+    fontSize: 14,
+  },
+  availabilityDateText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   availabilityLabel: {
     color: 'black',

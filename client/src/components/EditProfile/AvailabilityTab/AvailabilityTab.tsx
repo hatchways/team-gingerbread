@@ -139,7 +139,7 @@ const AvailabilityTab = (): JSX.Element => {
 
   useEffect(() => {
     if (updating) {
-      editAvailability(mockId, availability).then((data) => console.log(data));
+      editAvailability(mockId, availability);
       setUpdating(false);
     }
   }, [availability, updating]);
@@ -169,7 +169,6 @@ const AvailabilityTab = (): JSX.Element => {
             name={day.day}
             day={day.day}
             key={day.id}
-            // date={day.date}
             number={day.id - 1}
             startDate={startDate.getDate()}
             month={months[startDate.getMonth()]}

@@ -37,21 +37,20 @@ interface props {
   endTime: number;
   changeStartTime: any;
   changeEndTime: any;
-  // date: Date;
 }
 
 const AvailabilityRow = (props: props): JSX.Element => {
   const classes = useStyles();
 
   return (
-    <Grid style={{ width: '90%', border: '#dedcdc 1px solid', margin: '0 auto' }} className={classes.availabilityRow}>
-      <Typography style={{ color: 'grey', fontSize: 14 }}>
-        <Typography style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }} display="inline">
+    <Grid className={classes.availabilityRow}>
+      <Typography className={classes.availabilityText}>
+        <Typography className={classes.availabilityDateText} display="inline">
           {props.startDate + props.number} {props.month},
         </Typography>{' '}
         {props.day}
       </Typography>
-      <Box className={classes.availabilityForm}>
+      <Box display="flex" alignItems="center">
         <Typography className={classes.availabilityLabel}>from</Typography>
         <Select
           className={classes.availabilitySelect}
@@ -70,7 +69,7 @@ const AvailabilityRow = (props: props): JSX.Element => {
           ))}
         </Select>
       </Box>
-      <Box className={classes.availabilityForm}>
+      <Box display="flex" alignItems="center">
         <Typography className={classes.availabilityLabel}>to</Typography>
         <Select
           className={classes.availabilitySelect}
