@@ -1,6 +1,6 @@
+const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
-const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
 
 // @route POST /auth/register
@@ -24,7 +24,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
   }
   const newProfile = await Profile.create({});
 
-  if(newProfile){
+  if (newProfile) {
     const profile = newProfile._id;
     const user = await User.create({
       username,
@@ -36,18 +36,19 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     if (user) {
       const token = generateToken(user._id);
       const secondsInWeek = 604800;
-  
+
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: secondsInWeek * 1000,
       });
-  
+
       res.status(201).json({
         success: {
           user: {
             id: user._id,
             username: user.username,
             email: user.email,
+            profile: user.profile,
           },
         },
       });
@@ -84,6 +85,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
           id: user._id,
           username: user.username,
           email: user.email,
+          profile: user.profile,
         },
       },
     });
@@ -110,6 +112,7 @@ exports.loadUser = asyncHandler(async (req, res, next) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        profile: user.profile,
       },
     },
   });

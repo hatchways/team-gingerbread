@@ -5,8 +5,9 @@ import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import edit from '../../../helpers/APICalls/edit';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
+import { mockId } from '../../../mocks/mockId';
 
-interface ProfileInterface {
+interface Profile {
   firstName: string;
   lastName: string;
   description: string;
@@ -40,7 +41,7 @@ export default function EditProfileTab(): JSX.Element {
   const classes = useStyles();
   const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
-  const [profile, setProfile] = useState<ProfileInterface>({
+  const [profile, setProfile] = useState<Profile>({
     firstName: '',
     lastName: '',
     description: '',
@@ -52,10 +53,9 @@ export default function EditProfileTab(): JSX.Element {
     gender: '',
     email: '',
   });
-  const userId = '619c1eb37a1e963a5b179c4b';
 
   useEffect(() => {
-    fetchProfile(userId).then((data) => setProfile(data.success.profile));
+    fetchProfile(mockId).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
   }, []);
 
   const formik = useFormik({
@@ -75,7 +75,7 @@ export default function EditProfileTab(): JSX.Element {
     },
     onSubmit: (values) => {
       edit(
-        userId,
+        mockId,
         values.firstName,
         values.lastName,
         values.description,

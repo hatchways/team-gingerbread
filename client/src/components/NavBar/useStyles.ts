@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
   appbar: {
     maxHeight: 100,
-    backgroundColor: 'transparent',
+    backgroundColor: '#FFFFFF',
   },
   appbarHomePage: {
     maxHeight: 100,
@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     height: '100%',
     backgroundColor: '#FFFFFF',
+    borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
   },
   homePageBar: {
     display: 'flex',
