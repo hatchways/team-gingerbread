@@ -1,5 +1,6 @@
 import useStyles from './useStyles';
 import { Box, Grid, TextField, InputLabel, Button, Typography } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import homepage_image from '../../Images/homepage_image_v2.png';
 export default function Homepage(): JSX.Element {
   const classes = useStyles();
@@ -34,7 +35,15 @@ export default function Homepage(): JSX.Element {
                 }}
               />
             </Box>
-            <Button variant="contained">Find My Dog Sitter</Button>
+            <Button
+              component={Link}
+              to="/profile-listings"
+              color="primary"
+              variant="contained"
+              className={classes.findMyButton}
+            >
+              Find My Dog Sitter
+            </Button>
           </form>
         </Grid>
         <Grid item xs={12} sm={6} className={classes.imageWrapper}>
