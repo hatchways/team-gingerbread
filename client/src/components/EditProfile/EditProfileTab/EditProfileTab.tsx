@@ -43,7 +43,7 @@ export default function EditProfileTab(): JSX.Element {
   });
 
   useEffect(() => {
-    fetchProfile(mockId).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
+    fetchProfile(mockId).then((data) => setProfile(data.success.profile));
   }, []);
 
   const formik = useFormik({

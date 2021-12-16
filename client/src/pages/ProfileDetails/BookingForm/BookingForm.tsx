@@ -74,7 +74,7 @@ const BookingForm = (props: { id: string }): JSX.Element => {
   useEffect(() => {
     const startDate = availableTime.find((date) => date.day === formik.values.startDate);
     const startTime = typeof startDate?.startTime === 'number' ? parseInt(startDate?.startTime) : 24;
-    const endTime = typeof startDate?.startTime === 'number' ? parseInt(startDate?.endTime) : 24;
+    const endTime = typeof startDate?.endTime === 'number' ? parseInt(startDate?.endTime) : 24;
     const availableTimes = times.filter((t) => t.value >= startTime && t.value <= endTime);
     setAvailableStartHours(availableTimes);
   }, [availableTime, formik.values.startDate]);
@@ -82,7 +82,7 @@ const BookingForm = (props: { id: string }): JSX.Element => {
   useEffect(() => {
     const endDate = availableTime.find((date) => date.day === formik.values.endDate);
     const startTime = typeof endDate?.startTime === 'number' ? parseInt(endDate?.startTime) : 24;
-    const endTime = typeof endDate?.startTime === 'number' ? parseInt(endDate?.endTime) : 24;
+    const endTime = typeof endDate?.endTime === 'number' ? parseInt(endDate?.endTime) : 24;
     const availableTimes = times.filter((t) => t.value >= startTime && t.value <= endTime);
     setAvailableEndHours(availableTimes);
   }, [availableTime, formik.values.endDate]);
@@ -96,13 +96,6 @@ const BookingForm = (props: { id: string }): JSX.Element => {
         <Box className={classes.profileDetailsForm}>
           <Typography className={classes.profileDetailsLabel}>drop off</Typography>
           <Grid className={classes.profileDetailsFormContainer}>
-            {/* <OutlinedInput
-              type="date"
-              name="startDate"
-              className={classes.profileDetailsFormInput}
-              value={formik.values.startDate}
-              onChange={formik.handleChange}
-            ></OutlinedInput> */}
             <Select
               variant="outlined"
               name="startDate"
@@ -141,13 +134,6 @@ const BookingForm = (props: { id: string }): JSX.Element => {
         <Box className={classes.profileDetailsForm}>
           <Typography className={classes.profileDetailsLabel}>pick up</Typography>
           <Grid className={classes.profileDetailsFormContainer}>
-            {/* <OutlinedInput
-              type="date"
-              name="endDate"
-              className={classes.profileDetailsFormInput}
-              value={formik.values.endDate}
-              onChange={formik.handleChange}
-            ></OutlinedInput> */}
             <Select
               variant="outlined"
               name="endDate"

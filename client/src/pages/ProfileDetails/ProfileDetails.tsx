@@ -22,7 +22,8 @@ const ProfileDetails = (): JSX.Element => {
     email: '',
   });
 
-  const { id }: { id: string } = useParams();
+  // const { id }: { id: string } = useParams();
+  const id = '61affa655479b0ee3cc36331';
 
   useEffect(() => {
     fetchProfile(id).then((data) => setProfile(data.success.profile));

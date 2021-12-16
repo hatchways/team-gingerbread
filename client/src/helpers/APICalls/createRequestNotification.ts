@@ -6,7 +6,7 @@ interface FetchOptions {
   body?: string;
 }
 
-const createRequestNotification = async (name: string, duration: number, recipient: string) => {
+const createRequestNotification = async (name: string, duration: number, recipientId: string) => {
   const fetchOptions: FetchOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -15,7 +15,7 @@ const createRequestNotification = async (name: string, duration: number, recipie
       title: 'dogSitting',
       description: `${name} has requested your service for ${duration} hours.`,
       date: new Date(),
-      recipient: recipient,
+      recipientId: recipientId,
     }),
   };
 
