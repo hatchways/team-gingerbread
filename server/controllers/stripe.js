@@ -61,13 +61,31 @@ exports.createPaymentMethod = async (req, res) => {
   res.send(paymentMethod);
 };
 
-// @route GET /stripe/payment/all
+// @route GET /stripe/payment/all/:customerId
 // @desc gets all payment methods
 // @access Public
 exports.getAllPaymentMethods = async (req, res) => {
   const paymentMethods = await stripe.paymentMethods.list({
-    customer: "cus_Kk1rd4KHOzlRC0",
+    customer: req.params.customerId,
     type: "card",
   });
   res.send(paymentMethods);
+};
+
+// @route POST /stripe/request/:id/pay
+// @desc send payment to sitter
+// @access Public
+exports.sendPayment = async (req, res) => {
+  const transfer = await stripe.transfers.create({
+    amount: req.body.amount,
+    currency: "usd",
+    destination: req.params.id,
+    transfer_group: req.body.group,
+  });
+
+  res.status(200).json({
+    success: {
+      transfer,
+    },
+  });
 };
