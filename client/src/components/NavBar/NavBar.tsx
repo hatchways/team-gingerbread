@@ -50,17 +50,6 @@ const NavBar = (): JSX.Element => {
     }
   }, [history, classes, location]);
 
-  if (loggedInUser === undefined) return <CircularProgress />;
-  if (
-    !loggedInUser &&
-    history.location.pathname !== '/login' &&
-    history.location.pathname !== '/signup' &&
-    history.location.pathname !== '/'
-  ) {
-    history.push('/login');
-    return <CircularProgress />;
-  }
-
   return (
     <AppBar className={outterNavStyle.current} position="absolute">
       <CssBaseline />

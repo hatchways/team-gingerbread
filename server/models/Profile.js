@@ -25,28 +25,34 @@ const profileSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    default: null
+    default: null,
   },
   available: {
     type: Boolean,
-    default: false
+    default: false,
   },
   availability: {
     type: String,
-    default: ''
+    default: "",
   },
   photo: {
-    type: String,
-    default: "",
+    url: {
+      type: String,
+      default: "",
+    },
+    key: {
+      type: String,
+      default: "",
+    },
   },
   gender: {
     type: String,
-    default: ""
+    default: "",
   },
   email: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
