@@ -1,6 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
-const YOUR_DOMAIN = "http://localhost:3000";
+const YOUR_DOMAIN = process.env.DOMAIN;
 
 // @route POST /stripe/session
 // @desc create new session
@@ -45,14 +45,6 @@ exports.retrieveCustomer = async (req, res) => {
   res.send(customer);
 };
 
-// @route GET /stripe/customers/all
-// @desc retrieves all customer
-// @access Public
-exports.retrieveAllCustomers = async (req, res) => {
-  const customers = await stripe.customers.list();
-  res.send(customers);
-};
-
 // @route POST /stripe/payment/create
 // @desc creates new payment method
 // @access Public
@@ -60,7 +52,6 @@ exports.createPaymentMethod = async (req, res) => {
   const paymentMethod = await stripe.paymentMethods.create({
     type: "card",
     card: {
-      //eventually replace this with body from front-end payment form
       number: "4242424242424242",
       exp_month: 12,
       exp_year: 2022,
