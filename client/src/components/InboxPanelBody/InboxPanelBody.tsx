@@ -19,7 +19,6 @@ import StyledBadge from '../StyledBadge';
 interface Props {
   profileData?: Map<string, ProfileData>;
   conversations?: Array<Conversation>;
-  currentLastMessage: string;
   onConversationClick: (
     firstName: string | null | undefined,
     lastName: string | null | undefined,
@@ -29,12 +28,7 @@ interface Props {
   ) => void;
 }
 
-const InboxPanelBody = ({
-  profileData,
-  conversations,
-  onConversationClick,
-  currentLastMessage,
-}: Props): JSX.Element => {
+const InboxPanelBody = ({ profileData, conversations, onConversationClick }: Props): JSX.Element => {
   const classes = useStyles();
   const { loggedInUser } = useAuth();
 
@@ -118,7 +112,7 @@ const InboxPanelBody = ({
                     </Typography>
                   </React.Fragment>
                 }
-                secondary={currentLastMessage ? currentLastMessage : lastMessage ? lastMessage : ''}
+                secondary={lastMessage ? lastMessage : ''}
               />
               <ListItemSecondaryAction>
                 <Typography component="span" variant="body2" color="textPrimary">

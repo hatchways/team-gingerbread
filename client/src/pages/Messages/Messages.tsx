@@ -33,7 +33,6 @@ const Messages = (): JSX.Element => {
   const [messages, setMessages] = useState<Map<string, Array<Message>>>();
   const [isConversationStarted, setIsconversationStarted] = useState<boolean>(false);
   const [currentConversationMessages, setCurrentConversationMessages] = useState<Array<Message> | undefined>([]);
-  const [currentLastMessage, setCurrentLastMessage] = useState<string>('');
   const [currentConverserName, setCurrentConverserName] = useState<string>('');
   const [currentConverserImage, setCurrentConverserImage] = useState<string | undefined>(undefined);
   const [currentConversation, setCurrentConversation] = useState<string>('');
@@ -74,10 +73,8 @@ const Messages = (): JSX.Element => {
         } else {
           if (!currentConversationMessages) {
             setCurrentConversationMessages([data.success]);
-            setCurrentLastMessage(data.success.content);
           } else {
             setCurrentConversationMessages([...currentConversationMessages, data.success]);
-            setCurrentLastMessage(data.success.content);
           }
         }
       });
@@ -224,7 +221,6 @@ const Messages = (): JSX.Element => {
             <InboxPanelBody
               profileData={profileData}
               conversations={conversations}
-              currentLastMessage={currentLastMessage}
               onConversationClick={onConversationClick}
             />
           </Grid>
