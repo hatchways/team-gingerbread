@@ -6,11 +6,19 @@ const User = require("../models/User");
 // @desc edit user profile
 // @access Private
 exports.editProfile = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findByIdAndUpdate(req.body.id, req.body.changes, { new: true });
+  const user = await User.findById(req.body.id);
 
-  if (!profile) res.status(500).send("An error occurred while editing profile.");
+  if (user) {
+    const profile = await Profile.findByIdAndUpdate(user.profile, req.body.changes, { new: true });
 
-  res.status(200).json({ success: { message: "Profile edited successfully!" } });
+    if (!profile) {
+      res.status(500).send("An error occurred while editing profile.");
+    } else {
+      res.status(200).json({ success: { message: "Profile edited successfully!" } });
+    }
+  } else {
+    res.status(500).send("An error occurred while editing profile.");
+  }
 });
 
 // @route GET /profile/load

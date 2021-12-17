@@ -2,6 +2,7 @@ export interface User {
   email: string;
   username: string;
   profile: string;
+  id: string;
 }
 
 export interface SearchUsersApiData {
