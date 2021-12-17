@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 50,
     width: 50,
   },
+  chatPanelHeaderImage: {
+    maxHeight: '100%',
+    maxWidth: '100%',
+  },
   chatPanelHeaderAvatarBadge: {
     margin: '20px 20px 20px 30px',
     display: 'flex',

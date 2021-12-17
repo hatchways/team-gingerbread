@@ -260,7 +260,7 @@ const Messages = (): JSX.Element => {
                     variant="dot"
                   >
                     <Avatar className={classes.chatPanelHeaderAvatar}>
-                      <img src={currentConverserImage} alt="profile image" />
+                      <img src={currentConverserImage} alt="profile image" className={classes.chatPanelHeaderImage} />
                     </Avatar>
                   </StyledBadge>
                 </div>

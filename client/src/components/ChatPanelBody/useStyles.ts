@@ -6,6 +6,10 @@ const useStyles = makeStyles(() => ({
     height: 50,
     width: 50,
   },
+  chatPanelBodyImage: {
+    maxHeight: '100%',
+    maxWidth: '100%',
+  },
   chatPanelBodyIcon: {
     fontSize: 50,
   },

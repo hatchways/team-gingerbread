@@ -22,6 +22,9 @@ exports.searchUsers = asyncHandler(async (req, res, next) => {
   res.status(200).json({ users });
 });
 
+// @route POST /users
+// @desc load user profile data for one or many users
+// @access Private
 exports.loadUsersData = async (req, res) => {
   const { users } = req.body;
 

@@ -14,6 +14,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 50,
     width: 50,
   },
+  inboxPanelConversationImage: {
+    maxHeight: '100%',
+    maxWidth: '100%',
+  },
   inboxPanelConversationAvatarBadge: {
     margin: '0px 15px 0px 0px',
     display: 'flex',

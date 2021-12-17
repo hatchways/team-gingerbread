@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 
+// @route POST /conversations
+// @desc start a new conversation
+// @access Private
 exports.startConversation = async (req, res) => {
   const { user1, user2 } = req.body;
 
@@ -26,6 +29,9 @@ exports.startConversation = async (req, res) => {
   }
 };
 
+// @route POST /conversations
+// @desc load all conversations for a user
+// @access Private
 exports.loadConversations = async (req, res) => {
   const { user } = req.body;
   const conversations = await Conversation.find({
@@ -41,6 +47,9 @@ exports.loadConversations = async (req, res) => {
   }
 };
 
+// @route POST /conversations
+// @desc delete a single conversation and all their associated messages
+// @access Private
 exports.deleteConversation = async (req, res) => {
   const { _id } = req.body;
 

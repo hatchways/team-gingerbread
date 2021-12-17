@@ -102,7 +102,7 @@ const InboxPanelBody = ({
                   >
                     <Avatar className={classes.inboxPanelConversationAvatar}>
                       {photoUrl ? (
-                        <img src={photoUrl} alt="profile image" />
+                        <img src={photoUrl} alt="profile image" className={classes.inboxPanelConversationImage} />
                       ) : (
                         <AccountCircleIcon className={classes.inboxPanelConversationIcon} />
                       )}

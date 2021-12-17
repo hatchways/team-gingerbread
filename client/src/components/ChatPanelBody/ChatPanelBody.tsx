@@ -35,7 +35,7 @@ const ChatPanelBody = ({ currentConversationMessages, currentConverserImage }: P
                 </Avatar>
               ) : (
                 <Avatar className={classes.chatPanelBodyAvatar}>
-                  <img src={currentConverserImage} alt="profile image" />
+                  <img src={currentConverserImage} alt="profile image" className={classes.chatPanelBodyImage} />
                 </Avatar>
               )}
               <Box display="flex" justifyContent="center" alignItems="center">

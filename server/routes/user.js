@@ -6,6 +6,6 @@ const { searchUsers, loadUsersData } = require("../controllers/user");
 
 router.route("/").get(protect, searchUsers);
 
-router.route("/load").post(loadUsersData);
+router.route("/load").post(protect, loadUsersData);
 
 module.exports = router;
