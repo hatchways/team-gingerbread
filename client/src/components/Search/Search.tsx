@@ -74,9 +74,11 @@ const Search = ({ search, handleChange, getNewUser }: Props): JSX.Element => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onInputChange={handleChange}
-        onChange={(_, value) => {
+        onChange={(e, value) => {
           if (value && typeof value !== 'string' && loggedInUser && value._id !== loggedInUser.id) {
             getNewUser(value);
+          } else if (typeof value === 'string') {
+            updateSnackBarMessage('Please pick a user from the dropdown.');
           } else {
             updateSnackBarMessage('Unable to start a conversation with oneself. Please pick another user.');
           }

@@ -131,7 +131,7 @@ const Messages = (): JSX.Element => {
       loadConversations(loggedInUser.id).then((data) => {
         if (data.error) {
           if (!isConversationStarted) {
-            updateSnackBarMessage(`No conversations to load. Click 'Start a Conversation' to get begin one!`);
+            updateSnackBarMessage(`No conversations to load. Click 'Start a Conversation' to begin one!`);
           }
         } else if (data.success.conversations) {
           data.success.conversations.sort((a?, b?) => {

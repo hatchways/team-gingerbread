@@ -7,8 +7,8 @@ const useStyles = makeStyles(() => ({
     width: 50,
   },
   chatPanelBodyImage: {
-    maxHeight: '100%',
-    maxWidth: '100%',
+    maxHeight: '110%',
+    maxWidth: '110%',
   },
   chatPanelBodyIcon: {
     fontSize: 50,
