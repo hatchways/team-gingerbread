@@ -1,19 +1,19 @@
 import { FetchOptions } from '../../interface/FetchOptions';
-import { LoadConversationApiData } from '../../interface/LoadConversationApiData';
+import { NewMessageApiData } from '../../interface/NewMessageApiData';
 
-const loadConversations = async (user: string): Promise<LoadConversationApiData> => {
+const sendNewMessage = async (conversationId: string, author: string, content: string): Promise<NewMessageApiData> => {
   const fetchOptions: FetchOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user }),
+    body: JSON.stringify({ conversationId, author, content }),
     credentials: 'include',
   };
 
-  return await fetch('/conversations/load', fetchOptions)
+  return await fetch('/messages/new', fetchOptions)
     .then((res) => res.json())
     .catch((e) => ({
       error: { message: `Unable to connect to server. Please try again ${e}` },
     }));
 };
 
-export default loadConversations;
+export default sendNewMessage;

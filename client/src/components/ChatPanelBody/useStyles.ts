@@ -1,12 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
-  chatPanelHeaderAvatar: {
+  chatPanelBodyAvatar: {
     margin: '20px 20px 20px 30px',
     height: 50,
     width: 50,
   },
-  chatPanelHeaderIcon: {
+  chatPanelBodyIcon: {
     fontSize: 50,
   },
   chatPanelBodyBubbleUser: {

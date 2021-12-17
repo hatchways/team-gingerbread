@@ -42,8 +42,3 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
     },
   });
 });
-
-exports.batchLoadProfiles = async (req, res) => {
-  const { profileIds } = req.body;
-  const formattedIds = profileIds.map((id) => mongoose.Types.ObjectId(id));
-};

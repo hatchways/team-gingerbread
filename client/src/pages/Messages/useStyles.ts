@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { Theme, makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: '45px 0px 0px 0px',
     minWidth: '100%',
@@ -9,6 +9,7 @@ const useStyles = makeStyles(() => ({
   inboxPanel: {
     margin: '40px 0px 0px 0px',
     minWidth: '23vw',
+    maxWidth: '23vw',
     minHeight: '91vh',
     maxHeight: '91vh',
     borderRadius: 0,
@@ -22,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
   chatPanel: {
     margin: '45px 0px 0px 0px',
-    minWidth: '65vw',
+    minWidth: '77vw',
     maxWidth: '77vw',
     maxHeight: '92vh',
   },
@@ -32,15 +33,22 @@ const useStyles = makeStyles(() => ({
     overflow: 'auto',
   },
   chatPanelHeader: {
-    maxHeight: '20vh',
+    minHeight: '10vh',
+    maxHeight: '10vh',
     borderBottom: '1px solid lightGrey',
     borderLeft: '1px solid lightGrey',
     borderRadius: 0,
   },
   chatPanelHeaderAvatar: {
-    margin: '20px 20px 20px 30px',
     height: 50,
     width: 50,
+  },
+  chatPanelHeaderAvatarBadge: {
+    margin: '20px 20px 20px 30px',
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(1),
+    },
   },
   chatPanelHeaderIcon: {
     fontSize: 50,

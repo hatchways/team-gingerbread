@@ -29,9 +29,9 @@ exports.createNewMessage = async (req, res) => {
 };
 
 exports.loadMessages = async (req, res) => {
-  const { conversationId } = req.body;
+  const { conversationIds } = req.body;
 
-  const messages = await Message.find({ conversationId: mongoose.Types.ObjectId(conversationId) });
+  const messages = await Message.find({ conversationId: { $in: conversationIds } });
 
   if (!messages) {
     res.status(400).send("Conversation does not exist");

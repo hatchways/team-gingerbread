@@ -20,11 +20,11 @@ interface Props {
   open: boolean;
   search: string;
   handleClose: () => void;
-  getNewUser: (user: User) => void;
-  handleChange: (event: ChangeEvent<HTMLInputElement>, newInputValue: string) => void;
+  handleSearchChange: (event: ChangeEvent<HTMLInputElement>, newInputValue: string) => void;
+  getNewUser: (user: string | User | null) => void;
 }
 
-export default function SimpleModal({ open, search, handleClose, getNewUser, handleChange }: Props): JSX.Element {
+export default function SimpleModal({ open, search, handleClose, getNewUser, handleSearchChange }: Props): JSX.Element {
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
 
@@ -40,7 +40,7 @@ export default function SimpleModal({ open, search, handleClose, getNewUser, han
           </Button>
         </Grid>
       </Grid>
-      <Search search={search} handleChange={handleChange} getNewUser={getNewUser} />
+      <Search search={search} handleChange={handleSearchChange} getNewUser={getNewUser} />
     </div>
   );
 

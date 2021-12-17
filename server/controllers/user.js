@@ -21,3 +21,17 @@ exports.searchUsers = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ users });
 });
+
+exports.loadUsersData = async (req, res) => {
+  const { users } = req.body;
+
+  const profiles = await User.find({ _id: { $in: users } })
+    .select("profile")
+    .populate("profile", "firstName lastName photo");
+
+  if (!profiles) {
+    res.status(400).send("An error occurred in retrieving profile data.");
+  } else {
+    res.status(200).send({ success: profiles });
+  }
+};

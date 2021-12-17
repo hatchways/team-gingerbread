@@ -8,6 +8,4 @@ router.route("/edit").post(editProfile); // add protect back in
 
 router.route("/load/:id").get(loadProfile); // add protect back in
 
-router.route("/batch").post(batchLoadProfiles);
-
 module.exports = router;

@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { Theme, makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
     maxWidth: '23vw',
@@ -11,9 +11,15 @@ const useStyles = makeStyles(() => ({
     margin: '10px',
   },
   inboxPanelConversationAvatar: {
-    margin: '0px 15px 0px 0px',
     height: 50,
     width: 50,
+  },
+  inboxPanelConversationAvatarBadge: {
+    margin: '0px 15px 0px 0px',
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(1),
+    },
   },
   inboxPanelConversationIcon: {
     fontSize: 50,
