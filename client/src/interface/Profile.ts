@@ -2,14 +2,18 @@ export interface Profile {
   firstName: string;
   lastName: string;
   description: string;
+  isSitter: boolean;
   address: string;
   phoneNumber: string;
   dateOfBirth: Date;
-  availability: Array<Date>;
+  available: boolean;
+  accountType: string;
+  availability: string;
+  gender: string;
+  email: string;
   photo: {
     url: string;
     key: string;
   };
-  isSitter: boolean;
   _id: string;
 }

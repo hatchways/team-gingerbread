@@ -23,6 +23,7 @@ const ProfileListings = (): JSX.Element => {
           description={profile.description}
           location={'Ontario, Canada'}
           payRate={15}
+          id={profile._id}
         />
       </Grid>
     );

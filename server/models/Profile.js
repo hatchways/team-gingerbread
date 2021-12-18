@@ -27,9 +27,13 @@ const profileSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  available: {
+    type: Boolean,
+    default: false,
+  },
   availability: {
-    type: [Date],
-    default: [],
+    type: String,
+    default: "",
   },
   photo: {
     url: {
@@ -40,6 +44,14 @@ const profileSchema = new mongoose.Schema({
       type: String,
       default: "",
     },
+  },
+  gender: {
+    type: String,
+    default: "",
+  },
+  email: {
+    type: String,
+    default: "",
   },
   isSitter: {
     type: Boolean,
