@@ -14,7 +14,13 @@ const CurrentBookings: FC<CurrentBookingsProps> = ({ currentBookings }) => {
   return (
     <>
       {currentBookings.map((booking) => (
-        <Box key={booking.requestId} className={classes.bookingContainer}>
+        <Box
+          key={booking.requestId}
+          minHeight={'75px'}
+          padding={'10px'}
+          marginBottom={'5px'}
+          className={classes.bookingContainer}
+        >
           <Typography variant="body2">{formatBookingDate(booking.start)}</Typography>
           <Box display="flex" justifyContent="space-between">
             <Box>

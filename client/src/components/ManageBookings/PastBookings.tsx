@@ -1,7 +1,6 @@
 import { Box, Typography } from '@material-ui/core';
 import { FC } from 'react';
-import formatBookingDate from '../../helpers/ManageBookings/formatBookingDate';
-import sortBookingsByStartDate from '../../helpers/ManageBookings/sortBookingsByStartDate';
+import { formatBookingDate, sortBookingsByStartDate } from '../../helpers/ManageBookings';
 import { BookingRequests, BookingStatus } from '../../pages/ManageBookings/types';
 import useStyles from './useStyles';
 
@@ -25,7 +24,13 @@ const PastBookings: FC<PastBookingsProps> = ({ bookingRequests: bookingRequests 
   return (
     <>
       {sortedBookings.map((booking) => (
-        <Box key={booking.requestId} className={classes.bookingContainer}>
+        <Box
+          key={booking.requestId}
+          minHeight={'75px'}
+          padding={'10px'}
+          marginBottom={'5px'}
+          className={classes.bookingContainer}
+        >
           <Typography variant="body2">{formatBookingDate(booking.start)}</Typography>
           <Box display="flex" justifyContent="space-between">
             <Box>

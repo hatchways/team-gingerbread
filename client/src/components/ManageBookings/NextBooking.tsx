@@ -1,6 +1,6 @@
 import { Box, Typography } from '@material-ui/core';
 import { FC } from 'react';
-import formatBookingDate from '../../helpers/ManageBookings/formatBookingDate';
+import { formatBookingDate } from '../../helpers/ManageBookings';
 import { BookingRequest, BookingStatus } from '../../pages/ManageBookings/types';
 import useStyles from './useStyles';
 
@@ -14,7 +14,7 @@ const CurrentBookings: FC<NextBookingProps> = ({ nextBooking }) => {
   return (
     <>
       {nextBooking ? (
-        <Box className={classes.bookingContainer}>
+        <Box minHeight={'75px'} padding={'10px'} marginBottom={'5px'} className={classes.bookingContainer}>
           <Typography variant="body2">{formatBookingDate(nextBooking.start)}</Typography>
           <Box display="flex" justifyContent="space-between">
             <Box>

@@ -1,11 +1,8 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   bookingContainer: {
-    minHeight: '75px',
     border: `1px solid ${theme.palette.grey[200]}`,
-    padding: '10px',
-    marginBottom: '5px',
   },
 }));
 
