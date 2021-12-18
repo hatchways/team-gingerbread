@@ -54,6 +54,7 @@ app.use("/image", imageRouter);
 app.use("/profile", profileRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/booking-requests", bookingRequestRouter);
+app.use("/profile", profileRouter);
 app.use("/stripe", stripeRouter);
 
 if (process.env.NODE_ENV === "production") {

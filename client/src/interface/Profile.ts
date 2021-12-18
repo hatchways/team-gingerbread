@@ -11,4 +11,9 @@ export interface Profile {
   availability: string;
   gender: string;
   email: string;
+  photo: {
+    url: string;
+    key: string;
+  };
+  _id: string;
 }

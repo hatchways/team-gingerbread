@@ -35,7 +35,7 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
-                <ProtectedRoute exact path="/profile-details" Component={ProfileDetails} />
+                <ProtectedRoute exact path="/profile-details/:id" Component={ProfileDetails} />
                 <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
               </Switch>
             </SocketProvider>

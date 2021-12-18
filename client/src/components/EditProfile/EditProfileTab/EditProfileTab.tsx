@@ -45,6 +45,11 @@ export default function EditProfileTab(): JSX.Element {
     availability: '',
     gender: '',
     email: '',
+    photo: {
+      url: '',
+      key: '',
+    },
+    _id: '',
   });
 
   useEffect(() => {
@@ -108,6 +113,11 @@ export default function EditProfileTab(): JSX.Element {
         availability: values.availability,
         gender: values.gender,
         email: values.email,
+        photo: {
+          url: '',
+          key: '',
+        },
+        _id: '',
       });
     },
   });
@@ -119,11 +129,9 @@ export default function EditProfileTab(): JSX.Element {
         {accountType === 'partner' && (
           <Box className={classes.section}>
             <FormLabel>
-              {formik.values.isSitter ? (
-                <Typography className={classes.label}>i&apos;m a sitter</Typography>
-              ) : (
-                <Typography className={classes.label}>i&apos;m not a sitter</Typography>
-              )}
+              <Typography className={classes.label}>
+                {formik.values.isSitter ? `i'm a sitter` : `i'm not a sitter`}
+              </Typography>
             </FormLabel>
             <Switch
               id="isSitter"
