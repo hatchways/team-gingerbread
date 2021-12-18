@@ -1,24 +1,28 @@
 /* eslint-disable no-console */
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
 const colors = require("colors");
 const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const { join } = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
 const connectDB = require("./db");
 const { notFound, errorHandler } = require("./middleware/error");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
-const uploadRouter = require("./routes/upload");
+const imageRouter = require("./routes/image");
+const notificationsRouter = require("./routes/notifications");
+const bookingRequestRouter = require("./routes/bookingRequest");
+const stripeRouter = require("./routes/stripe");
 
 const { json, urlencoded } = express;
 
 connectDB();
 const app = express();
+
 const server = http.createServer(app);
 
 const io = socketio(server, {
@@ -46,8 +50,11 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-app.use("/upload", uploadRouter);
+app.use("/image", imageRouter);
 app.use("/profile", profileRouter);
+app.use("/notifications", notificationsRouter);
+app.use("/booking-requests", bookingRequestRouter);
+app.use("/stripe", stripeRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

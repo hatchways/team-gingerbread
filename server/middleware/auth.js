@@ -12,6 +12,10 @@ const protect = (req, res, next) => {
 
     req.user = decoded;
 
+    if (!req.user) {
+      return res.status(404).send("User Id is not valid");
+    }
+
     next();
   } catch (err) {
     res.status(401).send("Token is not valid");
