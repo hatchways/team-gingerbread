@@ -22,12 +22,12 @@ const ProfileDetails = (): JSX.Element => {
     email: '',
   });
 
-  // const { id }: { id: string } = useParams();
-  const id = '61affa655479b0ee3cc36331';
+  const { id }: { id: string } = useParams();
+  // const id = '61affa655479b0ee3cc36331';
 
   useEffect(() => {
     fetchProfile(id).then((data) => setProfile(data.success.profile));
-  }, [id]);
+  });
 
   return (
     <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1200px" display="grid" gridTemplateColumns="60fr 40fr">
