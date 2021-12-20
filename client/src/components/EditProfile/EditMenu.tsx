@@ -10,6 +10,12 @@ import EditProfileTab from './EditProfileTab/EditProfileTab';
 import ProfilePhotoTab from './ProfilePhotoTab/ProfilePhotoTab';
 import PaymentTab from './PaymentTab/PaymentTab';
 
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe(
+  'pk_test_51K4XCnKf5QktJZn3GrBXfSwbcgATNhC6MATEhDqM2T1q6jWFMhC4pA7hom84oWVSQWOMC5F3rjd2twAMa4Lnrktn00Yb6ixDo8',
+);
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -51,6 +57,11 @@ const EditMenu = (): JSX.Element => {
     setValue(newValue);
   };
 
+  const options = {
+    // passing the client secret obtained from the server
+    clientSecret: '{{CLIENT_SECRET}}',
+  };
+
   return (
     <Grid container component="main" className={classes.root}>
       <Grid item xs={6} md={2} lg={2} className={classes.tabContainer}>
@@ -81,7 +92,9 @@ const EditMenu = (): JSX.Element => {
           Availability Placeholder
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <PaymentTab />
+          <Elements stripe={stripePromise} options={options}>
+            <PaymentTab />
+          </Elements>
         </TabPanel>
         <TabPanel value={value} index={4}>
           Security Placeholder

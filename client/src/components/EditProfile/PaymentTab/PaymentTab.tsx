@@ -1,9 +1,10 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
-import { Box, Button, OutlinedInput, Grid } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import { useState } from 'react';
-import { useFormik } from 'formik';
 import CreditCard from './CreditCard/CreditCard';
+
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 
 interface card {
   name: string;
@@ -18,29 +19,35 @@ export default function PaymentTab(): JSX.Element {
   const [savedCards, setSavedCards] = useState<card[]>([]);
   const [showCardInput, setShowCardInput] = useState(false);
 
-  const addCard = (newCard: card) => {
-    setSavedCards([...savedCards, newCard]);
-  };
+  const stripe = useStripe();
+  const elements = useElements();
 
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      cardNumber: '',
-      cardExpDate: '',
-      cardCVC: '',
-    },
-    onSubmit: (values) => {
-      addCard({
-        name: values.name,
-        cardNumber: values.cardNumber,
-        cardExpDate: values.cardExpDate,
-        cardCVC: values.cardCVC,
-        cardType: ['visa', 'mastercard'][Math.floor(Math.random() * 2)],
-      });
-      formik.resetForm();
-      setShowCardInput(!showCardInput);
-    },
-  });
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    const result = await stripe.confirmPayment({
+      //`Elements` instance that was used to create the Payment Element
+      elements,
+      confirmParams: {
+        return_url: 'https://my-site.com/order/123/complete',
+      },
+    });
+
+    if (result.error) {
+      // Show error to your customer (e.g., payment details incomplete)
+      console.log(result.error.message);
+    } else {
+      // Your customer will be redirected to your `return_url`. For some payment
+      // methods like iDEAL, your customer will be redirected to an intermediate
+      // site first to authorize the payment, then redirected to the `return_url`.
+    }
+  };
 
   return (
     <Box minHeight="50vh" padding="45px 40px" display="flex" flexDirection="column" alignItems="center">
@@ -62,61 +69,14 @@ export default function PaymentTab(): JSX.Element {
       )}
       {showCardInput && (
         <Box width="100%">
-          <form className={classes.cardForm} onSubmit={formik.handleSubmit}>
-            <Typography className={classes.cardFormLabel}>Name</Typography>
-            <OutlinedInput
-              name="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              type="text"
-              autoComplete="cc-name"
-              placeholder="Name On Card"
-              fullWidth
-            />
-            <Typography className={classes.cardFormLabel}>Credit Card Number</Typography>
-            <OutlinedInput
-              name="cardNumber"
-              value={formik.values.cardNumber}
-              onChange={formik.handleChange}
-              type="text"
-              autoComplete="cc-number"
-              placeholder="9999 9999 9999 9999"
-              fullWidth
-            />
-            <Grid className={classes.cardFormGrid}>
-              <Box>
-                <Typography className={classes.cardFormLabel}>Expiration Date</Typography>
-                <OutlinedInput
-                  name="cardExpDate"
-                  value={formik.values.cardExpDate}
-                  onChange={formik.handleChange}
-                  type="text"
-                  autoComplete="cc-exp"
-                  placeholder="MM/YY"
-                  fullWidth
-                />
-              </Box>
-              <Box>
-                <Typography className={classes.cardFormLabel}>Security Code</Typography>
-                <OutlinedInput
-                  name="cardCVC"
-                  value={formik.values.cardCVC}
-                  onChange={formik.handleChange}
-                  type="password"
-                  autoComplete="cc-csc"
-                  placeholder="CVC"
-                  fullWidth
-                />
-              </Box>
-            </Grid>
-            <Box display="flex" justifyContent="space-around" width="100%" marginTop="30px">
-              <Button className={classes.cancelPaymentButton} onClick={(e) => setShowCardInput(!showCardInput)}>
-                Cancel
-              </Button>
-              <Button type="submit" className={classes.savePaymentButton}>
-                Save Payment
-              </Button>
-            </Box>
+          <form className={classes.cardForm} onSubmit={handleSubmit}>
+            <PaymentElement />
+            <Button className={classes.cancelPaymentButton} onClick={(e) => setShowCardInput(!showCardInput)}>
+              Cancel
+            </Button>
+            <Button type="submit" className={classes.savePaymentButton}>
+              Save Payment
+            </Button>
           </form>
         </Box>
       )}

@@ -20,8 +20,10 @@ export default function CreditCard(props: props): JSX.Element {
   return (
     <Box className={classes.creditCard}>
       <Box display="flex" justifyContent="space-between">
-        {card.cardType === 'mastercard' && <img className={classes.cardLogo} src={MastercardLogo} />}
-        {card.cardType === 'visa' && <img className={classes.cardLogo} src={VisaLogo} />}
+        {card.cardType === 'mastercard' && (
+          <img className={classes.cardLogo} src={MastercardLogo} alt="mastercard logo" />
+        )}
+        {card.cardType === 'visa' && <img className={classes.cardLogo} src={VisaLogo} alt="visa logo" />}
         <Checkbox className={classes.cardCheckbox} />
       </Box>
 
