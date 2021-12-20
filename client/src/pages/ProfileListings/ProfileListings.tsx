@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useState, useEffect } from 'react';
 import { Grid, Typography, Button, CircularProgress } from '@material-ui/core';
 import ProfilePreview from './ProfilePreview/ProfilePreview';
-import generateMockData from './generateMockData';
+import { populateProfiles } from '../../helpers/APICalls/populateProfiles';
+import { Profile } from '../../interface/Profile';
 import useStyles from './useStyles';
 import LocationSearchBar from '../../components/LocationSearchBar';
 import AvailabilitySearchBar from '../../components/AvailabilitySearchBar';
@@ -11,28 +10,29 @@ import AvailabilitySearchBar from '../../components/AvailabilitySearchBar';
 const ProfileListings = (): JSX.Element => {
   const classes = useStyles();
   const [currentUsers, setCurrentUsers] = useState<number>(6);
-  const [mockData, setMockData] = useState<any>([]);
+  const [profileData, setProfileData] = useState<Array<Profile>>([]);
 
-  const renderedPreviews = mockData.map(
-    (data: { name: Record<string, unknown>; picture: Record<string, any>; id: Record<string, any> }[]) => {
-      return (
-        <Grid item key={data[0].id.value}>
-          <ProfilePreview
-            img={data[0].picture.large}
-            name={`${data[0].name.first} ${data[0].name.last}`}
-            subtitle={'Puppy power'}
-            rating={3}
-            description={'I like to take long walks on the beach with your dog.'}
-            location={'Ontario, Canada'}
-            payRate={15}
-          />
-        </Grid>
-      );
-    },
-  );
+  const renderedPreviews = profileData.map((profile) => {
+    return (
+      <Grid item key={profile._id}>
+        <ProfilePreview
+          img={profile.photo.url}
+          name={`${profile.firstName} ${profile.lastName}`}
+          subtitle={'Puppy power'}
+          rating={3}
+          description={profile.description}
+          location={'Ontario, Canada'}
+          payRate={15}
+          id={profile._id}
+        />
+      </Grid>
+    );
+  });
 
   useEffect(() => {
-    generateMockData(currentUsers).then((res) => setMockData(res));
+    populateProfiles(currentUsers).then((res) => {
+      if (res && res.success) setProfileData(res.success.profiles);
+    });
   }, [currentUsers]);
 
   return (
@@ -54,7 +54,7 @@ const ProfileListings = (): JSX.Element => {
       </Grid>
       <Grid item>
         <Grid container spacing={6} className={classes.profilePreviewWrapper}>
-          {!mockData.length ? <CircularProgress /> : renderedPreviews}
+          {!profileData ? <CircularProgress /> : renderedPreviews}
         </Grid>
       </Grid>
       <Grid item spacing={1}>
