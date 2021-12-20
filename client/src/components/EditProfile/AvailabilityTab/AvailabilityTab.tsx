@@ -1,10 +1,11 @@
-import useStyles from './useStyles';
+import { useState, useEffect, useContext } from 'react';
 import { Box, Typography } from '@material-ui/core';
+import useStyles from './useStyles';
 import AvailabilityRow from './AvailabilityRow/AvailabilityRow';
-import { useState, useEffect } from 'react';
 import editAvailability from '../../../helpers/APICalls/editAvailability';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
-import { mockId } from '../../../mocks/mockId';
+import { AuthContext } from '../../../context/useAuthContext';
+import { SnackBarContext } from '../../../context/useSnackbarContext';
 
 const months = [
   'January',
@@ -53,7 +54,9 @@ const days = [
 ];
 
 const AvailabilityTab = (): JSX.Element => {
+  const { updateSnackBarMessage } = useContext(SnackBarContext);
   const classes = useStyles();
+  const { loggedInUser } = useContext(AuthContext);
   const [startDate, setStartDate] = useState(new Date(2019, 5, 17));
   const [availability, setAvailability] = useState([
     {
@@ -138,15 +141,18 @@ const AvailabilityTab = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (updating) {
-      editAvailability(mockId, availability);
+    if (updating && loggedInUser) {
+      editAvailability(loggedInUser.id, availability);
       setUpdating(false);
+      updateSnackBarMessage('Your availability has been updated');
     }
-  }, [availability, updating]);
+  }, [availability, updating, loggedInUser, updateSnackBarMessage]);
 
   useEffect(() => {
-    fetchProfile(mockId).then((data) => setAvailability(data.success.profile.availableTime));
-  }, []);
+    if (loggedInUser) {
+      fetchProfile(loggedInUser.id).then((data) => setAvailability(data.success.profile.availableTime));
+    }
+  }, [loggedInUser]);
 
   return (
     <Box
