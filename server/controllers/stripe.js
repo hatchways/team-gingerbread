@@ -71,3 +71,20 @@ exports.getAllPaymentMethods = async (req, res) => {
   });
   res.send(paymentMethods);
 };
+
+// @route POST /stripe/create-payment-intent
+// @desc creates payment intent
+// @access Public
+exports.createPaymentIntent = async (req, res) => {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 1,
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+};
