@@ -11,10 +11,12 @@ import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Unauthorized from './pages/Unauthorized/Unauthorized';
+import ProfileDetails from './pages/ProfileDetails/ProfileDetails';
 import ProfileListings from './pages/ProfileListings/ProfileListings';
 
 import './App.css';
 import Homepage from './pages/Homepage/Homepage';
+import ManageBookings from './pages/ManageBookings/ManageBookings';
 
 function App(): JSX.Element {
   return (
@@ -33,7 +35,9 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
+                <ProtectedRoute exact path="/manage-bookings" Component={ManageBookings} />
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
+                <ProtectedRoute exact path="/profile-details/:id" Component={ProfileDetails} />
                 <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
               </Switch>
             </SocketProvider>
