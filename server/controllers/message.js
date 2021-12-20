@@ -5,45 +5,53 @@ const Conversation = require("../models/Conversation");
 exports.createNewMessage = async (req, res) => {
   const { conversationId, author, content } = req.body;
 
-  const conversations = await Conversation.find({ _id: mongoose.Types.ObjectId(conversationId) });
+  if (conversationId && author && content) {
+    const conversation = await Conversation.findById({ _id: conversationId });
 
-  if (!conversations.length) {
-    res.status(400).send("Conversation not found.");
-  } else {
-    const newMessage = await Message.create({
-      conversationId,
-      author,
-      content,
-    });
+    if (!conversation) {
+      res.status(400).send("Conversation not found.");
+    } else {
+      const newMessage = await Message.create({
+        conversationId,
+        author,
+        content,
+      });
 
-    if (!newMessage) {
-      res.status(500).send("An error occurred while sending a message.");
+      if (!newMessage) {
+        res.status(500).send("An error occurred while sending a message.");
+      } else {
+        res.status(200).send({ success: newMessage });
+      }
     }
-
-    res.status(200).send({ success: newMessage });
+  } else {
+    res.status(400).send("Incorrect information sent.");
   }
 };
 
 exports.loadMessages = async (req, res) => {
-  const { conversationId } = req.body;
+  const { conversationId } = req.params;
 
-  const messages = await Message.find({ conversationId: mongoose.Types.ObjectId(conversationId) });
+  if (conversationId) {
+    const messages = await Message.find({ conversationId });
 
-  if (!messages) {
-    res.status(400).send("Conversation does not exist");
-  } else {
     res.status(200).send({ success: messages });
+  } else {
+    res.status(400).send("Incorrect information sent.");
   }
 };
 
 exports.deleteMessage = async (req, res) => {
-  const { _id } = req.body;
+  const { _id } = req.params;
 
-  const deleteMessage = await Message.deleteOne({ _id: mongoose.Types.ObjectId(_id) });
+  if (_id) {
+    const deleteMessage = await Message.deleteOne({ _id });
 
-  if (!deleteMessage.n) {
-    res.status(400).send("Message does not exist.");
+    if (!deleteMessage.n) {
+      res.status(400).send("Message does not exist.");
+    } else {
+      res.status(200).send({ success: { message: "Message deleted." } });
+    }
   } else {
-    res.status(200).send({ success: { message: "Message deleted." } });
+    res.status(400).send("Incorrect information sent.");
   }
 };
