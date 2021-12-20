@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
+
+const User = require("../models/User");
 const Message = require("../models/Message");
 const Conversation = require("../models/Conversation");
 
 exports.createNewMessage = async (req, res) => {
   const { conversationId, author, content } = req.body;
 
-  if (conversationId && author && content) {
+  const userExists = await User.exists({ _id: author });
+
+  if (conversationId && userExists && content) {
     const conversation = await Conversation.findById({ _id: conversationId });
 
     if (!conversation) {
@@ -31,7 +35,9 @@ exports.createNewMessage = async (req, res) => {
 exports.loadMessages = async (req, res) => {
   const { conversationId } = req.params;
 
-  if (conversationId) {
+  const conversationExists = await Conversation.exists({ _id: conversationId });
+
+  if (conversationExists) {
     const messages = await Message.find({ conversationId });
 
     res.status(200).send({ success: messages });
@@ -41,10 +47,12 @@ exports.loadMessages = async (req, res) => {
 };
 
 exports.deleteMessage = async (req, res) => {
-  const { _id } = req.params;
+  const { userId, messageId } = req.params;
 
-  if (_id) {
-    const deleteMessage = await Message.deleteOne({ _id });
+  const userExists = User.exists({ _id: userId });
+
+  if (userExists) {
+    const deleteMessage = await Message.deleteOne({ _id: messageId });
 
     if (!deleteMessage.n) {
       res.status(400).send("Message does not exist.");

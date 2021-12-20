@@ -4,10 +4,10 @@ const router = express.Router();
 const protect = require("../middleware/auth");
 const { createNewMessage, loadMessages, deleteMessage } = require("../controllers/message");
 
-router.route("/new").post(protect, createNewMessage);
+router.route("/new").post(createNewMessage);
 
-router.route("/load/:conversationId").get(protect, loadMessages);
+router.route("/load/:conversationId").get(loadMessages);
 
-router.route("/delete/:_id").delete(protect, deleteMessage);
+router.route("/delete/:userId/:messageId").delete(deleteMessage);
 
 module.exports = router;

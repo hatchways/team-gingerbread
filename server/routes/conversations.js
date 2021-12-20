@@ -4,10 +4,10 @@ const router = express.Router();
 const protect = require("../middleware/auth");
 const { startConversation, loadConversations, deleteConversation } = require("../controllers/conversation");
 
-router.route("/start").post(protect, startConversation);
+router.route("/start").post(startConversation);
 
-router.route("/load/:_id").get(protect, loadConversations);
+router.route("/load/:userId").get(loadConversations);
 
-router.route("/delete/:_id").delete(protect, deleteConversation);
+router.route("/delete/:userId/:conversationId").delete(deleteConversation);
 
 module.exports = router;

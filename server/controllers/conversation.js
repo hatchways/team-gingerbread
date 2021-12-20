@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
+const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 
 exports.startConversation = async (req, res) => {
   const { user1, user2 } = req.body;
 
-  if (user1 && user2) {
+  const usersExist = await User.countDocuments({ _id: { $in: [user1, user2] } });
+
+  if (usersExist === 2) {
     const conversationExists = await Conversation.findOne({
       users: [mongoose.Types.ObjectId(user1), mongoose.Types.ObjectId(user2)],
     });
@@ -31,11 +34,13 @@ exports.startConversation = async (req, res) => {
 };
 
 exports.loadConversations = async (req, res) => {
-  const { _id } = req.params;
+  const { userId } = req.params;
 
-  if (_id) {
+  const userExists = await User.exists({ _id: userId });
+
+  if (userExists) {
     const conversations = await Conversation.find({
-      users: { $in: [_id] },
+      users: { $in: [userId] },
     });
     res.status(200).send({
       success: { conversations },
@@ -46,17 +51,19 @@ exports.loadConversations = async (req, res) => {
 };
 
 exports.deleteConversation = async (req, res) => {
-  const { _id } = req.params;
+  const { userId, conversationId } = req.params;
 
-  if (_id) {
-    await Conversation.deleteOne({ _id });
+  const userExists = await User.exists({ _id: userId });
 
-    await Message.deleteMany({ conversationId: _id });
+  if (userExists) {
+    await Conversation.deleteOne({ _id: conversationId });
+
+    await Message.deleteMany({ conversationId });
 
     res.status(200).send({
       success: { message: "Conversation deleted." },
     });
   } else {
-    res.status(400).send("Incorrect information sent");
+    res.status(400).send("Incorrect information sent.");
   }
 };
