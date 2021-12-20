@@ -21,7 +21,7 @@ exports.editProfile = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @route GET /profile/load
+// @route GET /profile/load/:id
 // @desc Get user profile data
 // @access Private
 exports.loadProfile = asyncHandler(async (req, res, next) => {

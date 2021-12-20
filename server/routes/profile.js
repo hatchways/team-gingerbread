@@ -6,7 +6,7 @@ const { editProfile, loadProfile, populateListings } = require("../controllers/p
 
 router.route("/edit").post(protect, editProfile);
 
-router.route("/load").get(protect, loadProfile);
+router.route("/load/:id").get(protect, loadProfile);
 
 router.route("/listings").get(populateListings);
 

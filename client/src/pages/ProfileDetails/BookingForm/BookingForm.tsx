@@ -3,9 +3,8 @@ import { Box, Typography, Select, MenuItem, OutlinedInput, Grid, Button, Card } 
 import Rating from '@material-ui/lab/Rating';
 import { useFormik } from 'formik';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import createRequestNotification from '../../../helpers/APICalls/createRequestNotification';
-import { mockName } from '../../../mocks/mockId';
 
 const times = [...Array(24).keys()].map((number) => {
   if (number === 0) {
@@ -66,7 +65,7 @@ const BookingForm = (props: { id: string }): JSX.Element => {
     },
     onSubmit: (values) => {
       alert('Your request for service has been submitted!');
-      createRequestNotification(mockName, 3, props.id).then((data) => console.log(data)); //need to calculate hours requested based on start and end (include nights as well)
+      createRequestNotification('Justin', 3, props.id).then((data) => console.log(data)); //need to calculate hours requested based on start and end (include nights as well)
       formik.resetForm();
     },
   });

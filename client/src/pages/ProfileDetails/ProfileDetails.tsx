@@ -10,6 +10,7 @@ import { Profile } from '../../interface/Profile';
 const ProfileDetails = (): JSX.Element => {
   const classes = useStyles();
   const [profile, setProfile] = useState<Profile>({
+    isSitter: false,
     firstName: '',
     lastName: '',
     description: '',
@@ -17,13 +18,25 @@ const ProfileDetails = (): JSX.Element => {
     phoneNumber: '',
     dateOfBirth: new Date('December 17, 1995 03:24:00'),
     available: false,
+    accountType: '',
     availability: '',
     gender: '',
     email: '',
+    photo: {
+      url: '',
+      key: '',
+    },
+    _id: '',
   });
 
-  const { id }: { id: string } = useParams();
-  // const id = '61affa655479b0ee3cc36331';
+  // const { id }: { id: string } = useParams();
+  const id = '61affa655479b0ee3cc36331';
+
+  const params = useParams();
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   useEffect(() => {
     fetchProfile(id).then((data) => setProfile(data.success.profile));
