@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 
 // @route POST /profile/edit
 // @desc edit user profile
-// @access Public
+// @access Private
 exports.editProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.body.user.id);
 
@@ -39,5 +39,34 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
     success: {
       profile: profile,
     },
+  });
+});
+
+// @route POST /profile/availability/edit
+// @desc edit user profile
+// @access Private
+exports.editAvailability = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.body.user.id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User doesn't exist");
+  }
+  const profile = await Profile.findById(user.profile);
+  const availableTime = profile.availableTime;
+  const newDay = req.body.newDay;
+  if (availableTime.some((day) => day.date === newDay.date)) {
+    //need to fix, unable to find match
+    availableTime.forEach((day) => {
+      if (day.date === newDay.date) {
+        day = newDate; //need to fix; times are not getting updated
+      }
+    });
+  } else {
+    availableTime.push(newDay);
+  }
+  profile.set(availableTime);
+  const updatedProfile = await profile.save();
+  res.status(200).json({
+    success: updatedProfile.availableTime,
   });
 });

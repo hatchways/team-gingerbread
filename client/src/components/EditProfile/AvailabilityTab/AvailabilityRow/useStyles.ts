@@ -13,6 +13,7 @@ const useStyles = makeStyles(() => ({
   availabilityText: {
     color: 'grey',
     fontSize: 14,
+    textTransform: 'capitalize',
   },
   availabilityDateText: {
     color: 'black',

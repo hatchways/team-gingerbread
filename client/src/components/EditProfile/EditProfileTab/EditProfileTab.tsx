@@ -1,11 +1,11 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch, setRef } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useFormik } from 'formik';
 import edit from '../../../helpers/APICalls/edit';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
-import { mockId } from '../../../mocks/mockId';
+import { AuthContext } from '../../../context/useAuthContext';
 
 interface Profile {
   firstName: string;
@@ -38,6 +38,8 @@ const days = [...Array(31).keys()].map((i) => i + 1);
 const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
+  const { loggedInUser } = useContext(AuthContext);
+
   const classes = useStyles();
   const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
@@ -55,8 +57,10 @@ export default function EditProfileTab(): JSX.Element {
   });
 
   useEffect(() => {
-    fetchProfile(mockId).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
-  }, []);
+    if (loggedInUser) {
+      fetchProfile(loggedInUser.id).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
+    }
+  }, [loggedInUser]);
 
   const formik = useFormik({
     initialValues: {
@@ -74,21 +78,23 @@ export default function EditProfileTab(): JSX.Element {
       description: profile.description,
     },
     onSubmit: (values) => {
-      edit(
-        mockId,
-        values.firstName,
-        values.lastName,
-        values.description,
-        values.address,
-        values.phoneNumber,
-        new Date(`${values.birthdateMonth} ${values.birthdateDay}, ${values.birthdateYear}`),
-        values.available,
-        values.availability,
-        values.gender,
-        values.email,
-      );
-      formik.resetForm();
-      location.reload(); //reloads page so that prefilled values are updated, otherwise shows profile values before update submitted
+      if (loggedInUser) {
+        edit(
+          loggedInUser.id,
+          values.firstName,
+          values.lastName,
+          values.description,
+          values.address,
+          values.phoneNumber,
+          new Date(`${values.birthdateMonth} ${values.birthdateDay}, ${values.birthdateYear}`),
+          values.available,
+          values.availability,
+          values.gender,
+          values.email,
+        );
+        formik.resetForm();
+        location.reload(); //reloads page so that prefilled values are updated, otherwise shows profile values before update submitted
+      }
     },
     enableReinitialize: true, //since useEffect has a lag, this allows prefilled values to be updated if they change (from '' to value set by fetchProfile() helper)
   });

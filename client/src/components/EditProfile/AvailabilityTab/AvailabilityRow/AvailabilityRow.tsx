@@ -1,53 +1,61 @@
 import useStyles from './useStyles';
+import { useState, useEffect, useContext } from 'react';
 import { Box, Typography, Grid, Select, MenuItem } from '@material-ui/core';
-
-const times = [...Array(24).keys()].map((number) => {
-  if (number === 0) {
-    return {
-      time: '12:00 AM',
-      value: number,
-    };
-  } else if (number < 12) {
-    return {
-      time: number.toString() + ':00 AM',
-      value: number,
-    };
-  } else if (number === 12) {
-    return {
-      time: number.toString() + ':00 PM',
-      value: number,
-    };
-  } else {
-    return {
-      time: (number - 12).toString() + ':00 PM',
-      value: number,
-    };
-  }
-});
+import fetchProfile from '../../../../helpers/APICalls/fetchProfile';
+import editAvailability from '../../../../helpers/APICalls/editAvailability';
+import { AuthContext } from '../../../../context/useAuthContext';
+import { SnackBarContext } from '../../../../context/useSnackbarContext';
+import { times } from './times';
 
 interface props {
-  day: string;
-  key: number;
-  startDate: number;
+  date: Date;
+  key: string;
+  dayOfWeek: string;
+  dayOfMonth: number;
   month: string;
-  number: number;
-  name: string;
-  startTime: number;
-  endTime: number;
-  changeStartTime: any;
-  changeEndTime: any;
 }
 
 const AvailabilityRow = (props: props): JSX.Element => {
+  const date = props.date;
   const classes = useStyles();
+  const { updateSnackBarMessage } = useContext(SnackBarContext);
+  const { loggedInUser } = useContext(AuthContext);
+  const [startTime, setStartTime] = useState(-1);
+  const [endTime, setEndTime] = useState(-1);
+  const [updating, setUpdating] = useState(false);
+  const [availability, setAvailability] = useState([]);
+  const [available, setAvailable] = useState(true);
+
+  // useEffect(() => { //need to fetch startTime and endTime from db and set to state vars if exist
+  //   fetchProfile(loggedInUser.id).then((data) => setAvailability(data.success.profile.availableTime));
+  // }, []);
+
+  useEffect(() => {
+    if (updating && loggedInUser) {
+      editAvailability(loggedInUser.id, date.toDateString(), startTime, endTime, available).then((data) =>
+        console.log(data),
+      );
+      setUpdating(false);
+      updateSnackBarMessage('Your availability has been updated');
+    }
+  }, [availability, updating, loggedInUser, updateSnackBarMessage, date, startTime, endTime, available]);
+
+  const updateAvailability = (newTime: any, param: string) => {
+    setUpdating(true);
+    if (param === 'start') {
+      setStartTime(newTime);
+    } else {
+      setEndTime(newTime);
+    }
+  };
 
   return (
     <Grid className={classes.availabilityRow}>
       <Typography className={classes.availabilityText}>
-        <Typography className={classes.availabilityDateText} display="inline">
-          {props.startDate + props.number} {props.month},
-        </Typography>{' '}
-        {props.day}
+        <span className={classes.availabilityDateText}>
+          {props.dayOfMonth} {props.month},
+        </span>{' '}
+        {props.dayOfWeek}
       </Typography>
       <Box display="flex" alignItems="center">
         <Typography className={classes.availabilityLabel}>from</Typography>
@@ -55,10 +63,10 @@ const AvailabilityRow = (props: props): JSX.Element => {
           className={classes.availabilitySelect}
           variant="outlined"
           name="startTime"
-          value={props.startTime}
-          onChange={(e) => props.changeStartTime(props.number, e.target.value, props.day)}
+          value={startTime}
+          onChange={(e) => updateAvailability(e.target.value, 'start')}
         >
-          <MenuItem value="placeholder" disabled>
+          <MenuItem value={-1} disabled>
             start time
           </MenuItem>
           {times.map((time) => (
@@ -74,10 +82,10 @@ const AvailabilityRow = (props: props): JSX.Element => {
           className={classes.availabilitySelect}
           variant="outlined"
           name="endTime"
-          value={props.endTime}
-          onChange={(e) => props.changeEndTime(props.number, e.target.value, props.day)}
+          value={endTime}
+          onChange={(e) => updateAvailability(e.target.value, 'end')}
         >
-          <MenuItem value="placeholder" disabled>
+          <MenuItem value={-1} disabled>
             end time
           </MenuItem>
           {times.map((time) => (

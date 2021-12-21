@@ -2,146 +2,35 @@ import { useState, useEffect, useContext } from 'react';
 import { Box, Typography, Button } from '@material-ui/core';
 import useStyles from './useStyles';
 import AvailabilityRow from './AvailabilityRow/AvailabilityRow';
-import editAvailability from '../../../helpers/APICalls/editAvailability';
-import fetchProfile from '../../../helpers/APICalls/fetchProfile';
-import { AuthContext } from '../../../context/useAuthContext';
-import { SnackBarContext } from '../../../context/useSnackbarContext';
 import { months } from './months';
 import { days } from './days';
 
+const getDateArray = (startDate: Date) => {
+  const start = new Date(startDate);
+  const dateArray = [new Date(start.setDate(start.getDate()))];
+  for (let i = 0; i < 6; i++) {
+    dateArray.push(new Date(start.setDate(start.getDate() + 1)));
+  }
+  return dateArray;
+};
+
 const AvailabilityTab = (): JSX.Element => {
-  const { updateSnackBarMessage } = useContext(SnackBarContext);
-  const { loggedInUser } = useContext(AuthContext);
-
   const classes = useStyles();
-
-  const [startDate, setStartDate] = useState(
-    new Date(new Date().setDate(new Date().getDate() - ((new Date().getDay() + 6) % 7))),
-  );
-  const [updating, setUpdating] = useState(false);
-  const [availability, setAvailability] = useState([
-    //make a map function for 7 days?
-    {
-      day: 'Monday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date(),
-    },
-    {
-      day: 'Tuesday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date('2019-6-18'),
-    },
-    {
-      day: 'Wednesday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date('2019-6-19'),
-    },
-    {
-      day: 'Thursday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date('2019-6-20'),
-    },
-    {
-      day: 'Friday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date('2019-6-21'),
-    },
-    {
-      day: 'Saturday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date('2019-6-22'),
-    },
-    {
-      day: 'Sunday',
-      startTime: 10,
-      endTime: 22,
-      date: new Date('2019-6-23'),
-    },
-  ]);
+  const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
-    if (updating && loggedInUser) {
-      editAvailability(loggedInUser.id, availability);
-      setUpdating(false);
-      updateSnackBarMessage('Your availability has been updated');
-    }
-  }, [availability, updating, loggedInUser, updateSnackBarMessage]);
-
-  // useEffect(() => {
-  //   if (loggedInUser) {
-  //     fetchProfile(loggedInUser.id).then((data) => setAvailability(data.success.profile.availableTime));
-  //   }
-  // }, [loggedInUser]);
+    const today = new Date();
+    const day = today.getDay();
+    today.setDate(today.getDate() - day + 1);
+    setStartDate(today); //sets startDate to Monday of this current week
+  }, []);
 
   const changeStartDate = (direction: string) => {
     if (direction === 'prev') {
-      startDate.setDate(startDate.getDate() - 7);
-      setAvailability((availability) => {
-        return availability.map((availableDay) => {
-          return {
-            day: availableDay.day,
-            startTime: availableDay.startTime,
-            endTime: availableDay.endTime,
-            date: new Date(availableDay.date.setDate(availableDay.date.getDate() - 7)),
-          };
-        });
-      });
+      setStartDate(new Date(startDate.setDate(startDate.getDate() - 7)));
     } else {
-      startDate.setDate(startDate.getDate() + 7);
-      setAvailability((availability) => {
-        return availability.map((availableDay) => {
-          return {
-            day: availableDay.day,
-            startTime: availableDay.startTime,
-            endTime: availableDay.endTime,
-            date: new Date(availableDay.date.setDate(availableDay.date.getDate() + 7)),
-          };
-        });
-      });
+      setStartDate(new Date(startDate.setDate(startDate.getDate() + 7)));
     }
-    console.log(availability);
-  };
-
-  const changeStartTime = (index: number, newTime: number, dayToUpdate: string) => {
-    setAvailability(
-      availability.map((day) => {
-        if (day.day === dayToUpdate) {
-          return {
-            day: day.day,
-            startTime: newTime,
-            endTime: day.endTime,
-            date: day.date,
-          };
-        } else {
-          return day;
-        }
-      }),
-    );
-    setUpdating(true);
-  };
-
-  const changeEndTime = (index: number, newTime: number, dayToUpdate: string) => {
-    setAvailability(
-      availability.map((day) => {
-        if (day.day === dayToUpdate) {
-          return {
-            day: day.day,
-            startTime: day.startTime,
-            endTime: newTime,
-            date: day.date,
-          };
-        } else {
-          return day;
-        }
-      }),
-    );
-    setUpdating(true);
   };
 
   return (
@@ -173,19 +62,14 @@ const AvailabilityTab = (): JSX.Element => {
           Next Week
         </Button>
       </Box>
-      {days.map((day) => {
+      {getDateArray(startDate).map((date) => {
         return (
           <AvailabilityRow
-            name={day.day} //monday
-            day={day.day} //monday
-            key={day.id} //1
-            number={day.id - 1} //0
-            startDate={startDate.getDate()}
-            month={months[startDate.getMonth()]}
-            startTime={availability[day.id - 1].startTime}
-            endTime={availability[day.id - 1].endTime}
-            changeStartTime={changeStartTime}
-            changeEndTime={changeEndTime}
+            date={date}
+            key={date.toUTCString()}
+            dayOfWeek={days[date.getDay()]}
+            dayOfMonth={date.getDate()}
+            month={months[date.getMonth()]}
           />
         );
       })}
