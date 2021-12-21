@@ -15,7 +15,7 @@ const protect = (req, res, next) => {
 
     const userExists = User.exists({ _id: req.user.id });
 
-    if (!req.user && !userExists) {
+    if (!req.user || !userExists) {
       return res.status(404).send("User Id is not valid");
     }
 
