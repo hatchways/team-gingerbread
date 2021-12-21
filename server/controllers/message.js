@@ -1,15 +1,14 @@
-const mongoose = require("mongoose");
-
-const User = require("../models/User");
 const Message = require("../models/Message");
 const Conversation = require("../models/Conversation");
 
+// @route POST /new
+// @desc create a new message associated with a conversation
+// @access Private
 exports.createNewMessage = async (req, res) => {
-  const { conversationId, author, content } = req.body;
+  const userId = req.user.id;
+  const { conversationId, content } = req.body;
 
-  const userExists = await User.exists({ _id: author });
-
-  if (conversationId && userExists && content) {
+  if (conversationId && content) {
     const conversation = await Conversation.findById({ _id: conversationId });
 
     if (!conversation) {
@@ -17,13 +16,21 @@ exports.createNewMessage = async (req, res) => {
     } else {
       const newMessage = await Message.create({
         conversationId,
-        author,
+        author: userId,
         content,
       });
 
       if (!newMessage) {
         res.status(500).send("An error occurred while sending a message.");
       } else {
+        const willRead = conversation.users.filter((user) => String(user) !== String(userId));
+
+        await Conversation.findByIdAndUpdate(
+          { _id: conversationId },
+          { lastMessage: newMessage._id, isLastMessageRead: false, willRead },
+          { new: true }
+        );
+
         res.status(200).send({ success: newMessage });
       }
     }
@@ -32,34 +39,21 @@ exports.createNewMessage = async (req, res) => {
   }
 };
 
+// @route GET /load/:conversationId
+// @desc load all messages for a conversation
+// @access Private
 exports.loadMessages = async (req, res) => {
   const { conversationId } = req.params;
 
-  const conversationExists = await Conversation.exists({ _id: conversationId });
+  if (conversationId) {
+    const conversationExists = await Conversation.exists({ _id: conversationId });
 
-  if (conversationExists) {
-    const messages = await Message.find({ conversationId });
+    if (conversationExists) {
+      const messages = await Message.find({ conversationId });
 
-    res.status(200).send({ success: messages });
-  } else {
-    res.status(400).send("Incorrect information sent.");
-  }
-};
-
-exports.deleteMessage = async (req, res) => {
-  const { userId, messageId } = req.params;
-
-  const userExists = User.exists({ _id: userId });
-
-  if (userExists) {
-    const deleteMessage = await Message.deleteOne({ _id: messageId });
-
-    if (!deleteMessage.n) {
-      res.status(400).send("Message does not exist.");
+      res.status(200).send({ success: messages });
     } else {
-      res.status(200).send({ success: { message: "Message deleted." } });
+      res.status(400).send("Incorrect information sent.");
     }
-  } else {
-    res.status(400).send("Incorrect information sent.");
   }
 };

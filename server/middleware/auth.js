@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 const protect = (req, res, next) => {
   const token = req.cookies.token;
@@ -12,7 +13,9 @@ const protect = (req, res, next) => {
 
     req.user = decoded;
 
-    if (!req.user) {
+    const userExists = User.exists({ _id: req.user.id });
+
+    if (!req.user && !userExists) {
       return res.status(404).send("User Id is not valid");
     }
 

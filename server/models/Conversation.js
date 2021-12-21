@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 
+const { ObjectId } = mongoose.Schema.Types;
 const usersArrayBound = (val) => val.length <= 2;
+const willReadArrayBound = (val) => val.length <= 1;
 
 const conversationSchema = new mongoose.Schema(
   {
     users: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: ObjectId,
           ref: "User",
         },
       ],
@@ -16,9 +18,25 @@ const conversationSchema = new mongoose.Schema(
       default: [],
     },
     lastMessage: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       required: false,
       ref: "Message",
+    },
+    isLastMessageRead: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    willRead: {
+      type: [
+        {
+          type: ObjectId,
+          ref: "User",
+        },
+      ],
+      validate: [willReadArrayBound, "Exceeds limit for number of users part of a conversation."],
+      required: false,
+      default: [],
     },
   },
   { timestamps: true }
