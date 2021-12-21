@@ -1,6 +1,5 @@
 import useStyles from './useStyles';
 import { Box, Typography, Grid, Select, MenuItem } from '@material-ui/core';
-import { useFormik } from 'formik';
 
 const times = [...Array(24).keys()].map((number) => {
   if (number === 0) {

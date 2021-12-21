@@ -1,69 +1,31 @@
 import { useState, useEffect, useContext } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography, Button } from '@material-ui/core';
 import useStyles from './useStyles';
 import AvailabilityRow from './AvailabilityRow/AvailabilityRow';
 import editAvailability from '../../../helpers/APICalls/editAvailability';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
 import { AuthContext } from '../../../context/useAuthContext';
 import { SnackBarContext } from '../../../context/useSnackbarContext';
-
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const days = [
-  {
-    day: 'Monday',
-    id: 1,
-  },
-  {
-    day: 'Tuesday',
-    id: 2,
-  },
-  {
-    day: 'Wednesday',
-    id: 3,
-  },
-  {
-    day: 'Thursday',
-    id: 4,
-  },
-  {
-    day: 'Friday',
-    id: 5,
-  },
-  {
-    day: 'Saturday',
-    id: 6,
-  },
-  {
-    day: 'Sunday',
-    id: 7,
-  },
-];
+import { months } from './months';
+import { days } from './days';
 
 const AvailabilityTab = (): JSX.Element => {
   const { updateSnackBarMessage } = useContext(SnackBarContext);
-  const classes = useStyles();
   const { loggedInUser } = useContext(AuthContext);
-  const [startDate, setStartDate] = useState(new Date(2019, 5, 17));
+
+  const classes = useStyles();
+
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().setDate(new Date().getDate() - ((new Date().getDay() + 6) % 7))),
+  );
+  const [updating, setUpdating] = useState(false);
   const [availability, setAvailability] = useState([
+    //make a map function for 7 days?
     {
       day: 'Monday',
       startTime: 10,
       endTime: 22,
-      date: new Date('2019-6-17'),
+      date: new Date(),
     },
     {
       day: 'Tuesday',
@@ -102,7 +64,49 @@ const AvailabilityTab = (): JSX.Element => {
       date: new Date('2019-6-23'),
     },
   ]);
-  const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    if (updating && loggedInUser) {
+      editAvailability(loggedInUser.id, availability);
+      setUpdating(false);
+      updateSnackBarMessage('Your availability has been updated');
+    }
+  }, [availability, updating, loggedInUser, updateSnackBarMessage]);
+
+  // useEffect(() => {
+  //   if (loggedInUser) {
+  //     fetchProfile(loggedInUser.id).then((data) => setAvailability(data.success.profile.availableTime));
+  //   }
+  // }, [loggedInUser]);
+
+  const changeStartDate = (direction: string) => {
+    if (direction === 'prev') {
+      startDate.setDate(startDate.getDate() - 7);
+      setAvailability((availability) => {
+        return availability.map((availableDay) => {
+          return {
+            day: availableDay.day,
+            startTime: availableDay.startTime,
+            endTime: availableDay.endTime,
+            date: new Date(availableDay.date.setDate(availableDay.date.getDate() - 7)),
+          };
+        });
+      });
+    } else {
+      startDate.setDate(startDate.getDate() + 7);
+      setAvailability((availability) => {
+        return availability.map((availableDay) => {
+          return {
+            day: availableDay.day,
+            startTime: availableDay.startTime,
+            endTime: availableDay.endTime,
+            date: new Date(availableDay.date.setDate(availableDay.date.getDate() + 7)),
+          };
+        });
+      });
+    }
+    console.log(availability);
+  };
 
   const changeStartTime = (index: number, newTime: number, dayToUpdate: string) => {
     setAvailability(
@@ -140,20 +144,6 @@ const AvailabilityTab = (): JSX.Element => {
     setUpdating(true);
   };
 
-  useEffect(() => {
-    if (updating && loggedInUser) {
-      editAvailability(loggedInUser.id, availability);
-      setUpdating(false);
-      updateSnackBarMessage('Your availability has been updated');
-    }
-  }, [availability, updating, loggedInUser, updateSnackBarMessage]);
-
-  useEffect(() => {
-    if (loggedInUser) {
-      fetchProfile(loggedInUser.id).then((data) => setAvailability(data.success.profile.availableTime));
-    }
-  }, [loggedInUser]);
-
   return (
     <Box
       minHeight="60vh"
@@ -164,18 +154,32 @@ const AvailabilityTab = (): JSX.Element => {
       paddingBottom="30px"
     >
       <Typography style={{ color: 'black', fontSize: 24, fontWeight: 'bold' }}>Your availability</Typography>
-      <Box display="flex" width="100%" paddingLeft="75px" marginTop="35px" marginBottom="15px">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        width="100%"
+        paddingLeft="10%"
+        paddingRight="10%"
+        marginTop="35px"
+        marginBottom="15px"
+      >
+        <Button onClick={() => changeStartDate('prev')} className={classes.weekButton}>
+          Previous Week
+        </Button>
         <Typography variant="h6">
-          {startDate.getDate()} - {startDate.getDate() + 6} {months[startDate.getMonth()]} {startDate.getFullYear()}
+          Week of {startDate.getDate()} {months[startDate.getMonth()]} {startDate.getFullYear()}
         </Typography>
+        <Button onClick={() => changeStartDate('next')} className={classes.weekButton}>
+          Next Week
+        </Button>
       </Box>
       {days.map((day) => {
         return (
           <AvailabilityRow
-            name={day.day}
-            day={day.day}
-            key={day.id}
-            number={day.id - 1}
+            name={day.day} //monday
+            day={day.day} //monday
+            key={day.id} //1
+            number={day.id - 1} //0
             startDate={startDate.getDate()}
             month={months[startDate.getMonth()]}
             startTime={availability[day.id - 1].startTime}

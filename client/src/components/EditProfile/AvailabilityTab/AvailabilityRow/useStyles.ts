@@ -24,6 +24,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     fontWeight: 'bold',
     textTransform: 'uppercase',
+    marginLeft: 10,
     marginRight: 18,
   },
   availabilitySelect: {
