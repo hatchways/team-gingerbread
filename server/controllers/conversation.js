@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
@@ -6,33 +7,46 @@ const Message = require("../models/Message");
 // @desc start a new conversation with the logged in user and another valid user
 // @access Private
 exports.startConversation = async (req, res) => {
-  const userId = req.user.id;
-  const { converser } = req.body;
+  try {
+    const errors = validationResult(req);
 
-  const converserExists = await User.exists({ _id: converser });
+    if (!errors.isEmpty()) {
+      const { converser } = errors.mapped();
 
-  if (converserExists) {
-    const conversationExists = await Conversation.findOne({
-      users: [userId, converser],
-    });
+      res.status(422).send(converser.msg);
+      return;
+    }
 
-    if (conversationExists) {
-      res.status(400).send("Conversation already exists.");
-    } else {
-      const conversation = await Conversation.create({
+    const userId = req.user.id;
+    const { converser } = req.body;
+
+    const converserExists = await User.exists({ _id: converser });
+
+    if (converserExists) {
+      const conversationExists = await Conversation.findOne({
         users: [userId, converser],
       });
 
-      if (!conversation) {
-        res.status(500).send("Unable to start conversation.");
+      if (conversationExists) {
+        res.status(403).send("Cannot start multiple conversations with the same user.");
       } else {
-        res.status(200).send({
-          success: { message: "Conversation started." },
+        const conversation = await Conversation.create({
+          users: [userId, converser],
         });
+
+        if (!conversation) {
+          res.status(500).send("Unable to start conversation.");
+        } else {
+          res.status(200).send({
+            success: { message: "Conversation started." },
+          });
+        }
       }
+    } else {
+      res.status(404).send("User not found.");
     }
-  } else {
-    res.status(400).send("Incorrect information sent.");
+  } catch (e) {
+    res.status(500).send(`Unable to start conversation. ${e}`);
   }
 };
 
@@ -54,63 +68,44 @@ exports.loadConversations = async (req, res) => {
 // @desc delete a conversation for one user at a time
 // @access Private
 exports.deleteConversation = async (req, res) => {
-  const userId = req.user.id;
-  const { conversationId } = req.params;
+  try {
+    const errors = validationResult(req);
 
-  const conversationExists = await Conversation.exists({ _id: conversationId });
+    if (!errors.isEmpty()) {
+      const { conversationId } = errors.mapped();
 
-  if (conversationExists) {
-    const curr = await Conversation.findById({ _id: conversationId }).select({ users: 1, _id: 0 });
-
-    if (curr.users.length === 2) {
-      const updatedUsers = curr.users.filter((user) => String(user) !== String(userId));
-
-      // eslint-disable-next-line prettier/prettier
-      await Conversation.findByIdAndUpdate(
-        { _id: conversationId },
-        { users: updatedUsers },
-        { new: true },
-      );
-
-      res.status(200).send({
-        success: { message: "Conversation deleted." },
-      });
-    } else {
-      await Conversation.deleteOne({ _id: conversationId });
-
-      await Message.deleteMany({ conversationId });
-
-      res.status(200).send({
-        success: { message: "Conversation deleted." },
-      });
+      res.status(422).send(conversationId.msg);
+      return;
     }
-  } else {
-    res.status(400).send("Incorrect information sent.");
-  }
-};
 
-// @route /read/:conversationId
-// @desc set the lastMessageRead field to true
-// @access Private
-exports.lastMessageRead = async (req, res) => {
-  const userId = req.user.id;
-  const { conversationId } = req.params;
+    const userId = req.user.id;
+    const { conversationId } = req.params;
 
-  if (conversationId) {
-    const curr = await Conversation.findById({ _id: conversationId }).select({
-      isLastMessageRead: 1,
-      willRead: 1,
-      _id: 0,
-    });
+    const currConversation = await Conversation.findById({ _id: conversationId });
 
-    if (curr && !curr.isLastMessageRead && String(curr.willRead[0]) === String(userId)) {
-      await Conversation.findByIdAndUpdate({ _id: conversationId }, { isLastMessageRead: true });
+    if (currConversation) {
+      if (currConversation.users.length === 2) {
+        const updated = currConversation.users.filter((user) => String(user) !== String(userId));
 
-      res.status(200).send({ success: { message: "Message read." } });
+        currConversation.users = updated;
+        await currConversation.save();
+
+        res.status(200).send({
+          success: { message: "Conversation deleted." },
+        });
+      } else {
+        await Conversation.deleteOne({ _id: conversationId });
+
+        await Message.deleteMany({ conversationId });
+
+        res.status(200).send({
+          success: { message: "Conversation deleted." },
+        });
+      }
     } else {
-      res.status(400).send("Incorrect information sent.");
+      res.status(404).send("Conversation not found.");
     }
-  } else {
-    res.status(400).send("Incorrect information sent.");
+  } catch (e) {
+    res.status(500).send("Unable to start conversation.");
   }
 };
