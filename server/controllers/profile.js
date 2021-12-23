@@ -54,17 +54,23 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findById(user.profile);
   const availableTime = profile.availableTime;
   const newDay = req.body.newDay;
-  if (availableTime.some((day) => day.date === newDay.date)) {
-    //need to fix, unable to find match
+
+  if (
+    availableTime.some(
+      (day) =>
+        day.date.getDate() === new Date(newDay.date).getDate() &&
+        day.date.getMonth() === new Date(newDay.date).getMonth() &&
+        day.date.getFullYear() === new Date(newDay.date).getFullYear()
+    )
+  ) {
     availableTime.forEach((day) => {
-      if (day.date === newDay.date) {
-        day = newDate; //need to fix; times are not getting updated
-      }
+      if (day.date === newDay.date) day = newDay;
     });
   } else {
     availableTime.push(newDay);
   }
-  profile.set(availableTime);
+
+  profile.availableTime = availableTime;
   const updatedProfile = await profile.save();
   res.status(200).json({
     success: updatedProfile.availableTime,

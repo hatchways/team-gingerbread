@@ -1,6 +1,6 @@
 import useStyles from './useStyles';
 import { useState, useEffect, useContext } from 'react';
-import { Box, Typography, Grid, Select, MenuItem } from '@material-ui/core';
+import { Box, Typography, Grid, Select, MenuItem, Checkbox } from '@material-ui/core';
 import fetchProfile from '../../../../helpers/APICalls/fetchProfile';
 import editAvailability from '../../../../helpers/APICalls/editAvailability';
 import { AuthContext } from '../../../../context/useAuthContext';
@@ -15,6 +15,13 @@ interface props {
   month: string;
 }
 
+interface day {
+  date: Date;
+  startTime: number;
+  endTime: number;
+  available: boolean;
+}
+
 const AvailabilityRow = (props: props): JSX.Element => {
   const date = props.date;
   const classes = useStyles();
@@ -24,11 +31,26 @@ const AvailabilityRow = (props: props): JSX.Element => {
   const [endTime, setEndTime] = useState(-1);
   const [updating, setUpdating] = useState(false);
   const [availability, setAvailability] = useState([]);
-  const [available, setAvailable] = useState(true);
+  const [available, setAvailable] = useState(false);
 
-  // useEffect(() => { //need to fetch startTime and endTime from db and set to state vars if exist
-  //   fetchProfile(loggedInUser.id).then((data) => setAvailability(data.success.profile.availableTime));
-  // }, []);
+  useEffect(() => {
+    if (loggedInUser) {
+      fetchProfile(loggedInUser.id).then((data) => {
+        const availableTime = data.success.profile.availableTime;
+        const currentDay = availableTime.filter(
+          (day: day) =>
+            new Date(day.date).getDate() === new Date(date).getDate() &&
+            new Date(day.date).getMonth() === new Date(date).getMonth() &&
+            new Date(day.date).getFullYear() === new Date(date).getFullYear(),
+        )[0];
+        if (currentDay) {
+          setStartTime(currentDay.startTime);
+          setEndTime(currentDay.endTime);
+          setAvailable(currentDay.available);
+        }
+      });
+    }
+  }, [loggedInUser, date]);
 
   useEffect(() => {
     if (updating && loggedInUser) {
@@ -41,12 +63,12 @@ const AvailabilityRow = (props: props): JSX.Element => {
   }, [availability, updating, loggedInUser, updateSnackBarMessage, date, startTime, endTime, available]);
 
   const updateAvailability = (newTime: any, param: string) => {
-    setUpdating(true);
     if (param === 'start') {
       setStartTime(newTime);
     } else {
       setEndTime(newTime);
     }
+    setUpdating(true);
   };
 
   return (
@@ -94,6 +116,19 @@ const AvailabilityRow = (props: props): JSX.Element => {
             </MenuItem>
           ))}
         </Select>
+      </Box>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Typography className={classes.availableLabel}>Available?</Typography>
+        <Checkbox
+          className={classes.availableCheckbox}
+          color="default"
+          checked={available}
+          value={available}
+          onChange={() => {
+            setAvailable(!available);
+            setUpdating(true);
+          }}
+        />
       </Box>
     </Grid>
   );

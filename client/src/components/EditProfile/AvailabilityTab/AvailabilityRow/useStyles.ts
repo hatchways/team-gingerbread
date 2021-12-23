@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
   availabilityRow: {
     display: 'grid',
-    gridTemplateColumns: '30fr 35fr 35fr',
+    gridTemplateColumns: '30fr 30fr 30fr 10fr',
     alignItems: 'center',
     padding: '20px 45px',
     width: '90%',
@@ -30,8 +30,13 @@ const useStyles = makeStyles(() => ({
   },
   availabilitySelect: {
     height: 36,
-    width: 225,
+    width: 150,
   },
+  availableLabel: {
+    color: 'black',
+    fontSize: 12,
+  },
+  availableCheckbox: {},
 }));
 
 export default useStyles;
