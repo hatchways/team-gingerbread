@@ -29,17 +29,12 @@ const ProfileDetails = (): JSX.Element => {
     _id: '',
   });
 
-  // const { id }: { id: string } = useParams();
-  const id = '61affa655479b0ee3cc36331';
-
-  const params = useParams();
+  const { id } = useParams<{ id?: string }>();
 
   useEffect(() => {
-    console.log(params);
-  }, [params]);
-
-  useEffect(() => {
-    fetchProfile(id).then((data) => setProfile(data.success.profile));
+    if (id) {
+      fetchProfile(id).then((data) => setProfile(data.success.profile));
+    }
   });
 
   return (
@@ -85,7 +80,7 @@ const ProfileDetails = (): JSX.Element => {
         </CardContent>
       </Card>
 
-      <BookingForm id={id}></BookingForm>
+      <BookingForm></BookingForm>
     </Box>
   );
 };
