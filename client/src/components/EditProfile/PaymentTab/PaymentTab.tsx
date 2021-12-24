@@ -16,31 +16,31 @@ interface card {
 
 export default function PaymentTab(): JSX.Element {
   const classes = useStyles();
-  const [savedCards, setSavedCards] = useState<card[]>([]);
-  const [showCardInput, setShowCardInput] = useState(false);
+  // const [savedCards, setSavedCards] = useState<card[]>([]);
+  // const [showCardInput, setShowCardInput] = useState(false);
 
-  const stripe = useStripe();
-  const elements = useElements();
+  // const stripe = useStripe();
+  // const elements = useElements();
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    if (!stripe || !elements) {
-      return;
-    }
-    const result = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: 'https://my-site.com/order/123/complete',
-      },
-    });
-    if (result.error) {
-      console.log(result.error.message);
-    }
-  };
+  // const handleSubmit = async (event: any) => {
+  //   event.preventDefault();
+  //   if (!stripe || !elements) {
+  //     return;
+  //   }
+  //   const result = await stripe.confirmPayment({
+  //     elements,
+  //     confirmParams: {
+  //       return_url: 'https://google.com',
+  //     },
+  //   });
+  //   if (result.error) {
+  //     console.log(result.error.message);
+  //   }
+  // };
 
   return (
     <Box minHeight="50vh" padding="45px 40px" display="flex" flexDirection="column" alignItems="center">
-      <Typography className={classes.paymentHeader}>Payment Methods</Typography>
+      {/* <Typography className={classes.paymentHeader}>Payment Methods</Typography>
       {savedCards.length > 0 && !showCardInput && (
         <Box width="100%" marginBottom="30px">
           <Typography className={classes.savedText}>Saved Payment Profiles: </Typography>
@@ -68,7 +68,10 @@ export default function PaymentTab(): JSX.Element {
             </Button>
           </form>
         </Box>
-      )}
+      )} */}
+      <form action="/stripe/session" method="POST">
+        <button type="submit">Checkout</button>
+      </form>
     </Box>
   );
 }
