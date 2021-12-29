@@ -4,7 +4,7 @@ const {
   createSession,
   createCustomer,
   retrieveCustomer,
-  createPaymentMethod,
+  retrieveAllCustomers,
   getAllPaymentMethods,
   sendPayment,
 } = require("../controllers/stripe");
@@ -12,7 +12,7 @@ const {
 router.route("/session").post(createSession);
 router.route("/customers/create").post(createCustomer);
 router.route("/customers/retrieve/:id").get(retrieveCustomer);
-router.route("/payment/create").post(createPaymentMethod);
+router.route("/customers/retrieveAll").get(retrieveAllCustomers);
 router.route("/payment/all/:customerId").get(getAllPaymentMethods);
 router.route("/request/:id/pay").post(sendPayment);
 

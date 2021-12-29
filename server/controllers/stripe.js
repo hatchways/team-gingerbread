@@ -45,20 +45,12 @@ exports.retrieveCustomer = async (req, res) => {
   res.send(customer);
 };
 
-// @route POST /stripe/payment/create
-// @desc creates new payment method
+// @route GET /stripe/customers/retrieveAll
+// @desc retrieve customer
 // @access Public
-exports.createPaymentMethod = async (req, res) => {
-  const paymentMethod = await stripe.paymentMethods.create({
-    type: "card",
-    card: {
-      number: "4242424242424242",
-      exp_month: 12,
-      exp_year: 2022,
-      cvc: "314",
-    },
-  });
-  res.send(paymentMethod);
+exports.retrieveAllCustomers = async (req, res) => {
+  const customers = await stripe.customers.list();
+  res.send(customers);
 };
 
 // @route GET /stripe/payment/all/:customerId
@@ -76,11 +68,23 @@ exports.getAllPaymentMethods = async (req, res) => {
 // @desc send payment to sitter
 // @access Public
 exports.sendPayment = async (req, res) => {
-  const transfer = await stripe.transfers.create({
-    amount: req.body.amount,
+  const { clientId, clientPaymentMethod, chargeAmount, payoutAmount, transferGroup } = req.body;
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: chargeAmount,
     currency: "usd",
-    destination: req.params.id,
-    transfer_group: req.body.group,
+    customer: clientId, //client is charged
+    payment_method: clientPaymentMethod,
+    off_session: true,
+    confirm: true,
+    transfer_group: transferGroup,
+  });
+
+  const transfer = await stripe.transfers.create({
+    amount: payoutAmount,
+    currency: "usd",
+    destination: req.params.id, //sitter is paid
+    transfer_group: transferGroup,
   });
 
   res.status(200).json({
