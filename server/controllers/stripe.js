@@ -2,36 +2,28 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 const YOUR_DOMAIN = process.env.DOMAIN;
 
-// @route POST /stripe/session
-// @desc create new session
+// @route GET /stripe/session
+// @desc create new session to save user's payment method
 // @access Public
 exports.createSession = async (req, res) => {
-  // const session = await stripe.checkout.sessions.create({
-  //   line_items: [
-  //     {
-  //       price_data: {
-  //         currency: "usd",
-  //         product_data: {
-  //           name: "T-shirt",
-  //         },
-  //         unit_amount: 2000,
-  //       },
-  //       quantity: 1,
-  //     },
-  //   ],
-  //   mode: "payment",
-  //   success_url: `${YOUR_DOMAIN}/success=true`,
-  //   cancel_url: `${YOUR_DOMAIN}/canceled=true`,
-  // });
+  const customer = await stripe.customers.create();
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "setup",
-    customer: "cus_KpgqVNrpjbAWLB",
-    success_url: "https://google.com",
-    cancel_url: "https://justinbaytosh.com",
+    customer: customer.id,
+    success_url: "http://localhost:3000/edit-profile?success?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: "http://localhost:3000/edit-profile?cancel",
   });
 
-  res.redirect(303, session.url);
+  // const sessionRetrieve = await stripe.checkout.sessions.retrieve(session.id);
+
+  res.json({ success: session.id });
+
+  // res.redirect(303, session.url);
+
+  // const setupIntent = await stripe.setupIntents.retrieve(sessionRetrieve.setup_intent);
+
+  // res.json({ success: setupIntent.payment_method });
 };
 
 // @route POST /stripe/customers/create

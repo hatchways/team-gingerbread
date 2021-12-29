@@ -10,7 +10,7 @@ const {
   createPaymentIntent,
 } = require("../controllers/stripe");
 
-router.route("/session").post(createSession);
+router.route("/session").get(createSession);
 router.route("/customers/create").post(createCustomer);
 router.route("/customers/retrieve/:id").get(retrieveCustomer);
 router.route("/customers/retrieveAll").get(retrieveAllCustomers);
