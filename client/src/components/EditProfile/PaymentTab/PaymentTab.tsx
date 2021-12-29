@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import { Box, Button } from '@material-ui/core';
 import { useState } from 'react';
 import CreditCard from './CreditCard/CreditCard';
 import { setUpFuturePayment } from '../../../helpers/APICalls/setUpFuturePayment';
+import { getAllCreditCards } from '../../../helpers/APICalls/getAllCreditCards';
 
 interface card {
   name: string;
@@ -18,8 +20,22 @@ export default function PaymentTab(): JSX.Element {
   const [savedCards, setSavedCards] = useState<card[]>([]);
   const [showCardInput, setShowCardInput] = useState(false);
 
+  useEffect(() => {
+    getAllCreditCards().then((data) => {
+      const cards = data.data.map((card: any) => {
+        return {
+          name: 'John Doe',
+          cardNumber: card.card.last4,
+          cardExpDate: `${card.card.exp_month}/${card.card.exp_year}`,
+          cardType: card.card.brand,
+        };
+      });
+      setSavedCards(cards);
+    });
+  }, []);
+
   const handlePayment = async () => {
-    setUpFuturePayment().then((data) => window.location.replace(`https://checkout.stripe.com/pay/${data.success}`));
+    setUpFuturePayment().then((res) => window.location.replace(res.url));
   };
 
   return (
@@ -37,11 +53,9 @@ export default function PaymentTab(): JSX.Element {
         </Box>
       )}
 
-      {!showCardInput && (
-        <Button onClick={() => handlePayment()} className={classes.showCardInputButton}>
-          Add new payment profile
-        </Button>
-      )}
+      <Button onClick={() => handlePayment()} className={classes.showCardInputButton}>
+        Add new payment profile
+      </Button>
     </Box>
   );
 }

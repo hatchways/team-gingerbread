@@ -6,24 +6,15 @@ const YOUR_DOMAIN = process.env.DOMAIN;
 // @desc create new session to save user's payment method
 // @access Public
 exports.createSession = async (req, res) => {
-  const customer = await stripe.customers.create();
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "setup",
-    customer: customer.id,
-    success_url: "http://localhost:3000/edit-profile?success?session_id={CHECKOUT_SESSION_ID}",
-    cancel_url: "http://localhost:3000/edit-profile?cancel",
+    customer: "cus_KrCousRxcC9lSY",
+    success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: "http://localhost:3000/cancel",
   });
 
-  // const sessionRetrieve = await stripe.checkout.sessions.retrieve(session.id);
-
-  res.json({ success: session.id });
-
-  // res.redirect(303, session.url);
-
-  // const setupIntent = await stripe.setupIntents.retrieve(sessionRetrieve.setup_intent);
-
-  // res.json({ success: setupIntent.payment_method });
+  res.redirect(303, session.url);
 };
 
 // @route POST /stripe/customers/create
@@ -73,7 +64,7 @@ exports.createPaymentMethod = async (req, res) => {
 // @access Public
 exports.getAllPaymentMethods = async (req, res) => {
   const paymentMethods = await stripe.paymentMethods.list({
-    customer: "cus_Kk1rd4KHOzlRC0",
+    customer: "cus_KrCousRxcC9lSY",
     type: "card",
   });
   res.send(paymentMethods);

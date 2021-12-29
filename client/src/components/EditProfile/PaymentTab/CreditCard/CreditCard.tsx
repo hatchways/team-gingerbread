@@ -8,7 +8,6 @@ interface props {
     name: string;
     cardNumber: string;
     cardExpDate: string;
-    cardCVC: string;
     cardType: string;
   };
 }
