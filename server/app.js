@@ -7,9 +7,11 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const { join } = require("path");
+const jwt = require("jsonwebtoken");
 const connectDB = require("./db");
 const { notFound, errorHandler } = require("./middleware/error");
 
+const User = require("./models/User");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
@@ -31,8 +33,36 @@ const io = socketio(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("connected");
+const loggedInUsers = new Map();
+
+io.use((socket, next) => {
+  if (socket.handshake.headers.cookie) {
+    const token = socket.handshake.headers.cookie.replace("token=", "");
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        socket.disconnect();
+        next();
+      }
+
+      const userExists = User.exists({ _id: decoded.id });
+      if (userExists) {
+        loggedInUsers.set(socket, decoded.id);
+        next();
+      } else {
+        socket.disconnect();
+        next();
+      }
+    });
+  } else {
+    socket.disconnect();
+    next();
+  }
+}).on("connection", (socket) => {
+  console.log(Array.from(loggedInUsers.values()));
+  socket.on("disconnect", () => {
+    loggedInUsers.delete(socket);
+    console.log(Array.from(loggedInUsers.values()));
+  });
 });
 
 if (process.env.NODE_ENV === "development") {
