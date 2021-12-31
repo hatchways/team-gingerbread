@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const { ObjectId } = mongoose.Schema.Types;
 const usersArrayBound = (val) => val.length <= 2;
 
 const conversationSchema = new mongoose.Schema(
@@ -7,7 +8,7 @@ const conversationSchema = new mongoose.Schema(
     users: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: ObjectId,
           ref: "User",
         },
       ],
@@ -16,7 +17,7 @@ const conversationSchema = new mongoose.Schema(
       default: [],
     },
     lastMessage: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       required: false,
       ref: "Message",
     },

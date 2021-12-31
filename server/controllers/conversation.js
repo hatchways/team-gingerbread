@@ -1,69 +1,111 @@
-const mongoose = require("mongoose");
+const { validationResult } = require("express-validator");
+const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 
-// @route POST /conversations
-// @desc start a new conversation
+// @route POST /start
+// @desc start a new conversation with the logged in user and another valid user
 // @access Private
 exports.startConversation = async (req, res) => {
-  const { user1, user2 } = req.body;
+  try {
+    const errors = validationResult(req);
 
-  const conversationExists = await Conversation.findOne({
-    users: [mongoose.Types.ObjectId(user1), mongoose.Types.ObjectId(user2)],
-  });
+    if (!errors.isEmpty()) {
+      const { converser } = errors.mapped();
 
-  if (conversationExists) {
-    res.status(400).send("Conversation already exists.");
-  } else {
-    const conversation = await Conversation.create({
-      users: [user1, user2],
-    });
-
-    if (!conversation) {
-      res.status(500).send("Unable to start conversation.");
-    } else {
-      res.status(200).send({
-        success: { message: "Conversation started." },
-      });
+      res.status(422).send(converser.msg);
+      return;
     }
+
+    const userId = req.user.id;
+    const { converser } = req.body;
+
+    const converserExists = await User.exists({ _id: converser });
+
+    if (converserExists) {
+      const conversationExists = await Conversation.findOne({
+        users: [userId, converser],
+      });
+
+      if (conversationExists) {
+        res.status(403).send("Cannot start multiple conversations with the same user.");
+      } else {
+        const conversation = await Conversation.create({
+          users: [userId, converser],
+        });
+
+        if (!conversation) {
+          res.status(500).send("Unable to start conversation.");
+        } else {
+          res.status(200).send({
+            success: { message: "Conversation started." },
+          });
+        }
+      }
+    } else {
+      res.status(404).send("User not found.");
+    }
+  } catch (e) {
+    res.status(500).send(`Unable to start conversation. ${e}`);
   }
 };
 
-// @route POST /conversations
-// @desc load all conversations for a user
+// @route GET /load
+// @desc loads the current logged in user's conversations
 // @access Private
 exports.loadConversations = async (req, res) => {
-  const { user } = req.body;
-  const conversations = await Conversation.find({
-    users: { $in: [mongoose.Types.ObjectId(user)] },
-  }).populate("lastMessage");
+  const userId = req.user.id;
 
-  if (!conversations.length) {
-    res.status(400).send("Conversations do not exist.");
-  } else {
-    res.status(200).send({
-      success: { conversations },
-    });
-  }
+  const conversations = await Conversation.find({
+    users: { $in: [userId] },
+  }).populate("lastMessage");
+  res.status(200).send({
+    success: { conversations },
+  });
 };
 
-// @route POST /conversations
-// @desc delete a single conversation and all their associated messages
+// @route DELETE /delete/:conversationId
+// @desc delete a conversation for one user at a time
 // @access Private
 exports.deleteConversation = async (req, res) => {
-  const { _id } = req.body;
+  try {
+    const errors = validationResult(req);
 
-  const deleteConversation = await Conversation.deleteOne({ _id: mongoose.Types.ObjectId(_id) });
+    if (!errors.isEmpty()) {
+      const { conversationId } = errors.mapped();
 
-  const deleteMessages = await Message.deleteMany({ conversationId: mongoose.Types.ObjectId(_id) });
+      res.status(422).send(conversationId.msg);
+      return;
+    }
 
-  if (!deleteConversation.n) {
-    res.status(400).send("Conversation does not exist.");
-  } else if (!deleteMessages.n) {
-    res.status(400).send("No messages exist for that conversation.");
-  } else {
-    res.status(200).send({
-      success: { message: "Conversation deleted." },
-    });
+    const userId = req.user.id;
+    const { conversationId } = req.params;
+
+    const currConversation = await Conversation.findById({ _id: conversationId });
+
+    if (currConversation) {
+      if (currConversation.users.length === 2) {
+        const updated = currConversation.users.filter((user) => String(user) !== String(userId));
+
+        currConversation.users = updated;
+        await currConversation.save();
+
+        res.status(200).send({
+          success: { message: "Conversation deleted." },
+        });
+      } else {
+        await Conversation.deleteOne({ _id: conversationId });
+
+        await Message.deleteMany({ conversationId });
+
+        res.status(200).send({
+          success: { message: "Conversation deleted." },
+        });
+      }
+    } else {
+      res.status(404).send("Conversation not found.");
+    }
+  } catch (e) {
+    res.status(500).send("Unable to start conversation.");
   }
 };
