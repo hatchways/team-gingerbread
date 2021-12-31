@@ -54,9 +54,15 @@ const AvailabilityRow = (props: props): JSX.Element => {
 
   useEffect(() => {
     if (updating && loggedInUser) {
-      editAvailability(loggedInUser.id, date.toDateString(), startTime, endTime, available).then((data) =>
-        console.log(data),
-      );
+      // console.log(`
+      //   date: ${date}\n
+      //   startTime: ${startTime}\n
+      //   endTime: ${endTime}\n
+      //   available: ${available}
+      // `);
+      editAvailability(loggedInUser.id, date.toDateString(), startTime, endTime, available).then((data) => {
+        console.log(data);
+      });
       setUpdating(false);
       updateSnackBarMessage('Your availability has been updated');
     }

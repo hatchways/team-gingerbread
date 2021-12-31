@@ -52,10 +52,11 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
     throw new Error("User doesn't exist");
   }
   const profile = await Profile.findById(user.profile);
-  const availableTime = profile.availableTime;
+  const availableTime = profile.availableTime; //creates variable representing user's availability
   const newDay = req.body.newDay;
 
   if (
+    //checks if newDay is already in availableTime
     availableTime.some(
       (day) =>
         day.date.getDate() === new Date(newDay.date).getDate() &&
@@ -63,15 +64,17 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
         day.date.getFullYear() === new Date(newDay.date).getFullYear()
     )
   ) {
+    //if match, find match and set to newDay (updates match)
     availableTime.forEach((day) => {
       if (day.date === newDay.date) day = newDay;
     });
   } else {
+    //if no match, push newDay to availableTime
     availableTime.push(newDay);
   }
 
-  profile.availableTime = availableTime;
-  const updatedProfile = await profile.save();
+  profile.availableTime = availableTime; //updates user's availability with new value of availability var
+  const updatedProfile = await profile.save(); //saves changes
   res.status(200).json({
     success: updatedProfile.availableTime,
   });
