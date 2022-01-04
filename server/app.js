@@ -12,6 +12,7 @@ const connectDB = require("./db");
 const { notFound, errorHandler } = require("./middleware/error");
 
 const User = require("./models/User");
+const Notification = require("./models/Notifications");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
@@ -59,6 +60,10 @@ io.use((socket, next) => {
   }
 }).on("connection", (socket) => {
   console.log(Array.from(loggedInUsers.values()));
+  socket.on("get unread notifications", (id) => {
+    const notifications = await Notification.find({ recipient: id, read: false });
+    io.emit("new unread notifications", notifications);
+  });
   socket.on("disconnect", () => {
     loggedInUsers.delete(socket);
     console.log(Array.from(loggedInUsers.values()));
