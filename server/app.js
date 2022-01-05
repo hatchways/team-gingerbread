@@ -61,8 +61,25 @@ io.use((socket, next) => {
 }).on("connection", (socket) => {
   console.log(Array.from(loggedInUsers.values()));
   socket.on("get unread notifications", (id) => {
-    const notifications = await Notification.find({ recipient: id, read: false });
-    io.emit("new unread notifications", notifications);
+    Notification.find({ recipient: id, read: false }).then((notifications) => {
+      io.emit("new unread notifications", notifications);
+    });
+  });
+  socket.on("read notifications", (notifications) => {
+    console.log("read notification trigger");
+    notifications.forEach((notification) => {
+      Notification.findById(notification._id)
+        .then((n) => {
+          n.read = true;
+          return n;
+        })
+        .then((n) => {
+          n.save();
+        })
+        .then(() => {
+          console.log("notification read");
+        });
+    });
   });
   socket.on("disconnect", () => {
     loggedInUsers.delete(socket);
