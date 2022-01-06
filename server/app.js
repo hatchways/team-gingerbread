@@ -16,6 +16,8 @@ const profileRouter = require("./routes/profile");
 const imageRouter = require("./routes/image");
 const notificationsRouter = require("./routes/notifications");
 const bookingRequestRouter = require("./routes/bookingRequest");
+const conversationsRouter = require("./routes/conversations");
+const messagesRouter = require("./routes/messages");
 const stripeRouter = require("./routes/stripe");
 
 const { json, urlencoded } = express;
@@ -51,9 +53,10 @@ app.use((req, res, next) => {
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/image", imageRouter);
-app.use("/profile", profileRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/booking-requests", bookingRequestRouter);
+app.use("/conversations", conversationsRouter);
+app.use("/messages", messagesRouter);
 app.use("/profile", profileRouter);
 app.use("/stripe", stripeRouter);
 
