@@ -73,9 +73,12 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
     availableTime.push(newDay);
   }
 
-  profile.availableTime = availableTime; //updates user's availability with new value of availability var
-  const updatedProfile = await profile.save(); //saves changes
+  // profile.availableTime = availableTime; //updates user's availability with new value of availability var
+  // const updatedProfile = await profile.save(); //saves changes
+  // res.status(200).json({
+  //   success: updatedProfile.availableTime,
+  // });
   res.status(200).json({
-    success: updatedProfile.availableTime,
+    success: availableTime,
   });
 });
