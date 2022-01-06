@@ -24,7 +24,7 @@ const notificationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    recipient: {
+    recipientId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
