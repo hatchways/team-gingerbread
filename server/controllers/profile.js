@@ -55,6 +55,11 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
   const availableTime = profile.availableTime; //creates variable representing user's availability
   const newDay = req.body.newDay;
 
+  if (availableTime.startTime > availableTime.endTime) {
+    res.status(401);
+    throw new Error("Start time must occur before end time");
+  }
+
   if (
     //checks if newDay is already in availableTime
     availableTime.some(
@@ -73,12 +78,12 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
     availableTime.push(newDay);
   }
 
-  // profile.availableTime = availableTime; //updates user's availability with new value of availability var
-  // const updatedProfile = await profile.save(); //saves changes
-  // res.status(200).json({
-  //   success: updatedProfile.availableTime,
-  // });
+  profile.availableTime = availableTime; //updates user's availability with new value of availability var
+  const updatedProfile = await profile.save(); //saves changes
   res.status(200).json({
-    success: availableTime,
+    success: updatedProfile.availableTime,
   });
+  // res.status(200).json({
+  //   success: availableTime,
+  // });
 });
