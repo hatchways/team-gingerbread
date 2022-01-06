@@ -1,11 +1,12 @@
 const { validationResult } = require("express-validator");
+const asyncHandler = require("express-async-handler");
 const Message = require("../models/Message");
 const Conversation = require("../models/Conversation");
 
 // @route POST /new
 // @desc create a new message associated with a conversation
 // @access Private
-exports.createNewMessage = async (req, res) => {
+exports.createNewMessage = asyncHandler(async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -45,14 +46,14 @@ exports.createNewMessage = async (req, res) => {
       res.status(404).send("Conversation not found.");
     }
   } catch (e) {
-    res.status(500).send("Unable to start conversation.");
+    next(e);
   }
-};
+});
 
 // @route GET /load/:conversationId
 // @desc load all messages for a conversation the logged in user is part of
 // @access Private
-exports.loadMessages = async (req, res) => {
+exports.loadMessages = asyncHandler(async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -78,14 +79,14 @@ exports.loadMessages = async (req, res) => {
       res.status(404).send("Conversation does not exist.");
     }
   } catch (e) {
-    res.status(500).send("Unable to message(s).");
+    next(e);
   }
-};
+});
 
 // @route PATCH /read/:messageId
 // @desc update read status of all received messages
 // @access Private
-exports.updateIsRead = async (req, res) => {
+exports.updateIsRead = asyncHandler(async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -119,6 +120,6 @@ exports.updateIsRead = async (req, res) => {
       res.status(404).send("Message not found.");
     }
   } catch (e) {
-    res.status(500).send("Unable to set message status as read.");
+    next(e);
   }
-};
+});

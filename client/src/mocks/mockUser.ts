@@ -15,6 +15,7 @@ const mockOtherUser1: User = {
   id: '',
   _id: '',
 };
+
 const mockOtherUser2: User = {
   username: 'Mock test user 2',
   email: 'mockTestUser2@gmail.com',
@@ -22,6 +23,7 @@ const mockOtherUser2: User = {
   id: '',
   _id: '',
 };
+
 const mockOtherUser3: User = {
   username: 'Mock test user 3',
   email: 'mockTestUser3@gmail.com',

@@ -1,13 +1,9 @@
-interface FetchOptions {
-  method: string;
-  headers?: {
-    'Content-Type': string;
-  };
-  body?: string;
-}
+import { FetchOptions } from '../../interface/FetchOptions';
+import { EditApiData } from '../../interface/EditApiData';
 
 const edit = async (
   id: string,
+  isSitter: boolean,
   firstName: string,
   lastName: string,
   description: string,
@@ -18,23 +14,27 @@ const edit = async (
   availability: string,
   gender: string,
   email: string,
-) => {
+): Promise<EditApiData> => {
   const fetchOptions: FetchOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      user: { id: id },
-      firstName: firstName,
-      lastName: lastName,
-      description: description,
-      address: address,
-      phoneNumber: phoneNumber,
-      dateOfBirth: dateOfBirth,
-      available: available,
-      availability: availability,
-      gender: gender,
-      email: email,
+      id,
+      changes: {
+        isSitter,
+        firstName,
+        lastName,
+        description,
+        address,
+        phoneNumber,
+        dateOfBirth,
+        available,
+        availability,
+        gender,
+        email,
+      },
     }),
+    credentials: 'include',
   };
   return await fetch(`/profile/edit`, fetchOptions)
     .then((res) => res.json())
