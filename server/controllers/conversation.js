@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
@@ -6,7 +7,7 @@ const Message = require("../models/Message");
 // @route POST /start
 // @desc start a new conversation with the logged in user and another valid user
 // @access Private
-exports.startConversation = async (req, res) => {
+exports.startConversation = asyncHandler(async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -46,9 +47,9 @@ exports.startConversation = async (req, res) => {
       res.status(404).send("User not found.");
     }
   } catch (e) {
-    res.status(500).send(`Unable to start conversation. ${e}`);
+    next(e);
   }
-};
+});
 
 // @route GET /load
 // @desc loads the current logged in user's conversations
@@ -67,7 +68,7 @@ exports.loadConversations = async (req, res) => {
 // @route DELETE /delete/:conversationId
 // @desc delete a conversation for one user at a time
 // @access Private
-exports.deleteConversation = async (req, res) => {
+exports.deleteConversation = asyncHandler(async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -106,6 +107,6 @@ exports.deleteConversation = async (req, res) => {
       res.status(404).send("Conversation not found.");
     }
   } catch (e) {
-    res.status(500).send("Unable to start conversation.");
+    next(e);
   }
-};
+});
