@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom';
 import { Profile } from '../../interface/Profile';
 import { Review } from '../../interface/Review';
 import { getReviews } from '../../helpers/APICalls/getReviews';
+import Rating from '@material-ui/lab/Rating';
+import ReviewForm from './ReviewForm/ReviewForm';
 
 const ProfileDetails = (): JSX.Element => {
   const classes = useStyles();
@@ -42,7 +44,15 @@ const ProfileDetails = (): JSX.Element => {
   }, [id]);
 
   return (
-    <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1200px" display="grid" gridTemplateColumns="60fr 40fr">
+    <Box
+      margin="0 auto"
+      marginTop="11vh"
+      marginBottom="5vh"
+      width="65vw"
+      minWidth="1200px"
+      display="grid"
+      gridTemplateColumns="60fr 40fr"
+    >
       <Card className={classes.profileCard}>
         <CardMedia
           className={classes.backgroundImg}
@@ -66,7 +76,7 @@ const ProfileDetails = (): JSX.Element => {
         </CardContent>
         <CardContent className={classes.bottomCardContent}>
           <Box marginTop="10px" width="100%" textAlign="left" marginBottom="30px">
-            <Typography className={classes.userDescriptionHeaderText}>About me</Typography>
+            <Typography className={classes.userDescriptionHeaderText}>about me</Typography>
             <Typography className={classes.userDescriptionText}>{profile.description}</Typography>
           </Box>
           <Box width="100%" display="flex" alignItems="center" marginBottom="15px">
@@ -82,19 +92,25 @@ const ProfileDetails = (): JSX.Element => {
             />
           </Box>
         </CardContent>
-        <CardContent>
-          <Typography>reviews</Typography>
-          {reviews.map((review) => {
-            return (
-              <CardContent key={review.clientId + review.sitterId}>
-                <Typography>{review.rating}</Typography>
-                <Typography>{review.description}</Typography>
-              </CardContent>
-            );
-          })}
+        <CardContent className={classes.reviewsCardContent}>
+          <Typography className={classes.reviewsHeader}>reviews ({reviews.length})</Typography>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            {reviews.map((review) => {
+              return (
+                <CardContent key={review.clientId + review.sitterId} className={classes.review}>
+                  <Typography className={classes.reviewerName}>Justin B.</Typography>
+                  <Rating defaultValue={review.rating} precision={0.5} readOnly />
+                  <Typography>&quot;{review.description}&quot;</Typography>
+                </CardContent>
+              );
+            })}
+          </Box>
         </CardContent>
       </Card>
-      <BookingForm></BookingForm>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-between" height="85vh">
+        <BookingForm />
+        <ReviewForm />
+      </Box>
     </Box>
   );
 };

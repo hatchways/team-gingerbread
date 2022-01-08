@@ -1,9 +1,8 @@
 import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, Select, MenuItem, OutlinedInput, Grid, Button, Card } from '@material-ui/core';
+import { Box, Typography, Select, MenuItem, Grid, Button, Card } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import { useFormik } from 'formik';
-
 import { SnackBarContext } from '../../../context/useSnackbarContext';
 import { AuthContext } from '../../../context/useAuthContext';
 import fetchProfile from '../../../helpers/APICalls/fetchProfile';
