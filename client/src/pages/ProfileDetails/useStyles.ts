@@ -86,10 +86,18 @@ const useStyles = makeStyles((theme) => ({
   },
   review: {
     border: 'grey 1px solid',
-    width: '50%',
+    width: '100%',
     borderRadius: 5,
+    marginBottom: 15,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
-  reviewerName: {
+  reviewRating: {
+    marginLeft: 0,
+    marginBottom: 5,
+  },
+  reviewDescription: {
     color: 'black',
     fontSize: 14,
   },

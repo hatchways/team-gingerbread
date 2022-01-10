@@ -94,13 +94,12 @@ const ProfileDetails = (): JSX.Element => {
         </CardContent>
         <CardContent className={classes.reviewsCardContent}>
           <Typography className={classes.reviewsHeader}>reviews ({reviews.length})</Typography>
-          <Box display="flex" alignItems="center" justifyContent="center">
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" paddingTop="10px">
             {reviews.map((review) => {
               return (
                 <CardContent key={review.clientId + review.sitterId} className={classes.review}>
-                  <Typography className={classes.reviewerName}>Justin B.</Typography>
-                  <Rating defaultValue={review.rating} precision={0.5} readOnly />
-                  <Typography>&quot;{review.description}&quot;</Typography>
+                  <Rating className={classes.reviewRating} defaultValue={review.rating} precision={0.5} readOnly />
+                  <Typography className={classes.reviewDescription}>&quot;{review.description}&quot;</Typography>
                 </CardContent>
               );
             })}
