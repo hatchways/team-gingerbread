@@ -27,16 +27,6 @@ exports.createSession = async (req, res) => {
   res.redirect(303, session.url);
 };
 
-// @route POST /stripe/customers/create
-// @desc create new customer
-// @access Public
-exports.createCustomer = async (req, res) => {
-  const customer = await stripe.customers.create({
-    description: req.body.description,
-  });
-  res.send(customer);
-};
-
 // @route GET /stripe/customers/retrieve/:id
 // @desc retrieve customer
 // @access Public
@@ -55,10 +45,10 @@ exports.retrieveAllCustomers = async (req, res) => {
 
 // @route GET /stripe/payment/all/:customerId
 // @desc gets all payment methods
-// @access Public
+// @access Private
 exports.getAllPaymentMethods = async (req, res) => {
   const paymentMethods = await stripe.paymentMethods.list({
-    customer: req.params.customerId,
+    customer: req.user.stripeId,
     type: "card",
   });
   res.send(paymentMethods);
