@@ -71,7 +71,7 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
   ) {
     //if match, find match and set to newDay (updates match)
     availableTime.forEach((day) => {
-      if (day.date === newDay.date) day = newDay;
+      if (day.date.getDate() === new Date(newDay.date).getDate()) day = newDay;
     });
   } else {
     //if no match, push newDay to availableTime
