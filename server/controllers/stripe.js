@@ -1,4 +1,5 @@
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
+const User = require("../models/User");
 
 const YOUR_DOMAIN = process.env.DOMAIN;
 
@@ -43,12 +44,13 @@ exports.retrieveAllCustomers = async (req, res) => {
   res.send(customers);
 };
 
-// @route GET /stripe/payment/all/:customerId
+// @route GET /stripe/payment/all
 // @desc gets all payment methods
 // @access Private
 exports.getAllPaymentMethods = async (req, res) => {
+  const user = await User.findById(req.user.id);
   const paymentMethods = await stripe.paymentMethods.list({
-    customer: req.user.stripeId,
+    customer: user.stripeId,
     type: "card",
   });
   res.send(paymentMethods);
