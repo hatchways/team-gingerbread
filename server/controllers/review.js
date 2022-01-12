@@ -1,38 +1,29 @@
 const Review = require("../models/Review");
+const User = require("../models/User");
 
 // @route GET /reviews/all/:sitterId
 // @desc gets all reviews for sitter
 // @access Private
 exports.getAllReviews = async (req, res) => {
-  const reviews = await Review.find({ sitterId: req.params.sitterId });
-  res.json({ success: reviews });
+  const user = await User.exists({ _id: req.params.sitterId }, async (error, result) => {
+    if (error) {
+      res.status(400).json({ error: "the provided sitterId does not correspond to any users" });
+    } else {
+      const reviews = await Review.find({ sitterId: req.params.sitterId });
+      res.json({ success: reviews });
+    }
+  });
 };
 
 // @route POST /reviews/create
 // @desc creates new review
 // @access Private
 exports.createReview = async (req, res) => {
+  if (!("sitterId" in req.body && "rating" in req.body && "description" in req.body)) {
+    res.status(400).json({ error: "missing request body parameters" });
+  }
+
   const { sitterId, rating, description } = req.body;
-
-  const sitter = await User.findById(sitterId);
-  const sitterProfile = await Profile.findById(sitter.profile);
-
-  if (!sitterProfile.isSitter) {
-    res.json({ error: "Supplied sitter is not a sitter (this should be true)" });
-  }
-
-  res.send({ success: req.user.id });
-
-  const client = await User.findById(req.user.id);
-  const clientProfile = await Profile.findById(client.profile);
-
-  if (clientProfile.isSitter) {
-    res.json({ error: "Supplied client is a sitter (this should be false)" });
-  }
-
-  if (!(rating >= 1 && rating <= 5)) {
-    res.json({ error: "Rating is out-of-bounds (1 to 5)" });
-  }
 
   if (typeof description !== "string") {
     res.json({ error: "Description is not a string" });
@@ -45,5 +36,5 @@ exports.createReview = async (req, res) => {
     description,
   });
   const newReview = await review.save();
-  res.json({ success: newReview });
+  res.status(201).json({ success: newReview });
 };
