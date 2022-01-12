@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
   },
   inboxPanelHeader: {
-    margin: '15px 0px 5px 0px',
+    margin: '15px 0px 10px 0px',
   },
   startConversationButton: {
     margin: '1px',
@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderBottom: '1px solid lightGrey',
     borderLeft: '1px solid lightGrey',
     borderRadius: 0,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   chatPanelHeaderAvatar: {
     height: 50,
@@ -59,6 +62,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   chatPanelHeaderText: {
     margin: '25px 20px 20px 10px',
+  },
+  chatPanelHeaderOptionButton: {
+    margin: '0px 10px 0px 10px',
   },
   chatPanelFooter: {
     maxHeight: '10vh',

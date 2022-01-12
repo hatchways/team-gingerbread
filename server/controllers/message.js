@@ -40,10 +40,10 @@ exports.createNewMessage = asyncHandler(async (req, res, next) => {
       if (newMessage) {
         res.status(200).send({ success: newMessage });
       } else {
-        res.status(500).send("An error occurred while sending a message.");
+        res.status(500).send({ error: { message: "An error occurred while sending a message." } });
       }
     } else {
-      res.status(404).send("Conversation not found.");
+      res.status(404).send({ error: { message: "Conversation not found." } });
     }
   } catch (e) {
     next(e);
@@ -76,7 +76,7 @@ exports.loadMessages = asyncHandler(async (req, res, next) => {
 
       res.status(200).send({ success: messages });
     } else {
-      res.status(404).send("Conversation does not exist.");
+      res.status(404).send({ error: { message: "Conversation does not exist." } });
     }
   } catch (e) {
     next(e);
@@ -103,7 +103,7 @@ exports.updateIsRead = asyncHandler(async (req, res, next) => {
 
     if (currMessage) {
       if (String(currMessage.author) === String(userId)) {
-        res.status(403).send("User cannot change read status of own message(s).");
+        res.status(403).send({ error: { message: "User cannot change read status of own message(s)." } });
       } else {
         await Message.updateMany(
           {
@@ -114,10 +114,10 @@ exports.updateIsRead = asyncHandler(async (req, res, next) => {
           { $set: { isRead: true } }
         );
 
-        res.status(200).send("Message(s) read.");
+        res.status(200).send({ success: { message: "Message(s) read." } });
       }
     } else {
-      res.status(404).send("Message not found.");
+      res.status(404).send({ error: { message: "Message not found." } });
     }
   } catch (e) {
     next(e);

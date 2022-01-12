@@ -24,7 +24,7 @@ interface Props {
     lastName: string | null | undefined,
     photoUrl: string | null | undefined,
     conversationId: string,
-    currentUserId: string,
+    lastMessageId: string,
   ) => void;
 }
 
@@ -39,17 +39,25 @@ const InboxPanelBody = ({ profileData, conversations, onConversationClick }: Pro
           firstName: string | null | undefined,
           lastName: string | null | undefined,
           lastMessage: string | undefined,
+          lastMessageId: string,
+          isRead: boolean | undefined,
           date: Date | null | undefined,
-          formattedDate: string | null | undefined,
-          currentUserId: string;
+          formattedDate: string | null | undefined;
 
         if (conversation.users.length === 2 && loggedInUser) {
           converserId = conversation.users[0] !== loggedInUser.id ? conversation.users[0] : conversation.users[1];
-          lastMessage = conversation.lastMessage ? conversation.lastMessage.content : undefined;
-          currentUserId = loggedInUser.id;
           date = conversation.lastMessage
             ? new Date(String(conversation.lastMessage.createdAt))
             : new Date(String(conversation.createdAt));
+
+          if (conversation.lastMessage) {
+            lastMessage = conversation.lastMessage.content;
+            lastMessageId = conversation.lastMessage._id ? conversation.lastMessage._id : '';
+
+            if (conversation.lastMessage.author !== loggedInUser.id) {
+              isRead = conversation.lastMessage.isRead;
+            } else isRead = true;
+          }
 
           const currentDate = new Date();
           if (currentDate.getMonth() === date.getMonth() && currentDate.getDate() === date.getDate()) {
@@ -82,18 +90,42 @@ const InboxPanelBody = ({ profileData, conversations, onConversationClick }: Pro
             <ListItem
               alignItems="flex-start"
               className={classes.inboxPanelConversationWrapper}
-              onClick={() => onConversationClick(firstName, lastName, photoUrl, conversation._id, currentUserId)}
+              onClick={() => onConversationClick(firstName, lastName, photoUrl, conversation._id, lastMessageId)}
             >
               <ListItemAvatar>
-                <div className={classes.inboxPanelConversationAvatarBadge}>
-                  <StyledBadge
-                    overlap="circle"
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    variant="dot"
-                  >
+                {isRead !== undefined ? (
+                  !isRead ? (
+                    <div className={classes.inboxPanelConversationAvatarBadge}>
+                      <StyledBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        variant="dot"
+                      >
+                        <Avatar className={classes.inboxPanelConversationAvatar}>
+                          {photoUrl ? (
+                            <img src={photoUrl} alt="profile image" className={classes.inboxPanelConversationImage} />
+                          ) : (
+                            <AccountCircleIcon className={classes.inboxPanelConversationIcon} />
+                          )}
+                        </Avatar>
+                      </StyledBadge>
+                    </div>
+                  ) : (
+                    <div className={classes.inboxPanelConversationAvatarBadge}>
+                      <Avatar className={classes.inboxPanelConversationAvatar}>
+                        {photoUrl ? (
+                          <img src={photoUrl} alt="profile image" className={classes.inboxPanelConversationImage} />
+                        ) : (
+                          <AccountCircleIcon className={classes.inboxPanelConversationIcon} />
+                        )}
+                      </Avatar>
+                    </div>
+                  )
+                ) : (
+                  <div className={classes.inboxPanelConversationAvatarBadge}>
                     <Avatar className={classes.inboxPanelConversationAvatar}>
                       {photoUrl ? (
                         <img src={photoUrl} alt="profile image" className={classes.inboxPanelConversationImage} />
@@ -101,8 +133,8 @@ const InboxPanelBody = ({ profileData, conversations, onConversationClick }: Pro
                         <AccountCircleIcon className={classes.inboxPanelConversationIcon} />
                       )}
                     </Avatar>
-                  </StyledBadge>
-                </div>
+                  </div>
+                )}
               </ListItemAvatar>
               <ListItemText
                 primary={

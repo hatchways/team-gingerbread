@@ -1,11 +1,11 @@
 import { FetchOptions } from '../../interface/FetchOptions';
 import { SetConversationApiData } from '../../interface/SetConversationApiData';
 
-const startConversation = async (user1: string, user2: string): Promise<SetConversationApiData> => {
+const startConversation = async (converser: string): Promise<SetConversationApiData> => {
   const fetchOptions: FetchOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user1, user2 }),
+    body: JSON.stringify({ converser }),
     credentials: 'include',
   };
 
