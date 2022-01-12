@@ -55,7 +55,6 @@ const Messages = (): JSX.Element => {
     }
   };
 
-  // memoize here using last message
   const onConversationClick = (
     firstName: string | null | undefined,
     lastName: string | null | undefined,
@@ -169,7 +168,6 @@ const Messages = (): JSX.Element => {
           } else setCurrentIsRead(true);
         }
 
-        // only load the most recent conversations message
         if (latestConversation) {
           setCurrentConversation(latestConversation._id);
           loadMessages(latestConversation._id).then((data) => {
@@ -194,7 +192,6 @@ const Messages = (): JSX.Element => {
 
             const filteredUsers = users.filter((user) => user !== 'undefined');
 
-            // need to load all profile data for past conversations b/c it's displayed in InboxPanelBody
             if (filteredUsers && filteredUsers.length > 0) {
               loadUsersData(filteredUsers).then((data) => {
                 if (data.error || data.success.length === 0) {
@@ -407,7 +404,13 @@ const Messages = (): JSX.Element => {
           <Grid container direction="row" component={Paper} elevation={0} className={classes.chatPanelHeader}>
             <Grid item>
               {currentConverserImage === undefined ? null : currentConverserImage === '' ? (
-                !currentIsRead ? (
+                currentIsRead ? (
+                  <div className={classes.chatPanelHeaderAvatarBadge}>
+                    <Avatar className={classes.chatPanelHeaderAvatar}>
+                      <AccountCircleIcon className={classes.chatPanelHeaderIcon} />
+                    </Avatar>
+                  </div>
+                ) : (
                   <div className={classes.chatPanelHeaderAvatarBadge}>
                     <StyledBadge
                       overlap="circle"
@@ -422,14 +425,14 @@ const Messages = (): JSX.Element => {
                       </Avatar>
                     </StyledBadge>
                   </div>
-                ) : (
-                  <div className={classes.chatPanelHeaderAvatarBadge}>
-                    <Avatar className={classes.chatPanelHeaderAvatar}>
-                      <AccountCircleIcon className={classes.chatPanelHeaderIcon} />
-                    </Avatar>
-                  </div>
                 )
-              ) : !currentIsRead ? (
+              ) : currentIsRead ? (
+                <div className={classes.chatPanelHeaderAvatarBadge}>
+                  <Avatar className={classes.chatPanelHeaderAvatar}>
+                    <img src={currentConverserImage} alt="profile image" className={classes.chatPanelHeaderImage} />
+                  </Avatar>
+                </div>
+              ) : (
                 <div className={classes.chatPanelHeaderAvatarBadge}>
                   <StyledBadge
                     overlap="circle"
@@ -443,12 +446,6 @@ const Messages = (): JSX.Element => {
                       <img src={currentConverserImage} alt="profile image" className={classes.chatPanelHeaderImage} />
                     </Avatar>
                   </StyledBadge>
-                </div>
-              ) : (
-                <div className={classes.chatPanelHeaderAvatarBadge}>
-                  <Avatar className={classes.chatPanelHeaderAvatar}>
-                    <img src={currentConverserImage} alt="profile image" className={classes.chatPanelHeaderImage} />
-                  </Avatar>
                 </div>
               )}
             </Grid>
