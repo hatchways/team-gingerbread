@@ -1,4 +1,4 @@
-import { useState, useContext, createContext, FunctionComponent, useCallback } from 'react';
+import { useState, useEffect, useContext, createContext, FunctionComponent, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from './useAuthContext';
 
@@ -35,6 +35,14 @@ export const SocketProvider: FunctionComponent = ({ children }): JSX.Element => 
       socket.disconnect();
     }
   }, [socket]);
+
+  useEffect(() => {
+    initSocket();
+
+    return () => {
+      disconnect();
+    };
+  }, [initSocket, disconnect]);
 
   return <SocketContext.Provider value={{ socket, initSocket, disconnect }}>{children}</SocketContext.Provider>;
 };
