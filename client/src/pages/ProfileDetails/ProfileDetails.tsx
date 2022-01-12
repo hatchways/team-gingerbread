@@ -97,7 +97,7 @@ const ProfileDetails = (): JSX.Element => {
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" paddingTop="10px">
             {reviews.map((review) => {
               return (
-                <CardContent key={review.clientId + review.sitterId} className={classes.review}>
+                <CardContent key={review._id} className={classes.review}>
                   <Rating className={classes.reviewRating} defaultValue={review.rating} precision={0.5} readOnly />
                   <Typography className={classes.reviewDescription}>&quot;{review.description}&quot;</Typography>
                 </CardContent>
