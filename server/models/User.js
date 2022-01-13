@@ -25,13 +25,21 @@ const userSchema = new mongoose.Schema({
     required: true,
     ref: "Profile",
   },
+  stripeId: {
+    type: String,
+    required: true,
+  },
 });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+userSchema.methods.matchPassword = async (enteredPassword) => {
+  try {
+    return await bcrypt.compare(enteredPassword, this.password);
+  } catch (e) {
+    return e;
+  }
 };
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async (next) => {
   if (!this.isModified("password")) {
     next();
   }
