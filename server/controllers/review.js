@@ -5,11 +5,16 @@ const User = require("../models/User");
 // @desc gets all reviews for sitter
 // @access Private
 exports.getAllReviews = async (req, res) => {
-  const user = await User.exists({ _id: req.params.sitterId }, async (error, result) => {
+  const { sitterId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(sitterId)) {
+    return res.status(400).send("Bad Request: sitterId");
+  }
+  const user = await User.exists({ _id: sitterId }, async (error, result) => {
     if (error) {
       res.status(400).json({ error: "the provided sitterId does not correspond to any users" });
     } else {
-      const reviews = await Review.find({ sitterId: req.params.sitterId });
+      const reviews = await Review.find({ sitterId: sitterId });
       res.json({ success: reviews });
     }
   });
@@ -19,11 +24,20 @@ exports.getAllReviews = async (req, res) => {
 // @desc creates new review
 // @access Private
 exports.createReview = async (req, res) => {
-  if (!("sitterId" in req.body && "rating" in req.body && "description" in req.body)) {
-    res.status(400).json({ error: "missing request body parameters" });
+  const { sitterId, rating, description } = req.body;
+  const clientId = req.user.id;
+
+  if (!mongoose.Types.ObjectId.isValid(sitterId)) {
+    return res.status(400).send("Bad Request: sitterId");
   }
 
-  const { sitterId, rating, description } = req.body;
+  if (!mongoose.Types.ObjectId.isValid(clientId)) {
+    return res.status(400).send("Bad Request: clientId");
+  }
+
+  if (!(sitterId && rating && description)) {
+    res.status(400).json({ error: "missing request body parameters" });
+  }
 
   if (typeof description !== "string") {
     res.json({ error: "Description is not a string" });
@@ -31,7 +45,7 @@ exports.createReview = async (req, res) => {
 
   const review = new Review({
     sitterId,
-    clientId: req.user.id,
+    clientId,
     rating,
     description,
   });
