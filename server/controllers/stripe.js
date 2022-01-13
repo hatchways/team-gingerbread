@@ -1,4 +1,5 @@
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
+const User = require("../models/User");
 
 const YOUR_DOMAIN = process.env.DOMAIN;
 
@@ -27,16 +28,6 @@ exports.createSession = async (req, res) => {
   res.redirect(303, session.url);
 };
 
-// @route POST /stripe/customers/create
-// @desc create new customer
-// @access Public
-exports.createCustomer = async (req, res) => {
-  const customer = await stripe.customers.create({
-    description: req.body.description,
-  });
-  res.send(customer);
-};
-
 // @route GET /stripe/customers/retrieve/:id
 // @desc retrieve customer
 // @access Public
@@ -45,29 +36,52 @@ exports.retrieveCustomer = async (req, res) => {
   res.send(customer);
 };
 
-// @route POST /stripe/payment/create
-// @desc creates new payment method
+// @route GET /stripe/customers/retrieveAll
+// @desc retrieve customer
 // @access Public
-exports.createPaymentMethod = async (req, res) => {
-  const paymentMethod = await stripe.paymentMethods.create({
-    type: "card",
-    card: {
-      number: "4242424242424242",
-      exp_month: 12,
-      exp_year: 2022,
-      cvc: "314",
-    },
-  });
-  res.send(paymentMethod);
+exports.retrieveAllCustomers = async (req, res) => {
+  const customers = await stripe.customers.list();
+  res.send(customers);
 };
 
 // @route GET /stripe/payment/all
 // @desc gets all payment methods
-// @access Public
+// @access Private
 exports.getAllPaymentMethods = async (req, res) => {
+  const user = await User.findById(req.user.id);
   const paymentMethods = await stripe.paymentMethods.list({
-    customer: "cus_Kk1rd4KHOzlRC0",
+    customer: user.stripeId,
     type: "card",
   });
   res.send(paymentMethods);
+};
+
+// @route POST /stripe/request/:id/pay
+// @desc send payment to sitter
+// @access Public
+exports.sendPayment = async (req, res) => {
+  const { clientId, clientPaymentMethod, chargeAmount, payoutAmount, transferGroup } = req.body;
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: chargeAmount,
+    currency: "usd",
+    customer: clientId, //client is charged
+    payment_method: clientPaymentMethod,
+    off_session: true,
+    confirm: true,
+    transfer_group: transferGroup,
+  });
+
+  const transfer = await stripe.transfers.create({
+    amount: payoutAmount,
+    currency: "usd",
+    destination: req.params.id, //sitter is paid
+    transfer_group: transferGroup,
+  });
+
+  res.status(200).json({
+    success: {
+      transfer,
+    },
+  });
 };

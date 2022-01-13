@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     ref: "Profile",
   },
+  stripeId: {
+    type: String,
+    required: true,
+  },
 });
 
 userSchema.methods.matchPassword = async (enteredPassword) => {
