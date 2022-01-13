@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomCardContent: {
     padding: 30,
+    width: '100%',
   },
   userDescriptionHeaderText: {
     color: 'black',

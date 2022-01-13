@@ -2,12 +2,43 @@ import useStyles from './useStyles';
 import { Box, Typography, Card, CardMedia, CardContent } from '@material-ui/core';
 import RoomIcon from '@material-ui/icons/Room';
 import BookingForm from './BookingForm/BookingForm';
+import fetchProfile from '../../helpers/APICalls/fetchProfile';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Profile } from '../../interface/Profile';
 
 const ProfileDetails = (): JSX.Element => {
   const classes = useStyles();
+  const [profile, setProfile] = useState<Profile>({
+    isSitter: false,
+    firstName: '',
+    lastName: '',
+    description: '',
+    address: '',
+    phoneNumber: '',
+    dateOfBirth: new Date('December 17, 1995 03:24:00'),
+    available: false,
+    accountType: '',
+    availability: '',
+    gender: '',
+    email: '',
+    photo: {
+      url: '',
+      key: '',
+    },
+    _id: '',
+  });
+
+  const { id } = useParams<{ id?: string }>();
+
+  useEffect(() => {
+    if (id) {
+      fetchProfile(id).then((data) => setProfile(data.success.profile));
+    }
+  });
 
   return (
-    <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1000px" display="grid" gridTemplateColumns="60fr 40fr">
+    <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1200px" display="grid" gridTemplateColumns="60fr 40fr">
       <Card className={classes.profileCard}>
         <CardMedia
           className={classes.backgroundImg}
@@ -20,21 +51,19 @@ const ProfileDetails = (): JSX.Element => {
             image="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
             title="user's profile image"
           />
-          <Typography className={classes.userNameText}>Norma Byers</Typography>
+          <Typography className={classes.userNameText}>
+            {profile.firstName} {profile.lastName}
+          </Typography>
           <Typography className={classes.userTitleText}>Loving pet sitter</Typography>
           <Box marginTop="20px" display="flex">
             <RoomIcon className={classes.userLocationIcon} />
-            <Typography className={classes.userLocationText}>Toronto, Ontario</Typography>
+            <Typography className={classes.userLocationText}>{profile.address}</Typography>
           </Box>
         </CardContent>
         <CardContent className={classes.bottomCardContent}>
           <Box marginTop="10px" width="100%" textAlign="left" marginBottom="30px">
             <Typography className={classes.userDescriptionHeaderText}>About me</Typography>
-            <Typography className={classes.userDescriptionText}>
-              Animals are my passion! I will look after your pets with loving care. I have some availability for pet
-              care in my home as well. I have 10 yrs experience at the Animal Hospital, and have owned multiple pets for
-              many years, including numerous rescues. Kindly email, text or call me and I will respond promptly!
-            </Typography>
+            <Typography className={classes.userDescriptionText}>{profile.description}</Typography>
           </Box>
           <Box width="100%" display="flex" alignItems="center" marginBottom="15px">
             <CardMedia

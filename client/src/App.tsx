@@ -16,6 +16,7 @@ import ProfileListings from './pages/ProfileListings/ProfileListings';
 
 import './App.css';
 import Homepage from './pages/Homepage/Homepage';
+import ManageBookings from './pages/ManageBookings/ManageBookings';
 
 function App(): JSX.Element {
   return (
@@ -30,12 +31,12 @@ function App(): JSX.Element {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/unauthorized" component={Unauthorized} />
-                <Route exact path="/profile-listings" component={ProfileListings} />
-                <ProtectedRoute exact path="/dashboard" Component={Dashboard} />
+                <ProtectedRoute exact path="/dashboard" Component={ProfileListings} />
                 <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
+                <ProtectedRoute exact path="/manage-bookings" Component={ManageBookings} />
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
-                <ProtectedRoute exact path="/profile-details" Component={ProfileDetails} />
+                <Route exact path="/profile-details/:id" component={ProfileDetails} />
                 <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
               </Switch>
             </SocketProvider>
