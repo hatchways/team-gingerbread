@@ -31,7 +31,8 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
         history.push('/signup');
       } else setLoggedInUser(data.user);
     },
-    [history, loggedInUser],
+    //eslint-disable-next-line
+    [history],
   );
 
   const logout = useCallback(async () => {

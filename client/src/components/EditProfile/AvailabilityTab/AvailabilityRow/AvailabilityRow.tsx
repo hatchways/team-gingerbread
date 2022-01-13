@@ -40,7 +40,7 @@ const AvailabilityRow = (props: props): JSX.Element => {
     if (loggedInUser) {
       fetchProfile(loggedInUser.id).then((data) => {
         // fetchProfile(loggedInUser.id, signal).then((data) => {
-        // console.log(data);
+        console.log(data);
         if (!data.error) {
           const availableTime = data.success.profile.availableTime;
           const currentDay = availableTime.filter(
