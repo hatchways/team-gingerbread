@@ -73,7 +73,7 @@ exports.updateBookingRequest = asyncHandler(async (req, res, next) => {
 exports.getBookingRequests = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
 
-  const bookingRequests = (await BookingRequest.find({ userId }).exec());
+  const bookingRequests = await BookingRequest.find({ userId }).exec();
   res.status(200).json({
     bookingRequestsWereFound: true,
     bookingRequests,

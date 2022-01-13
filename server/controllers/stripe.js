@@ -2,7 +2,7 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 const YOUR_DOMAIN = process.env.DOMAIN;
 
-// @route GET /stripe/session
+// @route POST /stripe/session
 // @desc create new session to save user's payment method
 // @access Public
 exports.createSession = async (req, res) => {
@@ -14,7 +14,7 @@ exports.createSession = async (req, res) => {
     cancel_url: "http://localhost:3000/cancel",
   });
 
-  res.redirect(303, session.url);
+  res.json({ success: session.url });
 };
 
 // @route POST /stripe/customers/create
