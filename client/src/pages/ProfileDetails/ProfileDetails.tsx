@@ -43,6 +43,10 @@ const ProfileDetails = (): JSX.Element => {
     }
   }, [id]);
 
+  const addNewReview = (newReview: Review) => {
+    setReviews((prevReviews) => [...prevReviews, newReview]);
+  };
+
   return (
     <Box
       margin="0 auto"
@@ -108,7 +112,7 @@ const ProfileDetails = (): JSX.Element => {
       </Card>
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-between" height="85vh">
         <BookingForm />
-        <ReviewForm />
+        <ReviewForm addNewReview={addNewReview} />
       </Box>
     </Box>
   );

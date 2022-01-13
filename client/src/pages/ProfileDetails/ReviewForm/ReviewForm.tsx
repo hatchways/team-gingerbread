@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
-import { Box, Typography, Card, CardMedia, CardContent, Button, TextField } from '@material-ui/core';
+import { useState, useContext } from 'react';
+import { Typography, Card, CardContent, Button, TextField } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import useStyles from './useStyles';
 import { createReview } from '../../../helpers/APICalls/createReview';
@@ -7,20 +7,28 @@ import { useParams } from 'react-router-dom';
 import { AuthContext } from '../../../context/useAuthContext';
 import { SnackBarContext } from '../../../context/useSnackbarContext';
 
-const ReviewForm = (): JSX.Element => {
+const ReviewForm = (props: any): JSX.Element => {
   const classes = useStyles();
   const [rating, setRating] = useState<number | null>(0);
   const [description, setDescription] = useState('');
   const { id }: { id: string } = useParams();
   const { loggedInUser } = useContext(AuthContext);
   const { updateSnackBarMessage } = useContext(SnackBarContext);
+  const { addNewReview } = props;
 
   const submitReview = () => {
     if (loggedInUser) {
       createReview(id, loggedInUser.id, rating, description).then((data) => {
         if (data.success) {
           updateSnackBarMessage('Review submitted successfully');
-          window.location.reload();
+          addNewReview({
+            sitterId: id,
+            clientId: loggedInUser.id,
+            rating,
+            description,
+          });
+          setRating(0);
+          setDescription('');
         } else {
           updateSnackBarMessage('Error submitting review. Please try again');
         }

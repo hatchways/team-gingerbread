@@ -9,6 +9,8 @@ import fetchProfile from '../../../helpers/APICalls/fetchProfile';
 import createRequestNotification from '../../../helpers/APICalls/createRequestNotification';
 import useStyles from './useStyles';
 import { times } from './times';
+import { getReviews } from '../../../helpers/APICalls/getReviews';
+import { Review } from '../../../interface/Review';
 
 const BookingForm = (): JSX.Element => {
   const { loggedInUser } = useContext(AuthContext);
@@ -35,10 +37,20 @@ const BookingForm = (): JSX.Element => {
       value: 23,
     },
   ]);
+  const [rating, setRating] = useState(5);
 
   useEffect(() => {
     if (id) {
       fetchProfile(id).then((data) => setAvailableTime(data.success.profile.availableTime));
+      getReviews(id).then((data) => {
+        const reviews = data.success;
+        let avgRating = 0;
+        reviews.forEach((r: Review) => {
+          avgRating += r.rating;
+        });
+        avgRating = Math.round((avgRating * 2) / reviews.length) / 2;
+        setRating(avgRating);
+      });
     }
   }, [id]);
 
@@ -83,7 +95,7 @@ const BookingForm = (): JSX.Element => {
     <Card className={classes.bookingFormCard}>
       <form onSubmit={formik.handleSubmit} className={classes.bookingForm}>
         <Typography className={classes.userRateText}>$14/hr</Typography>
-        <Rating defaultValue={4.5} precision={0.5} readOnly />
+        <Rating value={rating} precision={0.5} readOnly />
         <Box className={classes.profileDetailsForm}>
           <Typography className={classes.profileDetailsLabel}>drop off</Typography>
           <Grid className={classes.profileDetailsFormContainer}>
