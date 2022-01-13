@@ -4,18 +4,22 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { User } from '../../interface/User';
+import { useAuth } from '../../context/useAuthContext';
+import { useSnackBar } from '../../context/useSnackbarContext';
 import { useDebounce } from 'use-debounce';
 import { searchUsers } from '../../helpers/APICalls/searchUsers';
 
 interface Props {
   search: string;
   handleChange: (event: ChangeEvent<HTMLInputElement>, newInputValue: string) => void;
+  getNewUser: (user: string | User | null) => void;
 }
-const Search = ({ search, handleChange }: Props): JSX.Element => {
+const Search = ({ search, handleChange, getNewUser }: Props): JSX.Element => {
+  const { loggedInUser } = useAuth();
+  const { updateSnackBarMessage } = useSnackBar();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  // limit our call to the api with a debounced value at max of 1 per 0.5 seconds
   const [debouncedSearch] = useDebounce(search, 500);
 
   const classes = useStyles();
@@ -28,27 +32,26 @@ const Search = ({ search, handleChange }: Props): JSX.Element => {
     let active = true;
 
     async function searchAndSaveUsers() {
-      // send request to backend API to get users limited to 20.
       setLoading(true);
-      const response = await searchUsers({
-        search: debouncedSearch,
-      });
+      if (debouncedSearch) {
+        const response = await searchUsers({
+          search: debouncedSearch,
+        });
 
-      if (active && response && response.users) {
-        console.log(response);
-        saveOptions(response.users);
+        if (active && response && response.users) {
+          saveOptions(response.users);
+        }
       }
-      setLoading(false);
     }
 
     searchAndSaveUsers();
 
     return () => {
       active = false;
+      saveOptions([]);
     };
   }, [debouncedSearch]);
 
-  // creates a combobox search which is dynamically updated with call's to the API
   return (
     <form
       onSubmit={(e: SyntheticEvent) => {
@@ -71,6 +74,15 @@ const Search = ({ search, handleChange }: Props): JSX.Element => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onInputChange={handleChange}
+        onChange={(e, value) => {
+          if (value && typeof value !== 'string' && loggedInUser && value._id !== loggedInUser.id) {
+            getNewUser(value);
+          } else if (typeof value === 'string') {
+            updateSnackBarMessage('Please pick a user from the dropdown.');
+          } else {
+            updateSnackBarMessage('Unable to start a conversation with oneself. Please pick another user.');
+          }
+        }}
         inputValue={search}
         noOptionsText="No Users Found"
         freeSolo

@@ -33,7 +33,7 @@ exports.loadUsersData = async (req, res) => {
     .populate("profile", "firstName lastName photo");
 
   if (!profiles) {
-    res.status(500).send("An error occurred while retrieving profile data.");
+    res.status(500).send({ error: { message: "An error occurred while retrieving profile data." } });
   } else {
     res.status(200).send({ success: profiles });
   }

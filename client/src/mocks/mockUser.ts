@@ -5,6 +5,7 @@ const mockLoggedInUser: User = {
   username: 'mock LoggedIn user',
   profile: '',
   id: '',
+  _id: '',
 };
 
 const mockOtherUser1: User = {
@@ -12,6 +13,7 @@ const mockOtherUser1: User = {
   email: 'mockTestUser1@gmail.com',
   profile: '',
   id: '',
+  _id: '',
 };
 
 const mockOtherUser2: User = {
@@ -19,6 +21,7 @@ const mockOtherUser2: User = {
   email: 'mockTestUser2@gmail.com',
   profile: '',
   id: '',
+  _id: '',
 };
 
 const mockOtherUser3: User = {
@@ -26,6 +29,7 @@ const mockOtherUser3: User = {
   email: 'mockTestUser3@gmail.com',
   profile: '',
   id: '',
+  _id: '',
 };
 
 const mockOtherUsers: User[] = [mockOtherUser1, mockOtherUser2, mockOtherUser3];

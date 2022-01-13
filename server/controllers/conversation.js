@@ -29,22 +29,20 @@ exports.startConversation = asyncHandler(async (req, res, next) => {
       });
 
       if (conversationExists) {
-        res.status(403).send("Cannot start multiple conversations with the same user.");
+        res.status(403).send({ error: { message: "Cannot start multiple conversations with the same user." } });
       } else {
         const conversation = await Conversation.create({
           users: [userId, converser],
         });
 
         if (!conversation) {
-          res.status(500).send("Unable to start conversation.");
+          res.status(500).send({ error: { message: "Unable to start conversation." } });
         } else {
-          res.status(200).send({
-            success: { message: "Conversation started." },
-          });
+          res.status(200).send({ success: { message: "Conversation started." } });
         }
       }
     } else {
-      res.status(404).send("User not found.");
+      res.status(404).send({ error: { message: "User not found." } });
     }
   } catch (e) {
     next(e);
@@ -60,9 +58,8 @@ exports.loadConversations = async (req, res) => {
   const conversations = await Conversation.find({
     users: { $in: [userId] },
   }).populate("lastMessage");
-  res.status(200).send({
-    success: { conversations },
-  });
+
+  res.status(200).send({ success: { conversations } });
 };
 
 // @route DELETE /delete/:conversationId
@@ -91,20 +88,16 @@ exports.deleteConversation = asyncHandler(async (req, res, next) => {
         currConversation.users = updated;
         await currConversation.save();
 
-        res.status(200).send({
-          success: { message: "Conversation deleted." },
-        });
+        res.status(200).send({ success: { message: "Conversation deleted." } });
       } else {
         await Conversation.deleteOne({ _id: conversationId });
 
         await Message.deleteMany({ conversationId });
 
-        res.status(200).send({
-          success: { message: "Conversation deleted." },
-        });
+        res.status(200).send({ success: { message: "Conversation deleted." } });
       }
     } else {
-      res.status(404).send("Conversation not found.");
+      res.status(404).send({ error: { message: "Conversation not found." } });
     }
   } catch (e) {
     next(e);

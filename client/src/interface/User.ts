@@ -3,6 +3,7 @@ export interface User {
   username: string;
   profile: string;
   id: string;
+  _id: string;
 }
 
 export interface SearchUsersApiData {
