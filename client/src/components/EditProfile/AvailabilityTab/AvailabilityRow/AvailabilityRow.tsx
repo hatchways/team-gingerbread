@@ -2,6 +2,7 @@ import useStyles from './useStyles';
 import { useState, useEffect, useContext } from 'react';
 import { Box, Typography, Grid, Select, MenuItem, Checkbox } from '@material-ui/core';
 import fetchProfile from '../../../../helpers/APICalls/fetchProfile';
+// import fetchProfile from '../../../../helpers/APICalls/fetchProfileWithSignal';
 import editAvailability from '../../../../helpers/APICalls/editAvailability';
 import { AuthContext } from '../../../../context/useAuthContext';
 import { SnackBarContext } from '../../../../context/useSnackbarContext';
@@ -34,37 +35,37 @@ const AvailabilityRow = (props: props): JSX.Element => {
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
+    // const controller = new AbortController();
+    // const signal = controller.signal;
     if (loggedInUser) {
       fetchProfile(loggedInUser.id).then((data) => {
-        const availableTime = data.success.profile.availableTime;
-        const currentDay = availableTime.filter(
-          (day: day) =>
-            new Date(day.date).getDate() === new Date(date).getDate() &&
-            new Date(day.date).getMonth() === new Date(date).getMonth() &&
-            new Date(day.date).getFullYear() === new Date(date).getFullYear(),
-        )[0];
-        if (currentDay) {
-          setStartTime(currentDay.startTime);
-          setEndTime(currentDay.endTime);
-          setAvailable(currentDay.available);
+        // fetchProfile(loggedInUser.id, signal).then((data) => {
+        // console.log(data);
+        if (!data.error) {
+          const availableTime = data.success.profile.availableTime;
+          const currentDay = availableTime.filter(
+            (day: day) =>
+              new Date(day.date).getDate() === new Date(date).getDate() &&
+              new Date(day.date).getMonth() === new Date(date).getMonth() &&
+              new Date(day.date).getFullYear() === new Date(date).getFullYear(),
+          )[0];
+          if (currentDay) {
+            setStartTime(currentDay.startTime);
+            setEndTime(currentDay.endTime);
+            setAvailable(currentDay.available);
+          }
         }
       });
     }
+    // return () => controller.abort();
   }, [loggedInUser, date]);
 
   useEffect(() => {
     if (updating && loggedInUser) {
-      // console.log(`
-      //   date: ${date}\n
-      //   startTime: ${startTime}\n
-      //   endTime: ${endTime}\n
-      //   available: ${available}
-      // `);
-      editAvailability(loggedInUser.id, date.toDateString(), startTime, endTime, available).then((data) => {
-        console.log(data);
-      });
       setUpdating(false);
-      updateSnackBarMessage('Your availability has been updated');
+      editAvailability(loggedInUser.id, date.toDateString(), startTime, endTime, available).then((data) => {
+        updateSnackBarMessage('Your availability has been updated');
+      });
     }
   }, [availability, updating, loggedInUser, updateSnackBarMessage, date, startTime, endTime, available]);
 
@@ -134,6 +135,7 @@ const AvailabilityRow = (props: props): JSX.Element => {
             setAvailable(!available);
             setUpdating(true);
           }}
+          disabled={startTime === -1 || endTime === -1}
         />
       </Box>
     </Grid>

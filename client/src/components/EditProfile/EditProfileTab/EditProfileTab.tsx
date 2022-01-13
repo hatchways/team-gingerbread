@@ -1,10 +1,10 @@
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
-import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch, setRef } from '@material-ui/core';
-import React, { useState, useEffect, useContext } from 'react';
+import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch } from '@material-ui/core';
+import { useState, useEffect, useContext } from 'react';
 import { useFormik } from 'formik';
 import edit from '../../../helpers/APICalls/edit';
-import fetchProfile from '../../../helpers/APICalls/fetchProfile';
+import fetchProfile from '../../../helpers/APICalls/fetchProfileWithSignal';
 import { AuthContext } from '../../../context/useAuthContext';
 
 interface Profile {
@@ -57,9 +57,16 @@ export default function EditProfileTab(): JSX.Element {
   });
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     if (loggedInUser) {
-      fetchProfile(loggedInUser.id).then((data) => setProfile(data.success.profile)); //get profileValues and set to profile state
+      fetchProfile(loggedInUser.id, signal).then((data) => {
+        if (!data.error) {
+          setProfile(data.success.profile);
+        }
+      });
     }
+    return () => controller.abort();
   }, [loggedInUser]);
 
   const formik = useFormik({

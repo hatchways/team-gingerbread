@@ -20,7 +20,6 @@ const editAvailability = async (id: string, date: string, startTime: number, end
       },
     }),
   };
-  // console.log(fetchOptions.body);
   return await fetch(`/profile/availability/edit`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({

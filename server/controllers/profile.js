@@ -52,7 +52,7 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
     throw new Error("User doesn't exist");
   }
   const profile = await Profile.findById(user.profile);
-  const availableTime = profile.availableTime; //creates variable representing user's availability
+  let availableTime = profile.availableTime; //creates variable representing user's availability
   const newDay = req.body.newDay;
 
   if (availableTime.startTime > availableTime.endTime) {
@@ -70,9 +70,7 @@ exports.editAvailability = asyncHandler(async (req, res, next) => {
     )
   ) {
     //if match, find match and set to newDay (updates match)
-    availableTime.forEach((day) => {
-      if (day.date.getDate() === new Date(newDay.date).getDate()) day = newDay;
-    });
+    availableTime = availableTime.map((day) => (day.date.getDate() === new Date(newDay.date).getDate() ? newDay : day));
   } else {
     //if no match, push newDay to availableTime
     availableTime.push(newDay);
