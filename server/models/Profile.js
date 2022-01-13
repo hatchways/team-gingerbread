@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Review = require("../models/Review");
 
 const timeSlot = new mongoose.Schema({ start: Date, end: Date });
 
