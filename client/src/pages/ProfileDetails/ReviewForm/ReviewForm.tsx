@@ -40,7 +40,12 @@ const ReviewForm = (props: any): JSX.Element => {
     <Card className={classes.reviewFormCard}>
       <CardContent className={classes.reviewCardContent}>
         <Typography className={classes.reviewCardHeader}>leave a review</Typography>
-        <Rating value={rating} onChange={(e, newValue) => setRating(newValue)} className={classes.ratingComponent} />
+        <Rating
+          name="rating"
+          value={rating}
+          onChange={(e, newValue) => setRating(newValue)}
+          className={classes.ratingComponent}
+        />
         <TextField
           className={classes.reviewTextBox}
           variant="outlined"

@@ -41,15 +41,25 @@ const BookingForm = (): JSX.Element => {
 
   useEffect(() => {
     if (id) {
-      fetchProfile(id).then((data) => setAvailableTime(data.success.profile.availableTime));
+      fetchProfile(id).then((data) => {
+        if (data.success) {
+          setAvailableTime(data.success.profile.availableTime);
+        } else {
+          console.log(data.error);
+        }
+      });
       getReviews(id).then((data) => {
-        const reviews = data.success;
-        let avgRating = 0;
-        reviews.forEach((r: Review) => {
-          avgRating += r.rating;
-        });
-        avgRating = Math.round((avgRating * 2) / reviews.length) / 2;
-        setRating(avgRating);
+        if (data.success) {
+          const reviews = data.success;
+          let avgRating = 0;
+          reviews.forEach((r: Review) => {
+            avgRating += r.rating;
+          });
+          avgRating = Math.round((avgRating * 2) / reviews.length) / 2;
+          setRating(avgRating);
+        } else {
+          console.log(data.error);
+        }
       });
     }
   }, [id]);

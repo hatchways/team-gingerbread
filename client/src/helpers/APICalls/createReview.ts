@@ -13,11 +13,11 @@ export const createReview = async (sitterId: string, clientId: string, rating: n
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      clientId,
+      sitterId,
       rating,
       description,
     }),
   };
-  const response = await fetch(`/reviews/create/${sitterId}`, options);
+  const response = await fetch('/reviews/create', options);
   return response.json();
 };

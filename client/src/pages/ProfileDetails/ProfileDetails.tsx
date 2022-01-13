@@ -38,8 +38,20 @@ const ProfileDetails = (): JSX.Element => {
 
   useEffect(() => {
     if (id) {
-      fetchProfile(id).then((data) => setProfile(data.success.profile));
-      getReviews(id).then((data) => setReviews(data.success));
+      fetchProfile(id).then((data) => {
+        if (data.success) {
+          setProfile(data.success.profile);
+        } else {
+          console.log(data.error);
+        }
+      });
+      getReviews(id).then((data) => {
+        if (data.success) {
+          setReviews(data.success);
+        } else {
+          console.log(data.error);
+        }
+      });
     }
   }, [id]);
 
