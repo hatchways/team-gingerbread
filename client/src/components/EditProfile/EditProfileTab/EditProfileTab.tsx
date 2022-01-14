@@ -1,8 +1,9 @@
-import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch } from '@material-ui/core';
 import { useState, useEffect, useContext } from 'react';
 import { useFormik } from 'formik';
+import useStyles from './useStyles';
+import { useSnackBar } from '../../../context/useSnackbarContext';
 import edit from '../../../helpers/APICalls/edit';
 import fetchProfile from '../../../helpers/APICalls/fetchProfileWithSignal';
 import { AuthContext } from '../../../context/useAuthContext';
@@ -11,10 +12,12 @@ interface Profile {
   firstName: string;
   lastName: string;
   description: string;
+  isSitter: boolean;
   address: string;
   phoneNumber: string;
   dateOfBirth: Date;
   available: boolean;
+  accountType: string;
   availability: string;
   gender: string;
   email: string;
@@ -39,11 +42,12 @@ const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
   const { loggedInUser } = useContext(AuthContext);
-
   const classes = useStyles();
+  const { updateSnackBarMessage } = useSnackBar();
   const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
-  const [profile, setProfile] = useState<Profile>({
+  const [profile, setProfile] = useState({
+    isSitter: false,
     firstName: '',
     lastName: '',
     description: '',
@@ -51,6 +55,7 @@ export default function EditProfileTab(): JSX.Element {
     phoneNumber: '',
     dateOfBirth: new Date('December 17, 1995 03:24:00'),
     available: false,
+    accountType: '',
     availability: '',
     gender: '',
     email: '',
@@ -62,7 +67,22 @@ export default function EditProfileTab(): JSX.Element {
     if (loggedInUser) {
       fetchProfile(loggedInUser.id, signal).then((data) => {
         if (!data.error) {
-          setProfile(data.success.profile);
+          const newProfile = {
+            isSitter: data.success.profile.isSitter,
+            available: data.success.profile.available,
+            availability: data.success.profile.availability,
+            firstName: data.success.profile.firstName,
+            lastName: data.success.profile.lastName,
+            gender: data.success.profile.gender,
+            dateOfBirth: data.success.profile.dateOfBirth,
+            email: data.success.profile.email,
+            phoneNumber: data.success.profile.phoneNumber,
+            address: data.success.profile.address,
+            description: data.success.profile.description,
+            accountType: data.success.profile.isSitter ? 'partner' : 'client',
+          };
+          // console.log(newProfile);
+          setProfile(newProfile);
         }
       });
     }
@@ -71,6 +91,7 @@ export default function EditProfileTab(): JSX.Element {
 
   const formik = useFormik({
     initialValues: {
+      isSitter: profile.isSitter,
       available: profile.available,
       availability: profile.availability || 'availability',
       firstName: profile.firstName,
@@ -88,6 +109,7 @@ export default function EditProfileTab(): JSX.Element {
       if (loggedInUser) {
         edit(
           loggedInUser.id,
+          values.isSitter,
           values.firstName,
           values.lastName,
           values.description,
@@ -98,12 +120,14 @@ export default function EditProfileTab(): JSX.Element {
           values.availability,
           values.gender,
           values.email,
-        );
-        formik.resetForm();
-        location.reload(); //reloads page so that prefilled values are updated, otherwise shows profile values before update submitted
+        ).then((data) => {
+          console.log(data);
+          // formik.resetForm();
+          // location.reload();
+        });
       }
     },
-    enableReinitialize: true, //since useEffect has a lag, this allows prefilled values to be updated if they change (from '' to value set by fetchProfile() helper)
+    enableReinitialize: true,
   });
 
   return (
@@ -113,13 +137,17 @@ export default function EditProfileTab(): JSX.Element {
         {accountType === 'partner' && (
           <Box className={classes.section}>
             <FormLabel>
-              <Typography className={classes.label}>i&apos;m available</Typography>
+              <Typography className={classes.label}>
+                {formik.values.isSitter ? `i'm a sitter` : `i'm not a sitter`}
+              </Typography>
             </FormLabel>
             <Switch
-              value={false}
-              checked={formik.values.available === true}
-              onChange={(event, checked) => {
-                formik.setFieldValue('available', checked ? true : false);
+              id="isSitter"
+              name="isSitter"
+              value={formik.values.isSitter}
+              checked={formik.values.isSitter === true}
+              onChange={(_, checked) => {
+                formik.setFieldValue('isSitter', checked ? true : false);
               }}
               color="primary"
             />
@@ -304,7 +332,7 @@ export default function EditProfileTab(): JSX.Element {
                 <Button
                   variant="contained"
                   className={classes.addPhone}
-                  onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                  onClick={() => setShowPhoneInput(!showPhoneInput)}
                 >
                   Add a phone number
                 </Button>
@@ -324,7 +352,7 @@ export default function EditProfileTab(): JSX.Element {
                 <Button
                   variant="contained"
                   className={classes.addPhone}
-                  onClick={(e) => setShowPhoneInput(!showPhoneInput)}
+                  onClick={() => setShowPhoneInput(!showPhoneInput)}
                 >
                   Cancel
                 </Button>

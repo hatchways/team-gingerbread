@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Review = require("../models/Review");
 
 const timeSlot = new mongoose.Schema({ start: Date, end: Date });
 
@@ -88,8 +89,14 @@ const profileSchema = new mongoose.Schema({
     ],
   },
   photo: {
-    type: String,
-    default: "",
+    url: {
+      type: String,
+      default: "",
+    },
+    key: {
+      type: String,
+      default: "",
+    },
   },
   gender: {
     type: String,
@@ -98,6 +105,10 @@ const profileSchema = new mongoose.Schema({
   email: {
     type: String,
     default: "",
+  },
+  isSitter: {
+    type: Boolean,
+    default: false,
   },
 });
 
