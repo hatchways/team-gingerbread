@@ -32,9 +32,9 @@ function App(): JSX.Element {
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/unauthorized" component={Unauthorized} />
                 <ProtectedRoute exact path="/dashboard" Component={ProfileListings} />
-                <ProtectedRoute exact path="/my-jobs" Component={Dashboard} />
+                <ProtectedRoute exact path="/my-jobs" Component={ManageBookings} />
                 <ProtectedRoute exact path="/messages" Component={Dashboard} />
-                <ProtectedRoute exact path="/manage-bookings" Component={ManageBookings} />
+                {/* <ProtectedRoute exact path="/manage-bookings" Component={ManageBookings} /> */}
                 <ProtectedRoute exact path="/my-sitters" Component={Dashboard} />
                 <Route exact path="/profile-details/:id" component={ProfileDetails} />
                 <ProtectedRoute exact path="/edit-profile" Component={EditMenu} />
