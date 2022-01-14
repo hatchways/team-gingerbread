@@ -1,19 +1,14 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import useStyles from './useStyles';
 import EditProfileTab from './EditProfileTab/EditProfileTab';
 import ProfilePhotoTab from './ProfilePhotoTab/ProfilePhotoTab';
 import PaymentTab from './PaymentTab/PaymentTab';
-
-const stripePromise = loadStripe(
-  'pk_test_51K4XCnKf5QktJZn3GrBXfSwbcgATNhC6MATEhDqM2T1q6jWFMhC4pA7hom84oWVSQWOMC5F3rjd2twAMa4Lnrktn00Yb6ixDo8',
-);
+import AvailabilityTab from './AvailabilityTab/AvailabilityTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -57,16 +52,6 @@ const EditMenu = (): JSX.Element => {
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   fetch('/stripe/create-payment-intent', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ items: 'test' }),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => setClientSecret(data.clientSecret));
-  // }, []);
-
   return (
     <Grid container component="main" className={classes.root}>
       <Grid item xs={6} md={2} lg={2} className={classes.tabContainer}>
@@ -94,12 +79,10 @@ const EditMenu = (): JSX.Element => {
           <ProfilePhotoTab />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Availability Placeholder
+          <AvailabilityTab />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
-            <PaymentTab />
-          </Elements>
+          <PaymentTab />
         </TabPanel>
         <TabPanel value={value} index={4}>
           Security Placeholder

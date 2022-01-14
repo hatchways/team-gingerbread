@@ -36,6 +36,58 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  availableTime: {
+    type: Array({
+      date: Date,
+      startTime: Number,
+      endTime: Number,
+      available: Boolean,
+    }),
+    default: [
+      {
+        date: new Date("2019-6-17"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+      {
+        date: new Date("2019-6-18"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+      {
+        date: new Date("2019-6-19"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+      {
+        date: new Date("2019-6-20"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+      {
+        date: new Date("2019-6-21"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+      {
+        date: new Date("2019-6-22"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+      {
+        date: new Date("2019-6-23"),
+        startTime: 10,
+        endTime: 22,
+        available: true,
+      },
+    ],
+  },
   photo: {
     url: {
       type: String,

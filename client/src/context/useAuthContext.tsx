@@ -33,6 +33,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
         history.replace('/dashboard');
       } else setLoggedInUser(data.user);
     },
+    //eslint-disable-next-line
     [history],
   );
 

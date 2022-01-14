@@ -6,19 +6,22 @@ const User = require("../models/User");
 // @desc edit user profile
 // @access Private
 exports.editProfile = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.body.id);
-
-  if (user) {
-    const profile = await Profile.findByIdAndUpdate(user.profile, req.body.changes, { new: true });
-
-    if (!profile) {
-      res.status(500).send("An error occurred while editing profile.");
-    } else {
-      res.status(200).json({ success: { message: "Profile edited successfully!" } });
-    }
-  } else {
-    res.status(500).send("An error occurred while editing profile.");
+  const { changes } = req.body;
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User doesn't exist");
   }
+  const profile = await Profile.findById(user.profile);
+  for (const attr in changes) {
+    profile[attr] = changes[attr];
+  }
+  const updatedProfile = await profile.save();
+  res.status(200).json({
+    success: {
+      profile: updatedProfile,
+    },
+  });
 });
 
 // @route GET /profile/load/:id
@@ -28,13 +31,46 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   const profileId = user.profile;
   const profile = await Profile.findById(profileId);
-
   if (!profile) {
     res.status(401);
     throw new Error("Not authorized");
   }
-
   res.status(200).json({ success: { profile } });
+});
+
+// @route POST /profile/availability/edit
+// @desc edit user profile
+// @access Private
+exports.editAvailability = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.body.user.id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User doesn't exist");
+  }
+  const profile = await Profile.findById(user.profile);
+  let availableTime = profile.availableTime;
+  const newDay = req.body.newDay;
+  if (availableTime.startTime > availableTime.endTime) {
+    res.status(401);
+    throw new Error("Start time must occur before end time");
+  }
+  if (
+    availableTime.some(
+      (day) =>
+        day.date.getDate() === new Date(newDay.date).getDate() &&
+        day.date.getMonth() === new Date(newDay.date).getMonth() &&
+        day.date.getFullYear() === new Date(newDay.date).getFullYear()
+    )
+  ) {
+    availableTime = availableTime.map((day) => (day.date.getDate() === new Date(newDay.date).getDate() ? newDay : day));
+  } else {
+    availableTime.push(newDay);
+  }
+  profile.availableTime = availableTime;
+  const updatedProfile = await profile.save();
+  res.status(200).json({
+    success: updatedProfile.availableTime,
+  });
 });
 
 // @route GET /profile/listings
