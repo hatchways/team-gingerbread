@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const generateToken = require("../utils/generateToken");
 
 // @route POST /auth/register
@@ -23,6 +24,9 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     throw new Error("A user with that username already exists");
   }
   const newProfile = await Profile.create({});
+  const customer = await stripe.customers.create({
+    description: req.body.description,
+  });
 
   if (newProfile) {
     const profile = newProfile._id;
@@ -31,6 +35,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
       email,
       password,
       profile,
+      stripeId: customer.id,
     });
 
     if (user) {
@@ -49,6 +54,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
             username: user.username,
             email: user.email,
             profile: user.profile,
+            stripeId: user.stripeId,
           },
         },
       });
