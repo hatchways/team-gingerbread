@@ -1,0 +1,92 @@
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  paymentHeader: {
+    color: 'black',
+    fontSize: 24,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  savedText: {
+    marginTop: 30,
+    color: 'grey',
+    fontSize: 18,
+  },
+  showCardInputButton: {
+    margin: '0 auto',
+    padding: 10,
+    width: 280,
+    height: 56,
+    borderRadius: theme.shape.borderRadius,
+    marginTop: 20,
+    marginBottom: 35,
+    fontSize: 14,
+    backgroundColor: 'white',
+    color: theme.palette.primary.main,
+    border: `${theme.palette.primary.main} 2.5px solid`,
+    fontWeight: 'bold',
+    textTransform: 'none',
+    transition: '1s',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+  },
+  cardForm: {
+    margin: '0 auto',
+    width: '60%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  cardFormLabel: {
+    alignSelf: 'flex-start',
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  cardFormGrid: {
+    display: 'grid',
+    gridTemplateColumns: '50fr 50fr',
+    width: '100%',
+    gridGap: '20px',
+  },
+  cancelPaymentButton: {
+    padding: 10,
+    width: '40%',
+    height: 56,
+    borderRadius: theme.shape.borderRadius,
+    fontSize: 14,
+    backgroundColor: 'white',
+    color: theme.palette.primary.main,
+    border: `${theme.palette.primary.main} 2.5px solid`,
+    fontWeight: 'bold',
+    textTransform: 'none',
+    transition: '1s',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+  },
+  savePaymentButton: {
+    padding: 10,
+    width: '40%',
+    height: 56,
+    borderRadius: theme.shape.borderRadius,
+    fontSize: 14,
+    backgroundColor: 'white',
+    color: '#1fc24e',
+    border: `#1fc24e 2.5px solid`,
+    fontWeight: 'bold',
+    textTransform: 'none',
+    transition: '1s',
+    '&:hover': {
+      backgroundColor: '#1fc24e',
+      color: 'white',
+      borderColor: '#1fc24e',
+    },
+  },
+}));
+
+export default useStyles;

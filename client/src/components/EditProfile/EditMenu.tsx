@@ -1,13 +1,13 @@
+import { useState, ChangeEvent } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import useStyles from './useStyles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
-import { useState, ChangeEvent } from 'react';
-
+import useStyles from './useStyles';
 import EditProfileTab from './EditProfileTab/EditProfileTab';
 import ProfilePhotoTab from './ProfilePhotoTab/ProfilePhotoTab';
+import PaymentTab from './PaymentTab/PaymentTab';
 import AvailabilityTab from './AvailabilityTab/AvailabilityTab';
 
 interface TabPanelProps {
@@ -46,6 +46,7 @@ function a11yProps(index: number) {
 const EditMenu = (): JSX.Element => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [clientSecret, setClientSecret] = useState('');
 
   const handleChange = (event: ChangeEvent<Record<string, unknown>>, newValue: number) => {
     setValue(newValue);
@@ -81,7 +82,7 @@ const EditMenu = (): JSX.Element => {
           <AvailabilityTab />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Payment Placeholder
+          <PaymentTab />
         </TabPanel>
         <TabPanel value={value} index={4}>
           Security Placeholder
