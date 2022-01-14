@@ -35,8 +35,10 @@ export default function PaymentTab(): JSX.Element {
   }, []);
 
   const handlePayment = async () => {
-    setUpFuturePayment().then((res) => {
-      console.log(res);
+    setUpFuturePayment().then((data) => {
+      if (data.success) {
+        window.location = data.success;
+      }
     });
   };
 
