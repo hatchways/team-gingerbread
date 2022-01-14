@@ -4,28 +4,18 @@ const User = require("../models/User");
 const YOUR_DOMAIN = process.env.DOMAIN;
 
 // @route POST /stripe/session
-// @desc create new session
+// @desc create new session to save user's payment method
 // @access Public
 exports.createSession = async (req, res) => {
   const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "T-shirt",
-          },
-          unit_amount: 2000,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: `${YOUR_DOMAIN}/success=true`,
-    cancel_url: `${YOUR_DOMAIN}/canceled=true`,
+    payment_method_types: ["card"],
+    mode: "setup",
+    customer: "cus_KrCousRxcC9lSY",
+    success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: "http://localhost:3000/cancel",
   });
 
-  res.redirect(303, session.url);
+  res.json({ success: session.url });
 };
 
 // @route GET /stripe/customers/retrieve/:id
