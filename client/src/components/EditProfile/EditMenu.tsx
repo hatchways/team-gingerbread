@@ -8,6 +8,7 @@ import { useState, ChangeEvent } from 'react';
 
 import EditProfileTab from './EditProfileTab/EditProfileTab';
 import ProfilePhotoTab from './ProfilePhotoTab/ProfilePhotoTab';
+import AvailabilityTab from './AvailabilityTab/AvailabilityTab';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -77,7 +78,7 @@ const EditMenu = (): JSX.Element => {
           <ProfilePhotoTab />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Availability Placeholder
+          <AvailabilityTab />
         </TabPanel>
         <TabPanel value={value} index={3}>
           Payment Placeholder

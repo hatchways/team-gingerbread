@@ -1,13 +1,27 @@
 import Typography from '@material-ui/core/Typography';
 import { FormLabel, OutlinedInput, Select, MenuItem, TextField, Button, Box, Switch } from '@material-ui/core';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useFormik } from 'formik';
 import useStyles from './useStyles';
-import { useAuth } from '../../../context/useAuthContext';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import edit from '../../../helpers/APICalls/edit';
-import fetchProfile from '../../../helpers/APICalls/fetchProfile';
-import { Profile } from '../../../interface/Profile';
+import fetchProfile from '../../../helpers/APICalls/fetchProfileWithSignal';
+import { AuthContext } from '../../../context/useAuthContext';
+
+interface Profile {
+  firstName: string;
+  lastName: string;
+  description: string;
+  isSitter: boolean;
+  address: string;
+  phoneNumber: string;
+  dateOfBirth: Date;
+  available: boolean;
+  accountType: string;
+  availability: string;
+  gender: string;
+  email: string;
+}
 
 const months = [
   'January',
@@ -27,12 +41,12 @@ const days = [...Array(31).keys()].map((i) => i + 1);
 const years = [...Array(119).keys()].map((i) => i + 1903).sort((a, b) => b - a);
 
 export default function EditProfileTab(): JSX.Element {
+  const { loggedInUser } = useContext(AuthContext);
   const classes = useStyles();
-  const { loggedInUser } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
   const [accountType, setAccountType] = useState<string>('partner');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
-  const [profile, setProfile] = useState<Profile>({
+  const [profile, setProfile] = useState({
     isSitter: false,
     firstName: '',
     lastName: '',
@@ -45,21 +59,34 @@ export default function EditProfileTab(): JSX.Element {
     availability: '',
     gender: '',
     email: '',
-    photo: {
-      url: '',
-      key: '',
-    },
-    _id: '',
   });
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     if (loggedInUser) {
-      fetchProfile(loggedInUser.id).then(() => {
-        //fetchProfile does not work correctly, once it does it can be integrated
-        //setProfile(data.success.profile)
+      fetchProfile(loggedInUser.id, signal).then((data) => {
+        if (!data.error) {
+          const newProfile = {
+            isSitter: data.success.profile.isSitter,
+            available: data.success.profile.available,
+            availability: data.success.profile.availability,
+            firstName: data.success.profile.firstName,
+            lastName: data.success.profile.lastName,
+            gender: data.success.profile.gender,
+            dateOfBirth: data.success.profile.dateOfBirth,
+            email: data.success.profile.email,
+            phoneNumber: data.success.profile.phoneNumber,
+            address: data.success.profile.address,
+            description: data.success.profile.description,
+            accountType: data.success.profile.isSitter ? 'partner' : 'client',
+          };
+          // console.log(newProfile);
+          setProfile(newProfile);
+        }
       });
-      setAccountType('partner');
     }
+    return () => controller.abort();
   }, [loggedInUser]);
 
   const formik = useFormik({
@@ -94,32 +121,13 @@ export default function EditProfileTab(): JSX.Element {
           values.gender,
           values.email,
         ).then((data) => {
-          if (data.error) {
-            updateSnackBarMessage('Something went wrong. Please try again.');
-          }
+          console.log(data);
+          // formik.resetForm();
+          // location.reload();
         });
       }
-
-      setProfile({
-        isSitter: values.isSitter,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        description: values.description,
-        address: values.address,
-        phoneNumber: values.phoneNumber,
-        dateOfBirth: new Date('December 17, 1995 03:24:00'),
-        available: values.available,
-        accountType,
-        availability: values.availability,
-        gender: values.gender,
-        email: values.email,
-        photo: {
-          url: '',
-          key: '',
-        },
-        _id: '',
-      });
     },
+    enableReinitialize: true,
   });
 
   return (
@@ -312,7 +320,7 @@ export default function EditProfileTab(): JSX.Element {
                 className={classes.phoneNumberInputComponentFull}
                 id="phone"
                 placeholder="(210) 556-0123"
-                name="phone"
+                name="phoneNumber"
                 autoComplete="tel"
                 value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
@@ -336,7 +344,7 @@ export default function EditProfileTab(): JSX.Element {
                   className={classes.phoneNumberInputComponent}
                   id="phone"
                   placeholder="(210) 556-0123"
-                  name="phone"
+                  name="phoneNumber"
                   autoComplete="tel"
                   value={formik.values.phoneNumber}
                   onChange={formik.handleChange}
