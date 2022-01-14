@@ -45,7 +45,7 @@ const BookingForm = (): JSX.Element => {
         if (data.success) {
           setAvailableTime(data.success.profile.availableTime);
         } else {
-          console.log(data.error);
+          updateSnackBarMessage(data.error);
         }
       });
       getReviews(id).then((data) => {
@@ -58,11 +58,11 @@ const BookingForm = (): JSX.Element => {
           avgRating = Math.round((avgRating * 2) / reviews.length) / 2;
           setRating(avgRating);
         } else {
-          console.log(data.error);
+          updateSnackBarMessage(data.error);
         }
       });
     }
-  }, [id]);
+  }, [id, updateSnackBarMessage]);
 
   const formik = useFormik({
     initialValues: {
