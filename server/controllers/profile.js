@@ -29,6 +29,7 @@ exports.editProfile = asyncHandler(async (req, res, next) => {
 // @access Private
 exports.loadProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
+
   const profileId = user.profile;
   const profile = await Profile.findById(profileId);
   if (!profile) {

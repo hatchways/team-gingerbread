@@ -6,6 +6,10 @@ import fetchProfile from '../../helpers/APICalls/fetchProfile';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Profile } from '../../interface/Profile';
+import { Review } from '../../interface/Review';
+import { getReviews } from '../../helpers/APICalls/getReviews';
+import Rating from '@material-ui/lab/Rating';
+import ReviewForm from './ReviewForm/ReviewForm';
 
 const ProfileDetails = (): JSX.Element => {
   const classes = useStyles();
@@ -28,17 +32,43 @@ const ProfileDetails = (): JSX.Element => {
     },
     _id: '',
   });
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   const { id } = useParams<{ id?: string }>();
 
   useEffect(() => {
     if (id) {
-      fetchProfile(id).then((data) => setProfile(data.success.profile));
+      fetchProfile(id).then((data) => {
+        if (data.success) {
+          setProfile(data.success.profile);
+        } else {
+          console.log(data.error);
+        }
+      });
+      getReviews(id).then((data) => {
+        if (data.success) {
+          setReviews(data.success);
+        } else {
+          console.log(data.error);
+        }
+      });
     }
-  });
+  }, [id]);
+
+  const addNewReview = (newReview: Review) => {
+    setReviews((prevReviews) => [...prevReviews, newReview]);
+  };
 
   return (
-    <Box margin="0 auto" marginTop="11vh" width="65vw" minWidth="1200px" display="grid" gridTemplateColumns="60fr 40fr">
+    <Box
+      margin="0 auto"
+      marginTop="11vh"
+      marginBottom="5vh"
+      width="65vw"
+      minWidth="1200px"
+      display="grid"
+      gridTemplateColumns="60fr 40fr"
+    >
       <Card className={classes.profileCard}>
         <CardMedia
           className={classes.backgroundImg}
@@ -62,7 +92,7 @@ const ProfileDetails = (): JSX.Element => {
         </CardContent>
         <CardContent className={classes.bottomCardContent}>
           <Box marginTop="10px" width="100%" textAlign="left" marginBottom="30px">
-            <Typography className={classes.userDescriptionHeaderText}>About me</Typography>
+            <Typography className={classes.userDescriptionHeaderText}>about me</Typography>
             <Typography className={classes.userDescriptionText}>{profile.description}</Typography>
           </Box>
           <Box width="100%" display="flex" alignItems="center" marginBottom="15px">
@@ -78,11 +108,25 @@ const ProfileDetails = (): JSX.Element => {
             />
           </Box>
         </CardContent>
+        <CardContent className={classes.reviewsCardContent}>
+          <Typography className={classes.reviewsHeader}>reviews ({reviews.length})</Typography>
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" paddingTop="10px">
+            {reviews.map((review) => {
+              return (
+                <CardContent key={review._id} className={classes.review}>
+                  <Rating className={classes.reviewRating} defaultValue={review.rating} precision={0.5} readOnly />
+                  <Typography className={classes.reviewDescription}>&quot;{review.description}&quot;</Typography>
+                </CardContent>
+              );
+            })}
+          </Box>
+        </CardContent>
       </Card>
-
-      <BookingForm></BookingForm>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-between" height="85vh">
+        <BookingForm />
+        <ReviewForm addNewReview={addNewReview} />
+      </Box>
     </Box>
   );
 };
-
 export default ProfileDetails;

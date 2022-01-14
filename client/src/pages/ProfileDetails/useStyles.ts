@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   userDescriptionText: {
     marginTop: 10,
@@ -69,6 +70,36 @@ const useStyles = makeStyles((theme) => ({
     objectFit: 'cover',
     marginRight: 20,
     borderRadius: 5,
+  },
+  reviewsCardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'left',
+    width: '100%',
+    paddingLeft: 30,
+  },
+  reviewsHeader: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+  },
+  review: {
+    border: 'grey 1px solid',
+    width: '100%',
+    borderRadius: 5,
+    marginBottom: 15,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  reviewRating: {
+    marginLeft: 0,
+    marginBottom: 5,
+  },
+  reviewDescription: {
+    color: 'black',
+    fontSize: 14,
   },
 }));
 
