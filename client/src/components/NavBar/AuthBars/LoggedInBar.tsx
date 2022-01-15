@@ -5,54 +5,45 @@ import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
 import AuthMenu from '../../AuthMenu/AuthMenu';
 import Notifications from './Notifications/Notifications';
-import { useState, useEffect } from 'react';
-import getUnread from '../../../helpers/APICalls/getAllUnreadNotifications';
-import readNotification from '../../../helpers/APICalls/readNotification';
+import { useState, useContext } from 'react';
 import { notification } from '../../../interface/Notification';
+import { AuthContext } from '../../../context/useAuthContext';
+import { SocketContext } from '../../../context/useSocketContext';
 
 const LoggedInBar = (): JSX.Element => {
+  const { loggedInUser } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
   const classes = useStyles();
   const [unread, setUnread] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<notification[]>([]);
 
-  useEffect(() => {
-    getUnread().then((data) => {
-      const notificationsData = data.success?.notifications;
-      const notificationsArray: notification[] = [
-        {
-          type: '',
-          title: '',
-          description: '',
-          read: false,
-          createdAt: new Date('1/1/2000'),
-          image: '',
-          _id: '',
-        },
-      ];
-      notificationsData?.forEach((n) => notificationsArray.push(n));
-      notificationsArray.shift();
-      setNotifications(notificationsArray);
-      if (notificationsArray.length > 0) {
-        setUnread(true);
-      }
-    });
-  }, []);
+  socket?.emit('join', { id: loggedInUser?.id });
+  socket?.emit('get unread notifications', loggedInUser?.id);
 
-  const handleNotificationsOpen = () => {
-    setNotificationsOpen(!notificationsOpen); //open notifications dropdown
-    setUnread(false); //turn off unread indicator
+  socket?.on('new unread notifications', (notificationsDataFromSockets) => {
+    setNotifications(notificationsDataFromSockets);
+    if (notificationsDataFromSockets.length > 0) {
+      setUnread(true);
+    } else {
+      setUnread(false);
+    }
+  });
+
+  const handleNotificationButtonClick = () => {
+    setNotificationsOpen(!notificationsOpen);
     if (notificationsOpen) {
-      notifications.forEach((notification) => {
-        readNotification(notification._id); //set notification read status as true
-      });
+      setUnread(false); //turn off unread indicator
+      if (notifications.length) {
+        socket?.emit('read notifications', notifications);
+      }
     }
   };
 
   return (
     <Grid container className={classes.navButtons}>
       <Grid item>
-        <Button onClick={(e) => handleNotificationsOpen()} color="secondary" size="large" variant="text">
+        <Button onClick={() => handleNotificationButtonClick()} color="secondary" size="large" variant="text">
           <Typography variant="h3">Notifications</Typography>
           {unread && <Typography className={classes.indicator}></Typography>}
           {notificationsOpen && <Notifications notifications={notifications} />}

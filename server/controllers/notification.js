@@ -5,8 +5,7 @@ const asyncHandler = require("express-async-handler");
 // @desc create new notification
 // @access Public
 exports.createNotification = asyncHandler(async (req, res, next) => {
-  const notification = new Notification(({ type, title, description, read, date, image, recipient } = req.body));
-
+  const notification = new Notification(({ type, title, description, read, recipient, image } = req.body));
   const newNotification = await notification.save();
   res.status(200).json({
     success: {
