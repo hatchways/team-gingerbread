@@ -60,13 +60,15 @@ io.use((socket, next) => {
   }
 }).on("connection", (socket) => {
   console.log(Array.from(loggedInUsers.values()));
+  socket.on("join", (data) => {
+    socket.join(data.id);
+  });
   socket.on("get unread notifications", (id) => {
     Notification.find({ recipient: id, read: false }).then((notifications) => {
-      io.emit("new unread notifications", notifications);
+      io.sockets.in(id).emit("new unread notifications", notifications);
     });
   });
   socket.on("read notifications", (notifications) => {
-    console.log("read notification trigger");
     notifications.forEach((notification) => {
       Notification.findById(notification._id)
         .then((n) => {
@@ -75,9 +77,6 @@ io.use((socket, next) => {
         })
         .then((n) => {
           n.save();
-        })
-        .then(() => {
-          console.log("notification read");
         });
     });
   });

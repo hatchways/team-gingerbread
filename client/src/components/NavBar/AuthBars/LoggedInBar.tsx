@@ -18,6 +18,7 @@ const LoggedInBar = (): JSX.Element => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<notification[]>([]);
 
+  socket?.emit('join', { id: loggedInUser?.id });
   socket?.emit('get unread notifications', loggedInUser?.id);
 
   socket?.on('new unread notifications', (notificationsDataFromSockets) => {
