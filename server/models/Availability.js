@@ -6,90 +6,7 @@ const availabilitySchema = mongoose.Schema({
     required: true,
     ref: "Profile",
   },
-  defaultSchedule: {
-    type: {
-      active: Boolean,
-      availability: {
-        monday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-        tuesday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-        wednesday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-        thursday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-        friday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-        saturday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-        sunday: {
-          startTime: Number,
-          endTime: Number,
-          availabile: Boolean,
-        },
-      },
-    },
-    required: true,
-    default: {
-      active: true,
-      availability: {
-        monday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-        tuesday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-        wednesday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-        thursday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-        friday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-        saturday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-        sunday: {
-          startTime: -1,
-          endTime: -1,
-          availabile: false,
-        },
-      },
-    },
-  },
-  alternateSchedules: {
+  schedules: {
     type: [
       {
         name: String,
@@ -135,6 +52,47 @@ const availabilitySchema = mongoose.Schema({
     ],
     required: true,
     default: [
+      {
+        name: "Default Schedule",
+        active: true,
+        availability: {
+          monday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+          tuesday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+          wednesday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+          thursday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+          friday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+          saturday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+          sunday: {
+            startTime: -1,
+            endTime: -1,
+            availabile: false,
+          },
+        },
+      },
       {
         name: "Holiday Schedule",
         active: false,
