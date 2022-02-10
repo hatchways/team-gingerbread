@@ -136,6 +136,16 @@ const availabilitySchema = mongoose.Schema({
       },
     ],
   },
+  overrides: {
+    type: [
+      {
+        date: Date,
+        startTime: Number,
+        endTime: Number,
+      },
+    ],
+    required: false,
+  },
 });
 
 module.exports = Availability = mongoose.model("Availability", availabilitySchema);
