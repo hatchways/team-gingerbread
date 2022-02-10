@@ -10,10 +10,10 @@ const {
   setActiveSchedule,
 } = require("../controllers/availability");
 
-router.route("/").post(createSchedule);
-router.route("/:scheduleId").get(getSchedule);
-router.route("/active").post(getActiveSchedule); //change to get and user protect middleware to get userId
-router.route("/getUserSchedule").post(getUserSchedule);
+router.route("/").post(createSchedule); //add protect
+router.route("/:scheduleId").get(getSchedule); //add protect, redo!!!
+router.route("/active/:sitterId").get(getActiveSchedule); //add protect
+router.route("/getUserSchedule").post(getUserSchedule); //add protect, change to get
 router.route("/:scheduleId/activate").patch(setActiveSchedule);
 
 module.exports = router;
