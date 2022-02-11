@@ -1,15 +1,19 @@
 const isValidObjectId = require("mongoose").isValidObjectId;
 const Availability = require("../models/Availability");
 
-// @route POST /availability
-// @desc creates new schedule
+// @route POST /availability/createAvailability
+// @desc creates new availability for a user
 // @access Private
-exports.createSchedule = async (req, res) => {
+exports.createAvailability = async (req, res) => {
   const userId = req.body.userId;
   if (isValidObjectId(userId)) {
     const existingAvailability = await Availability.findOne({ sitterId: userId });
     if (existingAvailability) {
-      res.json({ error: "A schedule for this user already exists!" });
+      res.json({
+        error: "An availability for this user already exists!",
+        userId,
+        availabilityId: existingAvailability._id,
+      });
     } else {
       const newAvailability = new Availability({
         sitterId: userId,
@@ -17,9 +21,64 @@ exports.createSchedule = async (req, res) => {
       const saved = await newAvailability.save();
       res.json({
         success: {
-          schedule: saved,
+          availability: saved,
         },
       });
+    }
+  } else {
+    res.json({ error: "Invalid userId" });
+  }
+};
+
+// @route POST /availability
+// @desc adds a new schedule to an existing user's availability
+// @access Private
+exports.addSchedule = async (req, res) => {
+  const { userId, availabilityId, newSchedule } = req.body;
+  if (isValidObjectId(userId)) {
+    if (isValidObjectId(availabilityId)) {
+      const availability = await Availability.findById(availabilityId);
+      if (availability) {
+        if (availability.sitterId == userId) {
+          let counter = 0;
+          for (let day in newSchedule) {
+            const currentDay = newSchedule[day];
+            console.log(currentDay.available);
+            if (
+              currentDay.startTime !== undefined &&
+              currentDay.endTime !== undefined &&
+              currentDay.available !== undefined
+            ) {
+              if (currentDay.available && parseInt(currentDay.startTime) < parseInt(currentDay.startTime)) {
+                counter++;
+              } else if (!currentDay.available) {
+                currentDay.startTime = -1;
+                currentDay.endTime = -1;
+                counter++;
+              }
+            }
+          }
+          if (counter === 7 && newSchedule.name !== undefined) {
+            availability.schedules.push(newSchedule);
+            const saved = await availability.save();
+            res.json({
+              success: {
+                availability: saved,
+              },
+            });
+          } else {
+            res.json({ error: "Provided schedule is invalid", newSchedule, counter });
+          }
+        } else {
+          res.json({
+            error: "The provided userId does not match with the provided availabilityId's availability's sitterId",
+          });
+        }
+      } else {
+        res.json({ error: "No availability was found for the provided userId", userId });
+      }
+    } else {
+      res.json({ error: "Invalid availabilityId" });
     }
   } else {
     res.json({ error: "Invalid userId" });
