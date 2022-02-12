@@ -5,7 +5,7 @@ const Availability = require("../models/Availability");
 // @desc creates new availability for a user
 // @access Private
 exports.createAvailability = async (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.user.id;
   if (isValidObjectId(userId)) {
     const existingAvailability = await Availability.findOne({ sitterId: userId });
     if (existingAvailability) {
@@ -34,16 +34,16 @@ exports.createAvailability = async (req, res) => {
 // @desc adds a new schedule to an existing user's availability
 // @access Private
 exports.addSchedule = async (req, res) => {
-  const { userId, availabilityId, newSchedule } = req.body;
+  const userId = req.body.id;
+  const { availabilityId, newSchedule } = req.body;
   if (isValidObjectId(userId)) {
     if (isValidObjectId(availabilityId)) {
       const availability = await Availability.findById(availabilityId);
       if (availability) {
         if (availability.sitterId == userId) {
           let counter = 0;
-          for (let day in newSchedule) {
-            const currentDay = newSchedule[day];
-            console.log(currentDay.available);
+          for (let day in newSchedule.availability) {
+            const currentDay = newSchedule.availability[day];
             if (
               currentDay.startTime !== undefined &&
               currentDay.endTime !== undefined &&
@@ -58,7 +58,7 @@ exports.addSchedule = async (req, res) => {
               }
             }
           }
-          if (counter === 7 && newSchedule.name !== undefined) {
+          if (counter === 7 && newSchedule.name !== undefined && newSchedule.active !== undefined) {
             availability.schedules.push(newSchedule);
             const saved = await availability.save();
             res.json({
@@ -85,136 +85,124 @@ exports.addSchedule = async (req, res) => {
   }
 };
 
-// @route GET /availability/:scheduleId
-// @desc gets schedule by scheduleId
+// @route GET /availability/:availabilityId/:scheduleId/getSchedule
+// @desc gets schedule from availability by availabilityId and scheduleId
 // @access Private
 exports.getSchedule = async (req, res) => {
-  const scheduleId = req.params.scheduleId;
-  if (isValidObjectId(scheduleId)) {
-    const schedule = await Availability.findById(scheduleId);
-    if (!schedule) {
-      res.json({ error: "A schedule with this id does not exist!" });
-    } else {
-      res.json({ success: schedule });
-    }
-  } else {
-    res.json({ error: "Invalid scheduleId" });
-  }
-};
-
-// @route GET /availability/active/:sitterId
-// @desc gets active schedule by sitterId
-// @access Private
-exports.getActiveSchedule = async (req, res) => {
-  const sitterId = req.params.sitterId;
-  if (isValidObjectId(sitterId)) {
-    const schedule = await Availability.findOne({ sitterId: sitterId });
-    if (!schedule) {
-      res.json({ error: "A schedule associated with this userId does not exist!" });
-    } else {
-      if (schedule.defaultSchedule.active) {
-        res.json({
-          success: {
-            schedule: schedule.defaultSchedule.availability,
-          },
-        });
-      } else {
-        const activeAlternate = schedule.alternateSchedules.find((altSchedule) => altSchedule.active === true);
-        if (activeAlternate) {
-          res.json({
-            success: {
-              schedule: activeAlternate.availability,
-            },
-          });
-        } else {
-          res.json({ error: "None of the schedules associated with this userId are active!" });
-        }
-      }
-    }
-  } else {
-    res.json({ error: "Invalid userId" });
-  }
-};
-
-// @route GET /availability/getUserSchedule
-// @desc gets schedule by sitterId of loggedInUser
-// @access Private
-exports.getUserSchedule = async (req, res) => {
-  const userId = req.body.userId;
-  // const userId = req.user.id
-  if (isValidObjectId(userId)) {
-    const schedule = await Availability.findOne({ sitterId: userId });
-    if (!schedule) {
-      res.json({ error: "A schedule associated with this userId does not exist!" });
-    } else {
-      res.json({ success: schedule });
-    }
-  } else {
-    res.json({ error: "Invalid userId" });
-  }
-};
-
-// @route PATCH /availability/:scheduleId/activate
-// @desc gets schedule by sitterId of loggedInUser
-// @access Private
-exports.setActiveSchedule = async (req, res) => {
-  const userId = req.body.userId;
-  const availabilityId = req.body.availabilityId;
-
-  if (isValidObjectId(userId)) {
-    if (isValidObjectId(availabilityId)) {
-      const userAvailability = await Availability.findById(availabilityId);
-      if (!userAvailability) {
+  const { availabilityId, scheduleId } = req.params;
+  if (isValidObjectId(availabilityId)) {
+    if (isValidObjectId(scheduleId)) {
+      const availability = await Availability.findById(availabilityId);
+      if (!availability) {
         res.json({ error: "A schedule with this id does not exist!" });
-      } else if (userAvailability.sitterId != userId) {
+      } else if (!availability.schedules.some((schedule) => schedule._id == scheduleId)) {
         res.json({
-          error: "The provided userId does not match the provided availabilityId's availability's sitterId",
+          error:
+            "The provided scheduleId does not match with any schedules inside the provided availabilityId's availability's schedules",
+          availabilityId,
+          scheduleId,
         });
       } else {
-        const schedule = await Availability.findOne({ sitterId: userId });
-        if (!schedule) {
-          res.json({ error: "A schedule associated with this userId does not exist!" });
-        } else {
-          let scheduleToActivate = schedule.defaultSchedule;
-          let scheduleToDeactivate = schedule.defaultSchedule;
-
-          //add in check to see which is current active, and if provided scheduleId is already active
-          if (schedule.defaultSchedule.active) {
-            scheduleToActivate = schedule.alternateSchedules.find((altSchedule) => altSchedule.active === false);
-          } else {
-            scheduleToDeactivate = schedule.alternateSchedules.find((altSchedule) => altSchedule.active === true);
-          }
-
-          scheduleToDeactivate.active = false;
-          scheduleToActivate.active = true;
-
-          // res.json({
-          //   success: {
-          //     activatedSchedule: {
-          //       name: scheduleToActivate.name ? scheduleToActivate.name : "Default Schedule",
-          //       active: scheduleToActivate.active,
-          //       _id: scheduleToActivate._id ? scheduleToActivate._id : "default, no id",
-          //     },
-          //     deactivatedSchedule: {
-          //       name: scheduleToDeactivate.name ? scheduleToDeactivate.name : "Default Schedule",
-          //       active: scheduleToDeactivate.active,
-          //       _id: scheduleToDeactivate._id ? scheduleToDeactivate._id : "default, no id",
-          //     },
-          //   },
-          // });
-
-          const updatedAvailability = await schedule.save();
-          res.json({
-            success: {
-              updatedAvailability,
-            },
-          });
-        }
+        const matchedSchedule = availability.schedules.find((schedule) => schedule._id == scheduleId);
+        res.json({ success: matchedSchedule });
       }
     } else {
       res.json({ error: "Invalid scheduleId" });
     }
   } else {
+    res.json({ error: "Invalid availabilityId" });
+  }
+};
+
+// @route GET /availability/:sitterId/getActiveSchedule
+// @desc gets active schedule by sitterId
+// @access Private
+exports.getActiveSchedule = async (req, res) => {
+  const { sitterId } = req.params;
+  if (isValidObjectId(sitterId)) {
+    const availability = await Availability.findOne({ sitterId: sitterId });
+    if (!availability) {
+      res.json({ error: "A schedule associated with this userId does not exist!" });
+    } else {
+      if (availability.schedules.some((schedule) => schedule.active)) {
+        const activeSchedule = availability.schedules.find((schedule) => schedule.active);
+        res.json({ success: activeSchedule });
+      } else {
+        res.json({ error: "None of the schedules associated with the provided sitterId are active", sitterId });
+      }
+    }
+  } else {
     res.json({ error: "Invalid userId" });
+  }
+};
+
+// @route GET /availability/getUserSchedules
+// @desc gets all schedules in loggedInUser's availability
+// @access Private
+exports.getUserSchedules = async (req, res) => {
+  const userId = req.user.id;
+  if (isValidObjectId(userId)) {
+    const availability = await Availability.findOne({ sitterId: userId });
+    if (!availability) {
+      res.json({ error: "A schedule associated with this userId does not exist!" });
+    } else {
+      res.json({ success: availability.schedules });
+    }
+  } else {
+    res.json({ error: "Invalid userId" });
+  }
+};
+
+// @route PATCH /availability/setActiveSchedule
+// @desc gets schedule by sitterId of loggedInUser
+// @access Private
+exports.setActiveSchedule = async (req, res) => {
+  const userId = req.user.id;
+  const { availabilityId, scheduleId } = req.body;
+  if (isValidObjectId(userId)) {
+    if (isValidObjectId(availabilityId)) {
+      if (isValidObjectId(scheduleId)) {
+        const availability = await Availability.findById(availabilityId);
+        if (!availability) {
+          res.json({ error: "An availability with this id does not exist!" });
+        } else if (availability.sitterId != userId) {
+          res.json({
+            error: "The provided userId does not match the provided availabilityId's availability's sitterId",
+          });
+        } else {
+          if (availability.schedules.some((schedule) => schedule.active)) {
+            let scheduleToActivate = availability.schedules.find((schedule) => schedule._id == scheduleId);
+            if (scheduleToActivate.active === false) {
+              let scheduleToDeactivate = availability.schedules.find((schedule) => schedule.active);
+              scheduleToActivate.active = true;
+              scheduleToDeactivate.active = false;
+              const updatedAvailability = await availability.save();
+              res.json({
+                success: updatedAvailability,
+              });
+            } else {
+              res.json({
+                error: "The provided scheduleId corresponds to a schedule that is currently active",
+                scheduleId,
+                scheduleToActivate,
+              });
+            }
+          } else {
+            res.json({
+              error:
+                "The provided scheduleId does not match with any schedules inside the provided availabilityId's availability's schedules",
+              availabilityId,
+              scheduleId,
+            });
+          }
+        }
+      } else {
+        res.json({ error: "Invalid scheduleId", availabilityId });
+      }
+    } else {
+      res.json({ error: "Invalid availabilityId", availabilityId });
+    }
+  } else {
+    res.json({ error: "Invalid userId", userId });
   }
 };

@@ -1,23 +1,21 @@
 const express = require("express");
-
-const router = express.Router();
 const protect = require("../middleware/auth");
 const {
   createAvailability,
   addSchedule,
   getSchedule,
   getActiveSchedule,
-  getUserSchedule,
+  getUserSchedules,
   setActiveSchedule,
 } = require("../controllers/availability");
 
-router.route("/createAvailability").post(createAvailability); //add protect
+const router = express.Router();
 
-router.route("/").post(addSchedule); //add protect
-
-router.route("/:scheduleId").get(getSchedule); //add protect, redo!!!
-router.route("/active/:sitterId").get(getActiveSchedule); //add protect
-router.route("/getUserSchedule").post(getUserSchedule); //add protect, change to get
-router.route("/:scheduleId/activate").patch(setActiveSchedule);
+router.route("/createAvailability").post(protect, createAvailability);
+router.route("/").post(protect, addSchedule);
+router.route("/:availabilityId/:scheduleId/getSchedule").get(protect, getSchedule);
+router.route("/:sitterId/getActiveSchedule").get(protect, getActiveSchedule);
+router.route("/getUserSchedules").post(protect, getUserSchedules);
+router.route("/setActiveSchedule").patch(protect, setActiveSchedule);
 
 module.exports = router;
