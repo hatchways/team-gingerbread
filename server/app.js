@@ -20,6 +20,7 @@ const conversationsRouter = require("./routes/conversations");
 const messagesRouter = require("./routes/messages");
 const stripeRouter = require("./routes/stripe");
 const reviewRouter = require("./routes/review");
+const availabilityRouter = require("./routes/availability");
 
 const { json, urlencoded } = express;
 
@@ -67,6 +68,7 @@ app.use("/messages", messagesRouter);
 app.use("/profile", profileRouter);
 app.use("/stripe", stripeRouter);
 app.use("/reviews", reviewRouter);
+app.use("/availability", availabilityRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
