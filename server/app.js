@@ -9,6 +9,7 @@ const socketio = require("socket.io");
 const { join } = require("path");
 const connectDB = require("./db");
 const { notFound, errorHandler } = require("./middleware/error");
+const sendEmail = require("./utils/sendEmail");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
@@ -87,5 +88,13 @@ process.on("unhandledRejection", (err, promise) => {
   // Close server & exit process
   server.close(() => process.exit(1));
 });
+
+sendEmail(
+  process.env.SENDGRID_API_KEY,
+  "justinofthebaytosh@gmail.com",
+  "justin.baytosh@gmail.com",
+  "test subject",
+  "<p>-Justin Baytosh</p>"
+);
 
 module.exports = { app, server };
